@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { Component, memo, type ReactNode } from 'react'
 import type { Block } from '@/types/course.types'
 import TextBlock from './TextBlock'
 import CodeBlock from './CodeBlock'
@@ -6,6 +6,39 @@ import QuizBlock from './QuizBlock'
 import CalloutBlock from './CalloutBlock'
 import ImageBlock from './ImageBlock'
 import UnknownBlock from './UnknownBlock'
+
+class BlockErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          role="alert"
+          style={{
+            padding: 'var(--space-4)',
+            borderRadius: '6px',
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface)',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--color-text-muted)',
+          }}
+        >
+          This block failed to render.
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 interface BlockRendererProps {
   blocks: Block[]
@@ -41,7 +74,9 @@ export default memo(function BlockRenderer({ blocks }: BlockRendererProps) {
       }}
     >
       {blocks.map((block, index) => (
-        <BlockComponent key={index} block={block} />
+        <BlockErrorBoundary key={index}>
+          <BlockComponent block={block} />
+        </BlockErrorBoundary>
       ))}
     </div>
   )
