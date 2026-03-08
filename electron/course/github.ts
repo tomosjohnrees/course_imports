@@ -42,6 +42,10 @@ const MIME_TYPES: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
+function encodeFilePath(filePath: string): string {
+  return filePath.split('/').map(encodeURIComponent).join('/')
+}
+
 /**
  * Parse a GitHub repository URL into owner and repo.
  * Accepts: https://github.com/owner/repo, github.com/owner/repo,
@@ -105,7 +109,7 @@ export async function fetchFile(
   filePath: string,
   options?: FetchOptions
 ): Promise<string> {
-  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${filePath}`
+  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${encodeFilePath(filePath)}`
   const response = await githubApiFetch(apiPath, options)
   const data = (await response.json()) as { content?: string; encoding?: string }
 
@@ -124,7 +128,7 @@ async function fetchFileBuffer(
   filePath: string,
   options?: FetchOptions
 ): Promise<Buffer> {
-  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${filePath}`
+  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${encodeFilePath(filePath)}`
   const response = await githubApiFetch(apiPath, options)
   const data = (await response.json()) as { content?: string }
 
@@ -143,7 +147,7 @@ export async function fetchDirectory(
   dirPath: string,
   options?: FetchOptions
 ): Promise<GitHubFileEntry[]> {
-  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${dirPath}`
+  const apiPath = `/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/contents/${encodeFilePath(dirPath)}`
   const response = await githubApiFetch(apiPath, options)
   const data = (await response.json()) as Array<{ name: string; type: string; path: string }>
 
@@ -224,18 +228,24 @@ async function resolveBlockFromGitHub(
     case 'image': {
       const src = rawBlock.src as string
       const filePath = `${topicPath}/${src}`
-      const buffer = await fetchFileBuffer(repo, filePath, options)
-      const ext = extname(src).toLowerCase()
-      const mimeType = MIME_TYPES[ext] || 'application/octet-stream'
-      const dataUri = `data:${mimeType};base64,${buffer.toString('base64')}`
+      try {
+        const buffer = await fetchFileBuffer(repo, filePath, options)
+        const ext = extname(src).toLowerCase()
+        const mimeType = MIME_TYPES[ext] || 'application/octet-stream'
+        const dataUri = `data:${mimeType};base64,${buffer.toString('base64')}`
 
-      const block: ImageBlock = {
-        type: 'image',
-        src: dataUri,
-        alt: rawBlock.alt as string,
+        const block: ImageBlock = {
+          type: 'image',
+          src: dataUri,
+          alt: rawBlock.alt as string,
+        }
+        if (rawBlock.caption) block.caption = rawBlock.caption as string
+        return block
+      } catch {
+        throw new Error(
+          `topics/${topicSlug} block ${blockIndex}: file "${src}" could not be fetched`
+        )
       }
-      if (rawBlock.caption) block.caption = rawBlock.caption as string
-      return block
     }
 
     case 'callout': {
