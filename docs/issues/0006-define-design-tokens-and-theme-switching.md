@@ -20,24 +20,24 @@ Establish the CSS custom properties (design tokens) that define the app's colour
 ## Acceptance criteria
 
 ### Functionality
-- [ ] CSS custom properties exist for all colours defined in the design guide (backgrounds, text, accents, borders, semantic colours)
-- [ ] CSS custom properties exist for the spacing scale (e.g. `--space-1` through `--space-8` or equivalent)
-- [ ] CSS custom properties exist for typography sizes and the reading width constraint
-- [ ] Light mode tokens are applied by default
-- [ ] Dark mode tokens are applied automatically when `prefers-color-scheme: dark` matches
-- [ ] Switching the OS appearance preference toggles the app's colour scheme without a page reload
+- [x] CSS custom properties exist for all colours defined in the design guide (backgrounds, text, accents, borders, semantic colours)
+- [x] CSS custom properties exist for the spacing scale (e.g. `--space-1` through `--space-8` or equivalent)
+- [x] CSS custom properties exist for typography sizes and the reading width constraint
+- [x] Light mode tokens are applied by default
+- [x] Dark mode tokens are applied automatically when `prefers-color-scheme: dark` matches
+- [x] Switching the OS appearance preference toggles the app's colour scheme without a page reload
 
 ### Security
-- [ ] No user input influences token values — all tokens are static CSS definitions
+- [x] No user input influences token values — all tokens are static CSS definitions
 
 ### Performance
-- [ ] Tokens are defined in a single CSS file loaded once at app startup
-- [ ] Theme switching uses CSS media queries, not JavaScript, so it is instantaneous
+- [x] Tokens are defined in a single CSS file loaded once at app startup
+- [x] Theme switching uses CSS media queries, not JavaScript, so it is instantaneous
 
 ### Testing
-- [ ] Visual verification that light mode renders with the correct colour palette
-- [ ] Visual verification that dark mode renders with the correct colour palette
-- [ ] All token names resolve (no `var()` references to undefined properties in the browser dev tools)
+- [x] Visual verification that light mode renders with the correct colour palette
+- [x] Visual verification that dark mode renders with the correct colour palette
+- [x] All token names resolve (no `var()` references to undefined properties in the browser dev tools)
 
 ## Notes
 
