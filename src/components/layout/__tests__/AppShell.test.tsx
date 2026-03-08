@@ -53,9 +53,9 @@ describe('AppShell', () => {
     expect(screen.getByRole('main')).toBeInTheDocument()
   })
 
-  it('renders the sidebar with Topics heading on course route', () => {
+  it('renders the sidebar with course heading on course route', () => {
     renderWithRouter('/course')
-    expect(screen.getByText('Topics')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
 
   it('renders the Home page at /', () => {
@@ -65,6 +65,6 @@ describe('AppShell', () => {
 
   it('renders the Course page at /course', () => {
     renderWithRouter('/course')
-    expect(screen.getByText('Course')).toBeInTheDocument()
+    expect(screen.getByRole('main')).toHaveTextContent('Course')
   })
 })

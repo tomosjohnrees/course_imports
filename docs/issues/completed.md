@@ -92,3 +92,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0018 | [Implement recent courses persistence and display](0018-implement-recent-courses-persistence.md) | Milestone 3 — Recent Courses | complete |
+
+## Milestone 4 — Sidebar
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0019 | [Implement sidebar with topic navigation and progress indicators](0019-implement-sidebar-topic-navigation.md) | Milestone 4 — Sidebar | complete |

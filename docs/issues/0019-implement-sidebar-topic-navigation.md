@@ -21,23 +21,23 @@ The sidebar needs to be populated with real course data so users can navigate be
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Sidebar displays all topics from `course.store` in the order defined by `topicOrder`
-- [ ] The currently active topic is highlighted with the accent left-border style per the design guide
-- [ ] Each topic shows a visual indicator of its completion state (not started / complete)
-- [ ] Clicking a topic updates `activeTopic` in the course store and the main content area reflects the change
-- [ ] The course title is displayed at the top of the sidebar
-- [ ] An overall progress bar shows the percentage of completed topics
-- [ ] The sidebar handles courses with many topics without layout breakage (scrollable)
+- [x] Sidebar displays all topics from `course.store` in the order defined by `topicOrder`
+- [x] The currently active topic is highlighted with the accent left-border style per the design guide
+- [x] Each topic shows a visual indicator of its completion state (not started / complete)
+- [x] Clicking a topic updates `activeTopic` in the course store and the main content area reflects the change
+- [x] The course title is displayed at the top of the sidebar
+- [x] An overall progress bar shows the percentage of completed topics
+- [x] The sidebar handles courses with many topics without layout breakage (scrollable)
 
 ### Security
-- [ ] No course data is leaked outside the app's renderer process
+- [x] No course data is leaked outside the app's renderer process
 
 ### Performance
-- [ ] Sidebar re-renders only when relevant store state changes (active topic, completion states), not on every store update
-- [ ] Topic list renders efficiently for courses with 50+ topics
+- [x] Sidebar re-renders only when relevant store state changes (active topic, completion states), not on every store update
+- [x] Topic list renders efficiently for courses with 50+ topics
 
 ### Testing
-- [ ] Component tests verify topics render in the correct order
-- [ ] Component tests verify active topic highlighting
-- [ ] Component tests verify clicking a topic updates the store
-- [ ] Component tests verify the progress bar reflects completion state
+- [x] Component tests verify topics render in the correct order
+- [x] Component tests verify active topic highlighting
+- [x] Component tests verify clicking a topic updates the store
+- [x] Component tests verify the progress bar reflects completion state
