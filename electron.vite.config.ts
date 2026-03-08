@@ -29,6 +29,11 @@ export default defineConfig({
         input: 'index.html'
       }
     },
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src')
+      }
+    },
     plugins: [react()]
   }
 })

@@ -20,23 +20,23 @@ Create the full folder structure defined in the architecture document and instal
 ## Acceptance criteria
 
 ### Functionality
-- [ ] All directories listed in the architecture document exist in the project
-- [ ] `@/` path alias resolves correctly in both the renderer and TypeScript (e.g. `import { something } from '@/store/course.store'` compiles)
-- [ ] Zustand, `react-router-dom`, and `electron-store` are installed and listed in `package.json`
-- [ ] Placeholder files exist for: `course.store.ts`, `ui.store.ts`, `Home.tsx`, `Course.tsx`, `AppShell.tsx`, `Sidebar.tsx`, `BlockRenderer.tsx`, `course.types.ts`
-- [ ] The app still starts in dev mode without errors after all changes
+- [x] All directories listed in the architecture document exist in the project
+- [x] `@/` path alias resolves correctly in both the renderer and TypeScript (e.g. `import { something } from '@/store/course.store'` compiles)
+- [x] Zustand, `react-router-dom`, and `electron-store` are installed and listed in `package.json`
+- [x] Placeholder files exist for: `course.store.ts`, `ui.store.ts`, `Home.tsx`, `Course.tsx`, `AppShell.tsx`, `Sidebar.tsx`, `BlockRenderer.tsx`, `course.types.ts`
+- [x] The app still starts in dev mode without errors after all changes
 
 ### Security
-- [ ] Dependencies are installed from the npm registry with no known critical vulnerabilities (`npm audit` shows no critical issues)
-- [ ] `electron-store` is only imported in the main process, not in the renderer
+- [x] Dependencies are installed from the npm registry with no known critical vulnerabilities (`npm audit` shows no critical issues)
+- [x] `electron-store` is only imported in the main process, not in the renderer
 
 ### Performance
-- [ ] Path alias resolution does not add measurable overhead to the build
-- [ ] No unnecessary dependencies are installed beyond what is specified
+- [x] Path alias resolution does not add measurable overhead to the build
+- [x] No unnecessary dependencies are installed beyond what is specified
 
 ### Testing
-- [ ] TypeScript compiles without errors with the new path aliases and placeholder files
-- [ ] Importing from the `@/` alias works in at least one renderer file
+- [x] TypeScript compiles without errors with the new path aliases and placeholder files
+- [x] Importing from the `@/` alias works in at least one renderer file
 
 ## Notes
 
