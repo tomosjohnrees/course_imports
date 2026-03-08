@@ -98,3 +98,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0019 | [Implement sidebar with topic navigation and progress indicators](0019-implement-sidebar-topic-navigation.md) | Milestone 4 — Sidebar | complete |
+
+## Milestone 4 — Block Renderer
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0020 | [Implement block renderer and unknown block fallback](0020-implement-block-renderer.md) | Milestone 4 — Block Renderer | complete |
