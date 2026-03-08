@@ -19,28 +19,28 @@ Implement the two Zustand stores that hold all global state for the app: `course
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `course.store` holds `course: Course | null`, `activeTopic: string | null`, and `progress: CourseProgress`
-- [ ] `setCourse(course)` sets the active course and resets activeTopic and progress
-- [ ] `setActiveTopic(topicId)` updates the active topic
-- [ ] `markTopicComplete(topicId)` marks a topic as complete in the progress map
-- [ ] `clearCourse()` resets course, activeTopic, and progress to initial state
-- [ ] `ui.store` holds `theme`, `isLoading`, `loadingMessage`, and `error`
-- [ ] `setLoading(true, 'Loading course...')` sets both isLoading and loadingMessage
-- [ ] `setLoading(false)` clears isLoading and loadingMessage
-- [ ] `setError(message)` sets the error; `setError(null)` clears it
+- [x] `course.store` holds `course: Course | null`, `activeTopic: string | null`, and `progress: CourseProgress`
+- [x] `setCourse(course)` sets the active course and resets activeTopic and progress
+- [x] `setActiveTopic(topicId)` updates the active topic
+- [x] `markTopicComplete(topicId)` marks a topic as complete in the progress map
+- [x] `clearCourse()` resets course, activeTopic, and progress to initial state
+- [x] `ui.store` holds `theme`, `isLoading`, `loadingMessage`, and `error`
+- [x] `setLoading(true, 'Loading course...')` sets both isLoading and loadingMessage
+- [x] `setLoading(false)` clears isLoading and loadingMessage
+- [x] `setError(message)` sets the error; `setError(null)` clears it
 
 ### Security
-- [ ] Stores do not persist data to disk on their own — persistence goes through the IPC bridge in later milestones
-- [ ] No sensitive data (tokens, credentials) is held in either store
+- [x] Stores do not persist data to disk on their own — persistence goes through the IPC bridge in later milestones
+- [x] No sensitive data (tokens, credentials) is held in either store
 
 ### Performance
-- [ ] Store updates trigger re-renders only in components that subscribe to the changed slice (Zustand's default selector behaviour)
-- [ ] No unnecessary deep cloning of the course object on state updates
+- [x] Store updates trigger re-renders only in components that subscribe to the changed slice (Zustand's default selector behaviour)
+- [x] No unnecessary deep cloning of the course object on state updates
 
 ### Testing
-- [ ] Unit tests verify each action in `course.store` updates state correctly
-- [ ] Unit tests verify each action in `ui.store` updates state correctly
-- [ ] Unit tests verify `clearCourse` resets all course-related state
+- [x] Unit tests verify each action in `course.store` updates state correctly
+- [x] Unit tests verify each action in `ui.store` updates state correctly
+- [x] Unit tests verify `clearCourse` resets all course-related state
 
 ## Notes
 

@@ -56,3 +56,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0012 | [Implement course loader and loadFromFolder IPC handler](0012-implement-course-loader-and-ipc-handler.md) | Milestone 2 — Course Loader | complete |
+
+## Milestone 2 — Zustand Store
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0013 | [Implement Zustand stores for course and UI state](0013-implement-zustand-stores.md) | Milestone 2 — Zustand Store | complete |
