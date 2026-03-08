@@ -74,3 +74,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0015 | [Implement GitHub client for fetching course files](0015-implement-github-client.md) | Milestone 3 — GitHub Client | complete |
+
+## Milestone 3 — IPC Handler
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0016 | [Implement loadFromGitHub IPC handler](0016-implement-load-from-github-ipc-handler.md) | Milestone 3 — IPC Handler | complete |

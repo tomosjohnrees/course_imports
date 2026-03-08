@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0016 | [Implement loadFromGitHub IPC handler](0016-implement-load-from-github-ipc-handler.md) | Milestone 3 — IPC Handler | todo |
 | 0017 | [Add GitHub URL input and loading flow to home screen](0017-add-github-url-loading-to-home-screen.md) | Milestone 3 — Home Screen | todo |
 | 0018 | [Implement recent courses persistence and display](0018-implement-recent-courses-persistence.md) | Milestone 3 — Recent Courses | todo |
 | 0019 | [Implement sidebar with topic navigation and progress indicators](0019-implement-sidebar-topic-navigation.md) | Milestone 4 — Sidebar | todo |

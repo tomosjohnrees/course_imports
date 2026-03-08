@@ -19,24 +19,24 @@ This issue wires the GitHub client into the IPC layer so the renderer process ca
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `course:loadFromGitHub` IPC handler is registered and callable from the renderer
-- [ ] Handler calls the GitHub client, then runs the fetched data through the validator and parser
-- [ ] Returns `{ success: true, course }` on success
-- [ ] Returns `{ success: false, error }` with a descriptive message on failure
-- [ ] Error messages distinguish between rate limiting, repo not found, invalid course structure, and network errors
-- [ ] Uses stored GitHub personal access token from preferences if available
+- [x] `course:loadFromGitHub` IPC handler is registered and callable from the renderer
+- [x] Handler calls the GitHub client, then runs the fetched data through the validator and parser
+- [x] Returns `{ success: true, course }` on success
+- [x] Returns `{ success: false, error }` with a descriptive message on failure
+- [x] Error messages distinguish between rate limiting, repo not found, invalid course structure, and network errors
+- [x] Uses stored GitHub personal access token from preferences if available
 
 ### Security
-- [ ] The GitHub personal access token is read from electron-store, not passed from the renderer in plain text over IPC
-- [ ] Error messages do not leak the auth token or internal file paths
+- [x] The GitHub personal access token is read from electron-store, not passed from the renderer in plain text over IPC
+- [x] Error messages do not leak the auth token or internal file paths
 
 ### Performance
-- [ ] The handler does not block the main process event loop — file fetching is async throughout
+- [x] The handler does not block the main process event loop — file fetching is async throughout
 
 ### Testing
-- [ ] Tests verify the handler returns success for a valid mock course
-- [ ] Tests verify the handler returns appropriate error types for each failure scenario
-- [ ] Tests verify the stored auth token is included in requests when present
+- [x] Tests verify the handler returns success for a valid mock course
+- [x] Tests verify the handler returns appropriate error types for each failure scenario
+- [x] Tests verify the stored auth token is included in requests when present
 
 ## Notes
 
