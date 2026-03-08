@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0004 | [Implement app shell layout with sidebar and routing](0004-implement-app-shell-layout-and-routing.md) | Milestone 1 — UI Shell | todo |
 | 0005 | [Implement home screen with placeholder load actions](0005-implement-home-screen-layout.md) | Milestone 1 — UI Shell | todo |
 | 0006 | [Define design tokens and theme switching](0006-define-design-tokens-and-theme-switching.md) | Milestone 1 — Design Tokens | todo |
 | 0007 | [Set up typography and global base styles](0007-set-up-typography-and-global-styles.md) | Milestone 1 — Design Tokens | todo |

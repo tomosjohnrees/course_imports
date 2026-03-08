@@ -1,4 +1,13 @@
-// App shell layout — populated in issue #0004
+import { Outlet } from 'react-router-dom'
+import Sidebar from './Sidebar'
+
 export default function AppShell() {
-  return <div>AppShell</div>
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <Sidebar />
+      <main style={{ flex: 1, overflow: 'auto' }}>
+        <Outlet />
+      </main>
+    </div>
+  )
 }

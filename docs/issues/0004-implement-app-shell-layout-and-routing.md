@@ -20,23 +20,23 @@ Build the two-panel app shell (sidebar + main content area) and configure React 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `AppShell.tsx` renders a two-panel layout — a fixed-width sidebar on the left and a flexible main content area on the right
-- [ ] `Sidebar.tsx` renders inside the sidebar panel with placeholder content (e.g. app name or "Topics" heading)
-- [ ] React Router is set up as a memory router (no URL bar dependency)
-- [ ] The `/` route renders the Home page component
-- [ ] The `/course` route renders the Course page component inside the app shell layout
-- [ ] The layout does not break or overflow on window resize
+- [x] `AppShell.tsx` renders a two-panel layout — a fixed-width sidebar on the left and a flexible main content area on the right
+- [x] `Sidebar.tsx` renders inside the sidebar panel with placeholder content (e.g. app name or "Topics" heading)
+- [x] React Router is set up as a memory router (no URL bar dependency)
+- [x] The `/` route renders the Home page component
+- [x] The `/course` route renders the Course page component inside the app shell layout
+- [x] The layout does not break or overflow on window resize
 
 ### Security
-- [ ] No user-supplied data is rendered in the shell at this stage (all content is static)
+- [x] No user-supplied data is rendered in the shell at this stage (all content is static)
 
 ### Performance
-- [ ] The layout uses CSS for positioning (flexbox or grid) — no JavaScript-driven layout calculations
-- [ ] Route transitions are instantaneous with no visible loading delay
+- [x] The layout uses CSS for positioning (flexbox or grid) — no JavaScript-driven layout calculations
+- [x] Route transitions are instantaneous with no visible loading delay
 
 ### Testing
-- [ ] Component tests verify that `AppShell` renders both the sidebar and main content areas
-- [ ] Component tests verify that navigating to `/` and `/course` renders the expected page components
+- [x] Component tests verify that `AppShell` renders both the sidebar and main content areas
+- [x] Component tests verify that navigating to `/` and `/course` renders the expected page components
 
 ## Notes
 

@@ -1,15 +1,20 @@
-import type { Course } from '@/types/course.types'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import AppShell from '@/components/layout/AppShell'
+import Home from '@/pages/Home'
+import Course from '@/pages/Course'
 
-// Verify @/ alias resolves — this unused import will be replaced in issue #0004
-void (undefined as Course | undefined)
+const router = createMemoryRouter([
+  {
+    element: <AppShell />,
+    children: [
+      { path: '/', element: <Home /> },
+      { path: '/course', element: <Course /> },
+    ],
+  },
+])
 
 function App(): React.JSX.Element {
-  return (
-    <div style={{ padding: '40px', fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Course Imports</h1>
-      <p>Electron + React + TypeScript</p>
-    </div>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App
