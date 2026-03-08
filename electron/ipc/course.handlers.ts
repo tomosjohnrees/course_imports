@@ -16,7 +16,11 @@ function classifyGitHubError(message: string, repo: GitHubRepo): string {
   if (/Not found.*course\.json/.test(message)) {
     return `Repository not found or missing course.json: ${repo.owner}/${repo.repo}. Check the URL and ensure the repository contains a valid course.`
   }
-  return message
+  // Course structure validation errors are user-friendly — pass through to help users fix their course
+  if (/missing a topicOrder|is not an array|unknown block type|could not be fetched/.test(message)) {
+    return message
+  }
+  return `Failed to load course from ${repo.owner}/${repo.repo}. Please check the repository URL and try again.`
 }
 
 export function registerCourseHandlers(): void {
