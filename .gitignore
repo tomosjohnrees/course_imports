@@ -2,3 +2,5 @@ node_modules/
 .claude/
 .DS_Store
 sandbox
+out/
+dist/

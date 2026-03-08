@@ -1,17 +1,29 @@
 {
-  "name": "course_imports",
+  "name": "course-imports",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "A desktop app for loading and viewing course content",
+  "main": "./out/main/index.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "electron": "^40.8.0"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "electron": "^40.8.0",
+    "electron-vite": "^3.0.0",
+    "typescript": "^5.7.0",
+    "@vitejs/plugin-react": "^4.3.0"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

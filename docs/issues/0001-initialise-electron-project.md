@@ -21,24 +21,24 @@ Set up the foundational Electron application using `electron-vite` with TypeScri
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Running `npm run dev` starts the Electron app and opens a window
-- [ ] The renderer process loads a React root component
-- [ ] The preload script exposes an empty `window.api` object via `contextBridge`
-- [ ] A global `.d.ts` file declares the `window.api` type so TypeScript does not error in the renderer
-- [ ] Editing a React component in the renderer triggers a hot reload without restarting Electron
+- [x] Running `npm run dev` starts the Electron app and opens a window
+- [x] The renderer process loads a React root component
+- [x] The preload script exposes an empty `window.api` object via `contextBridge`
+- [x] A global `.d.ts` file declares the `window.api` type so TypeScript does not error in the renderer
+- [x] Editing a React component in the renderer triggers a hot reload without restarting Electron
 
 ### Security
-- [ ] `nodeIntegration` is set to `false` on the `BrowserWindow`
-- [ ] `contextIsolation` is set to `true` on the `BrowserWindow`
-- [ ] The renderer cannot access Node.js built-ins (`fs`, `path`, `child_process`, etc.) directly
+- [x] `nodeIntegration` is set to `false` on the `BrowserWindow`
+- [x] `contextIsolation` is set to `true` on the `BrowserWindow`
+- [x] The renderer cannot access Node.js built-ins (`fs`, `path`, `child_process`, etc.) directly
 
 ### Performance
-- [ ] Dev server starts and opens the window in under 10 seconds on a typical machine
-- [ ] HMR applies changes without a full page reload
+- [x] Dev server starts and opens the window in under 10 seconds on a typical machine
+- [x] HMR applies changes without a full page reload
 
 ### Testing
-- [ ] The app can be launched in dev mode without errors in the console
-- [ ] TypeScript compiles without errors (`npm run typecheck` or equivalent passes)
+- [x] The app can be launched in dev mode without errors in the console
+- [x] TypeScript compiles without errors (`npm run typecheck` or equivalent passes)
 
 ## Notes
 
