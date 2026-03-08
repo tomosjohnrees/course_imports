@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0010 | [Implement course validator](0010-implement-course-validator.md) | Milestone 2 — Course Validator | todo |
 | 0011 | [Implement course parser](0011-implement-course-parser.md) | Milestone 2 — Course Parser | todo |
 | 0012 | [Implement course loader and loadFromFolder IPC handler](0012-implement-course-loader-and-ipc-handler.md) | Milestone 2 — Course Loader | todo |
 | 0013 | [Implement Zustand stores for course and UI state](0013-implement-zustand-stores.md) | Milestone 2 — Zustand Store | todo |

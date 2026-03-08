@@ -19,28 +19,28 @@ Build the course validator that checks whether a local folder contains a valid c
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Returns an error if `course.json` does not exist at the root of the given path
-- [ ] Returns an error if `course.json` is not valid JSON
-- [ ] Returns an error if `topics/` folder does not exist
-- [ ] Returns an error if any folder listed in `topicOrder` does not exist inside `topics/`
-- [ ] Returns an error if any topic folder is missing a `content.json` file
-- [ ] Returns an error if any `content.json` is not valid JSON or is not an array
-- [ ] Returns an error if any block in a `content.json` array is missing a `type` field
-- [ ] Returns `{ valid: true, errors: [] }` when all checks pass
-- [ ] Collects all errors rather than stopping at the first one, so users can fix everything in one pass
+- [x] Returns an error if `course.json` does not exist at the root of the given path
+- [x] Returns an error if `course.json` is not valid JSON
+- [x] Returns an error if `topics/` folder does not exist
+- [x] Returns an error if any folder listed in `topicOrder` does not exist inside `topics/`
+- [x] Returns an error if any topic folder is missing a `content.json` file
+- [x] Returns an error if any `content.json` is not valid JSON or is not an array
+- [x] Returns an error if any block in a `content.json` array is missing a `type` field
+- [x] Returns `{ valid: true, errors: [] }` when all checks pass
+- [x] Collects all errors rather than stopping at the first one, so users can fix everything in one pass
 
 ### Security
-- [ ] The validator only reads files within the provided folder path — no path traversal outside the course directory
-- [ ] File paths are resolved and normalised to prevent directory traversal via `../` in `topicOrder` entries
+- [x] The validator only reads files within the provided folder path — no path traversal outside the course directory
+- [x] File paths are resolved and normalised to prevent directory traversal via `../` in `topicOrder` entries
 
 ### Performance
-- [ ] Validation completes without unnecessary file reads — only reads files needed for structural checks
-- [ ] Does not read the full contents of `src`-referenced files (that is the parser's job)
+- [x] Validation completes without unnecessary file reads — only reads files needed for structural checks
+- [x] Does not read the full contents of `src`-referenced files (that is the parser's job)
 
 ### Testing
-- [ ] Unit tests cover each validation check independently (missing course.json, invalid JSON, missing topics folder, etc.)
-- [ ] Unit tests verify that multiple errors are collected and returned together
-- [ ] Unit tests verify a valid course structure returns `{ valid: true, errors: [] }`
+- [x] Unit tests cover each validation check independently (missing course.json, invalid JSON, missing topics folder, etc.)
+- [x] Unit tests verify that multiple errors are collected and returned together
+- [x] Unit tests verify a valid course structure returns `{ valid: true, errors: [] }`
 
 ## Notes
 

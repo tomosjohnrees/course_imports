@@ -38,3 +38,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0009 | [Define IPC bridge API surface and handler structure](0009-define-ipc-bridge-and-handler-structure.md) | Milestone 2 — IPC Bridge | complete |
+
+## Milestone 2 — Course Validator
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0010 | [Implement course validator](0010-implement-course-validator.md) | Milestone 2 — Course Validator | complete |
