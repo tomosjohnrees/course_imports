@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback } from 'react'
+import { memo, useState, useEffect, useCallback, useRef } from 'react'
 import { Copy, Check } from 'lucide-react'
 import type { CodeBlock as CodeBlockType } from '@/types/course.types'
 import { getHighlighter, highlightCode } from './highlighter'
@@ -7,6 +7,7 @@ import './CodeBlock.css'
 export default memo(function CodeBlock({ language, content, label }: CodeBlockType) {
   const [highlightedHtml, setHighlightedHtml] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -24,10 +25,17 @@ export default memo(function CodeBlock({ language, content, label }: CodeBlockTy
     }
   }, [content, language])
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
+    }
+  }, [])
+
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(content)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000)
   }, [content])
 
   return (
