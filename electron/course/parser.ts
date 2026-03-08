@@ -8,6 +8,8 @@ import type {
   CodeBlock,
   ImageBlock,
   CalloutBlock,
+  MultipleChoiceQuizBlock,
+  FreeTextQuizBlock,
 } from '../../src/types/course.types'
 
 export type ParseResult =
@@ -144,29 +146,31 @@ async function resolveBlock(
     case 'callout': {
       return {
         type: 'callout',
-        style: rawBlock.style,
-        body: rawBlock.body,
-      } as CalloutBlock
+        style: rawBlock.style as CalloutBlock['style'],
+        body: rawBlock.body as string,
+      } satisfies CalloutBlock
     }
 
     case 'quiz': {
       if (rawBlock.options) {
-        return {
+        const block: MultipleChoiceQuizBlock = {
           type: 'quiz',
           variant: 'multiple-choice',
           question: rawBlock.question as string,
           options: rawBlock.options as string[],
           answer: rawBlock.answer as number,
-          ...(rawBlock.explanation ? { explanation: rawBlock.explanation as string } : {}),
         }
+        if (rawBlock.explanation) block.explanation = rawBlock.explanation as string
+        return block
       }
-      return {
+      const block: FreeTextQuizBlock = {
         type: 'quiz',
         variant: 'free-text',
         question: rawBlock.question as string,
-        ...(rawBlock.sampleAnswer ? { sampleAnswer: rawBlock.sampleAnswer as string } : {}),
-        ...(rawBlock.explanation ? { explanation: rawBlock.explanation as string } : {}),
       }
+      if (rawBlock.sampleAnswer) block.sampleAnswer = rawBlock.sampleAnswer as string
+      if (rawBlock.explanation) block.explanation = rawBlock.explanation as string
+      return block
     }
 
     default:
@@ -185,9 +189,16 @@ export async function parseCourse(folderPath: string): Promise<ParseResult> {
     const raw = await readFile(resolve(root, 'course.json'), 'utf-8')
     courseData = JSON.parse(raw) as Record<string, unknown>
   } catch (err) {
+    const message = (err as Error).message
+    if (message.includes('ENOENT')) {
+      return {
+        success: false,
+        error: 'course.json does not exist',
+      }
+    }
     return {
       success: false,
-      error: `Failed to read course.json: ${(err as Error).message}`,
+      error: 'course.json contains malformed JSON',
     }
   }
 
