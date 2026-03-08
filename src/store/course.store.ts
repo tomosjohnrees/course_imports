@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 import type { Course, CourseProgress } from '@/types/course.types'
 
 interface CourseStore {
@@ -17,27 +18,40 @@ const initialState = {
   progress: {} as CourseProgress,
 }
 
-export const useCourseStore = create<CourseStore>((set) => ({
-  ...initialState,
+export const useCourseStore = create<CourseStore>()(
+  devtools(
+    (set) => ({
+      ...initialState,
 
-  setCourse: (course) =>
-    set({
-      course,
-      activeTopic: null,
-      progress: {},
+      setCourse: (course) =>
+        set(
+          {
+            course,
+            activeTopic: null,
+            progress: {},
+          },
+          false,
+          'setCourse',
+        ),
+
+      setActiveTopic: (topicId) =>
+        set({ activeTopic: topicId }, false, 'setActiveTopic'),
+
+      markTopicComplete: (topicId) =>
+        set(
+          (state) => ({
+            progress: {
+              ...state.progress,
+              [topicId]: { viewed: true, complete: true },
+            },
+          }),
+          false,
+          'markTopicComplete',
+        ),
+
+      clearCourse: () =>
+        set({ ...initialState }, false, 'clearCourse'),
     }),
-
-  setActiveTopic: (topicId) =>
-    set({ activeTopic: topicId }),
-
-  markTopicComplete: (topicId) =>
-    set((state) => ({
-      progress: {
-        ...state.progress,
-        [topicId]: { viewed: true, complete: true },
-      },
-    })),
-
-  clearCourse: () =>
-    set({ ...initialState }),
-}))
+    { name: 'CourseStore' },
+  ),
+)
