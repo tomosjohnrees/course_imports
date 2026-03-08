@@ -32,7 +32,7 @@ const components: Components = {
 
   a({ href, children, node: _node, ...props }) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      <a {...props} href={href} target="_blank" rel="noopener noreferrer">
         {children}
       </a>
     )
