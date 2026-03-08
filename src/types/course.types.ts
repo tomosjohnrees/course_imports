@@ -1,4 +1,4 @@
-// Course and block type definitions — populated in issue #0008
+// Course and block type definitions
 
 export interface Course {
   id: string
@@ -78,4 +78,9 @@ export interface CourseProgress {
     viewed: boolean
     complete: boolean
   }
+}
+
+export interface ValidationResult {
+  valid: boolean
+  errors: string[]
 }

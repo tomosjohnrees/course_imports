@@ -1,2 +1,4 @@
 // Course store — populated in issue #0013
-export {}
+import type { Course, CourseProgress } from '@/types/course.types'
+
+export type { Course, CourseProgress }

@@ -1,5 +1,8 @@
 import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
+import type { Course, ValidationResult } from '../src/types/course.types'
+
+export type { Course, ValidationResult }
 
 function createWindow(): void {
   const win = new BrowserWindow({

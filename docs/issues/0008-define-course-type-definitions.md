@@ -22,23 +22,23 @@ Define all shared TypeScript types for the course data model — Course, Topic, 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] All types from the architecture doc's "Data Types" section are defined in `src/types/course.types.ts`
-- [ ] `Block` is a discriminated union — each variant has a `type` literal field
-- [ ] `QuizBlock` supports both `multiple-choice` and `free-text` variants
-- [ ] `ImageBlock.src` is typed as `string` (resolved data URI or URL, not a file path)
-- [ ] `CourseSource` distinguishes `local` (with folder path) and `github` (with repo URL)
-- [ ] All types are exported and importable from both main process and renderer code
+- [x] All types from the architecture doc's "Data Types" section are defined in `src/types/course.types.ts`
+- [x] `Block` is a discriminated union — each variant has a `type` literal field
+- [x] `QuizBlock` supports both `multiple-choice` and `free-text` variants
+- [x] `ImageBlock.src` is typed as `string` (resolved data URI or URL, not a file path)
+- [x] `CourseSource` distinguishes `local` (with folder path) and `github` (with repo URL)
+- [x] All types are exported and importable from both main process and renderer code
 
 ### Security
-- [ ] No sensitive fields (tokens, credentials) are included in any course-facing type
-- [ ] Types enforce that resolved content (not raw file paths) reaches the renderer
+- [x] No sensitive fields (tokens, credentials) are included in any course-facing type
+- [x] Types enforce that resolved content (not raw file paths) reaches the renderer
 
 ### Performance
-- [ ] Types are interfaces/types only — no runtime code, no impact on bundle size
+- [x] Types are interfaces/types only — no runtime code, no impact on bundle size
 
 ### Testing
-- [ ] TypeScript compiles without errors after adding the type definitions
-- [ ] At least one file in the main process and one in the renderer successfully import the types
+- [x] TypeScript compiles without errors after adding the type definitions
+- [x] At least one file in the main process and one in the renderer successfully import the types
 
 ## Notes
 
