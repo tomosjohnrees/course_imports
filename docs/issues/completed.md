@@ -104,3 +104,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0020 | [Implement block renderer and unknown block fallback](0020-implement-block-renderer.md) | Milestone 4 — Block Renderer | complete |
+
+## Milestone 4 — Text Block
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0021 | [Implement text block with markdown rendering](0021-implement-text-block.md) | Milestone 4 — Text Block | complete |

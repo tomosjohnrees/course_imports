@@ -20,25 +20,25 @@ Text blocks are the primary content type in courses — they contain markdown th
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `react-markdown` with `remark-gfm` is installed and configured
-- [ ] `TextBlock` renders `block.content` as formatted markdown
-- [ ] Rendered content uses the Lora serif font and is constrained to `--reading-width`
-- [ ] All markdown elements are styled: headings (h1–h6), paragraphs, ordered and unordered lists, blockquotes, tables, horizontal rules, inline code, bold, italic, links
-- [ ] Fenced code blocks within markdown are rendered via the `CodeBlock` component with syntax highlighting
-- [ ] Links open in the system default browser, not inside the Electron app
+- [x] `react-markdown` with `remark-gfm` is installed and configured
+- [x] `TextBlock` renders `block.content` as formatted markdown
+- [x] Rendered content uses the Lora serif font and is constrained to `--reading-width`
+- [x] All markdown elements are styled: headings (h1–h6), paragraphs, ordered and unordered lists, blockquotes, tables, horizontal rules, inline code, bold, italic, links
+- [x] Fenced code blocks within markdown are rendered via the `CodeBlock` component with syntax highlighting
+- [x] Links open in the system default browser, not inside the Electron app
 
 ### Security
-- [ ] HTML in markdown is not rendered raw — `react-markdown` does not allow arbitrary HTML injection by default; this must not be overridden
-- [ ] Links are rendered with `rel="noopener noreferrer"` and `target="_blank"`
+- [x] HTML in markdown is not rendered raw — `react-markdown` does not allow arbitrary HTML injection by default; this must not be overridden
+- [x] Links are rendered with `rel="noopener noreferrer"` and `target="_blank"`
 
 ### Performance
-- [ ] Markdown parsing does not block the UI for large text blocks (content is rendered efficiently)
-- [ ] The component does not re-parse markdown on every render unless `block.content` changes
+- [x] Markdown parsing does not block the UI for large text blocks (content is rendered efficiently)
+- [x] The component does not re-parse markdown on every render unless `block.content` changes
 
 ### Testing
-- [ ] Component tests verify markdown renders correctly for key element types (headings, lists, code, tables)
-- [ ] Component tests verify fenced code blocks delegate to CodeBlock
-- [ ] Component tests verify links have correct security attributes
+- [x] Component tests verify markdown renders correctly for key element types (headings, lists, code, tables)
+- [x] Component tests verify fenced code blocks delegate to CodeBlock
+- [x] Component tests verify links have correct security attributes
 
 ## Notes
 
