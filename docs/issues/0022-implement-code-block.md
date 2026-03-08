@@ -21,26 +21,26 @@ Code blocks display source code with syntax highlighting and are a core part of 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `shiki` is installed and configured with a light theme (GitHub Light style) and a dark theme (warm dark style)
-- [ ] `CodeBlock` renders `block.content` with syntax highlighting based on `block.language`
-- [ ] The theme switches automatically when the app switches between light and dark mode
-- [ ] An optional `block.label` (filename) is displayed in the top-right corner of the code block
-- [ ] A copy-to-clipboard button copies the code content to the system clipboard
-- [ ] The copy button shows brief visual feedback (e.g. checkmark) after copying
-- [ ] The component handles missing or unrecognised languages gracefully (falls back to plain text)
+- [x] `shiki` is installed and configured with a light theme (GitHub Light style) and a dark theme (warm dark style)
+- [x] `CodeBlock` renders `block.content` with syntax highlighting based on `block.language`
+- [x] The theme switches automatically when the app switches between light and dark mode
+- [x] An optional `block.label` (filename) is displayed in the top-right corner of the code block
+- [x] A copy-to-clipboard button copies the code content to the system clipboard
+- [x] The copy button shows brief visual feedback (e.g. checkmark) after copying
+- [x] The component handles missing or unrecognised languages gracefully (falls back to plain text)
 
 ### Security
-- [ ] Code content is rendered as text, never as executable HTML
-- [ ] The clipboard API is used safely — no arbitrary content injection
+- [x] Code content is rendered as text, never as executable HTML
+- [x] The clipboard API is used safely — no arbitrary content injection
 
 ### Performance
-- [ ] Shiki highlighter is initialised once and reused across all code blocks, not re-created per block
-- [ ] Syntax highlighting does not block the UI — large code blocks render without freezing
-- [ ] Only the languages actually used in the course are loaded (or a reasonable default set)
+- [x] Shiki highlighter is initialised once and reused across all code blocks, not re-created per block
+- [x] Syntax highlighting does not block the UI — large code blocks render without freezing
+- [x] Only the languages actually used in the course are loaded (or a reasonable default set)
 
 ### Testing
-- [ ] Component tests verify code is rendered with syntax highlighting
-- [ ] Component tests verify theme switching between light and dark
-- [ ] Component tests verify the copy button copies content to clipboard
-- [ ] Component tests verify the label is displayed when provided and hidden when absent
-- [ ] Component tests verify graceful fallback for unknown languages
+- [x] Component tests verify code is rendered with syntax highlighting
+- [x] Component tests verify theme switching between light and dark
+- [x] Component tests verify the copy button copies content to clipboard
+- [x] Component tests verify the label is displayed when provided and hidden when absent
+- [x] Component tests verify graceful fallback for unknown languages

@@ -1,38 +1,62 @@
-import { memo } from 'react'
+import { memo, useState, useEffect, useCallback } from 'react'
+import { Copy, Check } from 'lucide-react'
 import type { CodeBlock as CodeBlockType } from '@/types/course.types'
+import { getHighlighter, highlightCode } from './highlighter'
+import './CodeBlock.css'
 
-// Full implementation in issue #0022
 export default memo(function CodeBlock({ language, content, label }: CodeBlockType) {
+  const [highlightedHtml, setHighlightedHtml] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    getHighlighter()
+      .then((highlighter) => {
+        if (!cancelled) {
+          setHighlightedHtml(highlightCode(highlighter, content, language))
+        }
+      })
+      .catch(() => {
+        // Highlighting unavailable — fallback renders plain text
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [content, language])
+
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [content])
+
   return (
-    <div>
-      {label && (
-        <div
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--color-text-muted)',
-            marginBottom: 'var(--space-1)',
-          }}
+    <div className="code-block">
+      <div className="code-block-header">
+        {label && <span className="code-block-label">{label}</span>}
+        <button
+          className="code-block-copy"
+          onClick={handleCopy}
+          aria-label={copied ? 'Copied' : 'Copy code'}
         >
-          {label}
-        </div>
+          {copied ? (
+            <Check size={16} strokeWidth={1.5} />
+          ) : (
+            <Copy size={16} strokeWidth={1.5} />
+          )}
+        </button>
+      </div>
+      {highlightedHtml ? (
+        <div
+          className="code-block-content"
+          // shiki escapes all code content — only generates <pre>, <code>, and <span> elements
+          dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+        />
+      ) : (
+        <pre className="code-block-fallback">
+          <code data-language={language}>{content}</code>
+        </pre>
       )}
-      <pre
-        style={{
-          margin: 0,
-          padding: 'var(--space-4)',
-          borderRadius: '6px',
-          background: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-          fontFamily: 'var(--font-mono)',
-          fontSize: 'var(--text-sm)',
-          lineHeight: 'var(--leading-base)',
-          color: 'var(--color-text-primary)',
-          overflow: 'auto',
-        }}
-      >
-        <code data-language={language}>{content}</code>
-      </pre>
     </div>
   )
 })

@@ -110,3 +110,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0021 | [Implement text block with markdown rendering](0021-implement-text-block.md) | Milestone 4 — Text Block | complete |
+
+## Milestone 4 — Code Block
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0022 | [Implement code block with syntax highlighting](0022-implement-code-block.md) | Milestone 4 — Code Block | complete |

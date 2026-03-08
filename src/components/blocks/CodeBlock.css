@@ -1,0 +1,100 @@
+/* ——— Code Block ——— */
+
+.code-block {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Header — label + copy button overlay */
+.code-block-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  z-index: 1;
+}
+
+.code-block-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+.code-block-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.code-block:hover .code-block-copy,
+.code-block-copy:focus-visible {
+  opacity: 1;
+}
+
+.code-block-copy:hover {
+  color: var(--color-text-primary);
+  background: var(--color-border);
+}
+
+.code-block-copy[aria-label='Copied'] {
+  opacity: 1;
+  color: var(--color-success);
+}
+
+/* ——— Highlighted code (shiki output) ——— */
+
+.code-block-content pre {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg) !important;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.code-block-content code {
+  font-family: inherit;
+}
+
+/* Shiki dual-theme: use light CSS variables by default */
+.code-block-content .shiki,
+.code-block-content .shiki span {
+  color: var(--shiki-light) !important;
+  background-color: transparent !important;
+}
+
+/* Shiki dual-theme: switch to dark CSS variables in dark mode */
+@media (prefers-color-scheme: dark) {
+  .code-block-content .shiki,
+  .code-block-content .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+}
+
+/* ——— Fallback (plain text before highlighting loads) ——— */
+
+.code-block-fallback {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  overflow-x: auto;
+}
