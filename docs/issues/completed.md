@@ -68,3 +68,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0014 | [Wire home screen to local folder loading pipeline](0014-wire-home-screen-local-loading.md) | Milestone 2 — Home Screen Wiring | complete |
+
+## Milestone 3 — GitHub Client
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0015 | [Implement GitHub client for fetching course files](0015-implement-github-client.md) | Milestone 3 — GitHub Client | complete |

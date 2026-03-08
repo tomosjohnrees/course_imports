@@ -21,26 +21,26 @@ The app needs to load courses hosted on GitHub. This issue builds the GitHub cli
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Parses `https://github.com/owner/repo`, `github.com/owner/repo`, and trailing-slash variants into `{ owner, repo }`
-- [ ] Returns a clear error for URLs that don't match expected GitHub formats
-- [ ] `fetchFile` fetches a file via the Contents API and decodes its base64 content
-- [ ] `fetchDirectory` returns the list of entries in a directory
-- [ ] `fetchCourse` fetches course.json, discovers topics, fetches each topic's content.json, and fetches all src-referenced files
-- [ ] Files within a topic are fetched in parallel to reduce total load time
-- [ ] An optional auth token can be passed to include in request headers
+- [x] Parses `https://github.com/owner/repo`, `github.com/owner/repo`, and trailing-slash variants into `{ owner, repo }`
+- [x] Returns a clear error for URLs that don't match expected GitHub formats
+- [x] `fetchFile` fetches a file via the Contents API and decodes its base64 content
+- [x] `fetchDirectory` returns the list of entries in a directory
+- [x] `fetchCourse` fetches course.json, discovers topics, fetches each topic's content.json, and fetches all src-referenced files
+- [x] Files within a topic are fetched in parallel to reduce total load time
+- [x] An optional auth token can be passed to include in request headers
 
 ### Security
-- [ ] GitHub personal access token is passed via Authorization header, never included in URLs or logged
-- [ ] No user-supplied input is interpolated into URLs without sanitisation
+- [x] GitHub personal access token is passed via Authorization header, never included in URLs or logged
+- [x] No user-supplied input is interpolated into URLs without sanitisation
 
 ### Performance
-- [ ] Src-referenced files within each topic are fetched concurrently rather than sequentially
-- [ ] Fetched data is not unnecessarily duplicated in memory
+- [x] Src-referenced files within each topic are fetched concurrently rather than sequentially
+- [x] Fetched data is not unnecessarily duplicated in memory
 
 ### Testing
-- [ ] Unit tests cover URL parsing with valid and invalid inputs
-- [ ] Unit tests cover error handling for 403, 404, and network failure scenarios
-- [ ] Integration-style tests verify fetchCourse assembles a correct course structure from mock responses
+- [x] Unit tests cover URL parsing with valid and invalid inputs
+- [x] Unit tests cover error handling for 403, 404, and network failure scenarios
+- [x] Integration-style tests verify fetchCourse assembles a correct course structure from mock responses
 
 ## Notes
 
