@@ -19,20 +19,20 @@ Set up `electron-builder` so the app can be packaged into distributable installe
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `npm run build` produces a production build without errors
-- [ ] `npm run package` produces a distributable artifact for the current platform
-- [ ] The config file defines targets for macOS, Windows, and Linux
-- [ ] The packaged app launches and opens a window on the current platform
+- [x] `npm run build` produces a production build without errors
+- [x] `npm run package` produces a distributable artifact for the current platform
+- [x] The config file defines targets for macOS, Windows, and Linux
+- [x] The packaged app launches and opens a window on the current platform
 
 ### Security
-- [ ] No sensitive files (`.env`, tokens, dev configs) are included in the packaged output
-- [ ] The `asar` archive is enabled (default) so source files are not trivially readable on disk
+- [x] No sensitive files (`.env`, tokens, dev configs) are included in the packaged output
+- [x] The `asar` archive is enabled (default) so source files are not trivially readable on disk
 
 ### Performance
-- [ ] The packaged app size is reasonable for a minimal Electron app (under 200 MB uncompressed)
+- [x] The packaged app size is reasonable for a minimal Electron app (under 200 MB uncompressed)
 
 ### Testing
-- [ ] The package script completes without errors on the current development platform
+- [x] The package script completes without errors on the current development platform
 
 ## Notes
 

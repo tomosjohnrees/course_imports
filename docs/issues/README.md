@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0002 | [Configure electron-builder for cross-platform packaging](0002-configure-electron-builder.md) | Milestone 1 — Electron & Build Setup | todo |
 | 0003 | [Set up project folder structure and core dependencies](0003-set-up-project-structure-and-dependencies.md) | Milestone 1 — Project Structure | todo |
 | 0004 | [Implement app shell layout with sidebar and routing](0004-implement-app-shell-layout-and-routing.md) | Milestone 1 — UI Shell | todo |
 | 0005 | [Implement home screen with placeholder load actions](0005-implement-home-screen-layout.md) | Milestone 1 — UI Shell | todo |

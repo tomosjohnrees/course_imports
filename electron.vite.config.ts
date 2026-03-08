@@ -1,3 +1,4 @@
+import { resolve } from 'path'
 import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
@@ -6,7 +7,8 @@ export default defineConfig({
     build: {
       outDir: 'out/main',
       rollupOptions: {
-        input: 'electron/main.ts'
+        input: resolve(__dirname, 'electron/main.ts'),
+        output: { entryFileNames: 'index.js' }
       }
     }
   },
@@ -14,7 +16,8 @@ export default defineConfig({
     build: {
       outDir: 'out/preload',
       rollupOptions: {
-        input: 'electron/preload.ts'
+        input: resolve(__dirname, 'electron/preload.ts'),
+        output: { entryFileNames: 'index.js' }
       }
     }
   },
