@@ -1,7 +1,8 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { IpcChannel } from './channels'
 
 export function registerCourseHandlers(): void {
-  ipcMain.handle('course:selectFolder', async () => {
+  ipcMain.handle(IpcChannel.course.selectFolder, async () => {
     const win = BrowserWindow.getFocusedWindow()
     if (!win) return null
 
@@ -16,11 +17,11 @@ export function registerCourseHandlers(): void {
     return result.filePaths[0]
   })
 
-  ipcMain.handle('course:loadFromFolder', async (_event, _folderPath: string) => {
+  ipcMain.handle(IpcChannel.course.loadFromFolder, async (_event, _folderPath: string) => {
     return { success: false, error: 'Not implemented' }
   })
 
-  ipcMain.handle('course:loadFromGitHub', async (_event, _repoUrl: string) => {
+  ipcMain.handle(IpcChannel.course.loadFromGitHub, async (_event, _repoUrl: string) => {
     return { success: false, error: 'Not implemented' }
   })
 }
