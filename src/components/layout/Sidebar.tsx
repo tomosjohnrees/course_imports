@@ -99,6 +99,8 @@ export default function Sidebar() {
           return (
             <li key={topic.id}>
               <button
+                className="sidebar-topic-btn"
+                data-active={isActive ? '' : undefined}
                 onClick={() => setActiveTopic(topic.id)}
                 style={{
                   display: 'flex',
@@ -111,9 +113,6 @@ export default function Sidebar() {
                   borderLeft: isActive
                     ? '3px solid var(--color-accent)'
                     : '3px solid transparent',
-                  background: isActive
-                    ? 'var(--color-accent-subtle)'
-                    : 'transparent',
                   color: isActive
                     ? 'var(--color-accent)'
                     : 'var(--color-text-primary)',
@@ -124,16 +123,6 @@ export default function Sidebar() {
                   cursor: 'pointer',
                   transition: 'background 100ms',
                   overflow: 'hidden',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'var(--color-bg)'
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'transparent'
-                  }
                 }}
               >
                 <span

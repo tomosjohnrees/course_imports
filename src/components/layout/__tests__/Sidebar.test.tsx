@@ -51,7 +51,7 @@ describe('Sidebar', () => {
     expect(activeButton.style.borderLeft).toBe(
       '3px solid var(--color-accent)',
     )
-    expect(activeButton.style.background).toBe('var(--color-accent-subtle)')
+    expect(activeButton).toHaveAttribute('data-active', '')
   })
 
   it('updates active topic when a topic is clicked', async () => {
