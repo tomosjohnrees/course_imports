@@ -86,3 +86,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0017 | [Add GitHub URL input and loading flow to home screen](0017-add-github-url-loading-to-home-screen.md) | Milestone 3 — Home Screen | complete |
+
+## Milestone 3 — Recent Courses
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0018 | [Implement recent courses persistence and display](0018-implement-recent-courses-persistence.md) | Milestone 3 — Recent Courses | complete |

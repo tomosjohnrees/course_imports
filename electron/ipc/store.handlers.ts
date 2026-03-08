@@ -1,13 +1,16 @@
 import { ipcMain } from 'electron'
 import { IpcChannel } from './channels'
+import { getRecentCourses } from '../store'
 
 export function registerStoreHandlers(): void {
   ipcMain.handle(IpcChannel.store.getRecentCourses, async () => {
-    return { success: false, error: 'Not implemented' }
+    return getRecentCourses()
   })
 
   ipcMain.handle(IpcChannel.store.saveRecentCourse, async (_event, _course: unknown) => {
-    return { success: false, error: 'Not implemented' }
+    // Saving is handled automatically by course handlers after successful loads.
+    // This handler exists for API completeness.
+    return
   })
 
   ipcMain.handle(IpcChannel.store.getProgress, async (_event, _courseId: string) => {

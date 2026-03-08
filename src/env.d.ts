@@ -13,6 +13,7 @@ interface WindowApi {
     loadFromFolder: (folderPath: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
     loadFromGitHub: (repoUrl: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
     selectFolder: () => Promise<string | null>
+    loadRecentCourse: (courseId: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
   }
   store: {
     getRecentCourses: () => Promise<RecentCourse[]>

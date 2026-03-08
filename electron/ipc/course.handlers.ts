@@ -4,7 +4,7 @@ import { loadCourse } from '../course/loader'
 import { fetchCourse, parseGitHubUrl } from '../course/github'
 import type { GitHubFetchResult, GitHubRepo } from '../course/github'
 import type { ParseResult } from '../course/parser'
-import { getStoredGitHubToken } from '../store'
+import { getStoredGitHubToken, saveRecentCourse, getStoredRecentCourse } from '../store'
 
 function classifyGitHubError(message: string, repo: GitHubRepo): string {
   if (message.includes('rate limit')) {
@@ -45,7 +45,19 @@ export function registerCourseHandlers(): void {
     }
 
     try {
-      return await loadCourse(folderPath)
+      const result = await loadCourse(folderPath)
+
+      if (result.success) {
+        saveRecentCourse({
+          id: result.course.id,
+          title: result.course.title,
+          sourceType: 'local',
+          sourcePath: folderPath,
+          lastLoaded: Date.now(),
+        })
+      }
+
+      return result
     } catch {
       return { success: false, error: 'An unexpected error occurred while loading the course' }
     }
@@ -76,6 +88,65 @@ export function registerCourseHandlers(): void {
     if (!result.success) {
       return { success: false, error: classifyGitHubError(result.error, repo) }
     }
+
+    saveRecentCourse({
+      id: result.course.id,
+      title: result.course.title,
+      sourceType: 'github',
+      sourcePath: repoUrl,
+      lastLoaded: Date.now(),
+    })
+
+    return result
+  })
+
+  ipcMain.handle(IpcChannel.course.loadRecentCourse, async (_event, courseId: string): Promise<ParseResult | GitHubFetchResult> => {
+    if (!courseId || typeof courseId !== 'string') {
+      return { success: false, error: 'A valid course identifier is required' }
+    }
+
+    const entry = getStoredRecentCourse(courseId)
+    if (!entry) {
+      return { success: false, error: 'Course not found in recent courses' }
+    }
+
+    if (entry.sourceType === 'local') {
+      try {
+        const result = await loadCourse(entry.sourcePath)
+
+        if (result.success) {
+          saveRecentCourse({ ...entry, lastLoaded: Date.now() })
+        }
+
+        return result
+      } catch {
+        return { success: false, error: 'An unexpected error occurred while loading the course' }
+      }
+    }
+
+    // GitHub source
+    let repo
+    try {
+      repo = parseGitHubUrl(entry.sourcePath)
+    } catch {
+      return { success: false, error: 'The stored GitHub URL is no longer valid' }
+    }
+
+    const token = getStoredGitHubToken()
+
+    let result: GitHubFetchResult
+    try {
+      result = await fetchCourse(repo, token ? { token } : undefined)
+    } catch (err) {
+      const message = (err as Error).message || 'An unexpected error occurred'
+      return { success: false, error: classifyGitHubError(message, repo) }
+    }
+
+    if (!result.success) {
+      return { success: false, error: classifyGitHubError(result.error, repo) }
+    }
+
+    saveRecentCourse({ ...entry, lastLoaded: Date.now() })
 
     return result
   })

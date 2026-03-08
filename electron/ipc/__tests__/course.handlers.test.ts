@@ -20,6 +20,8 @@ vi.mock('electron', () => ({
 // Mock the store module
 vi.mock('../../store', () => ({
   getStoredGitHubToken: vi.fn(),
+  saveRecentCourse: vi.fn(),
+  getStoredRecentCourse: vi.fn(),
   default: {},
 }))
 

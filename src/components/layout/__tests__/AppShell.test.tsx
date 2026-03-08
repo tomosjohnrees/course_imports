@@ -1,9 +1,28 @@
 import { render, screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import AppShell from '../AppShell'
 import Home from '@/pages/Home'
 import Course from '@/pages/Course'
+
+beforeEach(() => {
+  window.api = {
+    course: {
+      selectFolder: vi.fn(),
+      loadFromFolder: vi.fn(),
+      loadFromGitHub: vi.fn(),
+      loadRecentCourse: vi.fn(),
+    },
+    store: {
+      getRecentCourses: vi.fn().mockResolvedValue([]),
+      saveRecentCourse: vi.fn(),
+      getProgress: vi.fn(),
+      saveProgress: vi.fn(),
+      getPreferences: vi.fn(),
+      savePreferences: vi.fn(),
+    },
+  }
+})
 
 function renderWithRouter(initialRoute: string) {
   const router = createMemoryRouter(

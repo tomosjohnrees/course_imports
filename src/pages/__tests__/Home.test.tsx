@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useUIStore } from '@/store/ui.store'
 import { useCourseStore } from '@/store/course.store'
 import Home from '../Home'
-import type { Course } from '@/types/course.types'
+import type { Course, RecentCourse } from '@/types/course.types'
 
 const mockCourse: Course = {
   id: 'test-course',
@@ -35,9 +35,10 @@ beforeEach(() => {
       selectFolder: vi.fn(),
       loadFromFolder: vi.fn(),
       loadFromGitHub: vi.fn(),
+      loadRecentCourse: vi.fn(),
     },
     store: {
-      getRecentCourses: vi.fn(),
+      getRecentCourses: vi.fn().mockResolvedValue([]),
       saveRecentCourse: vi.fn(),
       getProgress: vi.fn(),
       saveProgress: vi.fn(),
@@ -289,6 +290,92 @@ describe('Home', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/rate limit exceeded/)).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Recent courses', () => {
+    const mockRecentCourses: RecentCourse[] = [
+      {
+        id: 'course-1',
+        title: 'Local Course',
+        sourceType: 'local',
+        lastLoaded: Date.now() - 60 * 1000,
+      },
+      {
+        id: 'course-2',
+        title: 'GitHub Course',
+        sourceType: 'github',
+        lastLoaded: Date.now() - 3600 * 1000,
+      },
+    ]
+
+    it('displays recent courses on the home screen', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Recent courses')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Local Course')).toBeInTheDocument()
+      expect(screen.getByText('GitHub Course')).toBeInTheDocument()
+    })
+
+    it('shows source type for each recent course', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local')).toBeInTheDocument()
+      })
+      expect(screen.getByText('GitHub')).toBeInTheDocument()
+    })
+
+    it('does not show recent courses section when list is empty', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue([])
+      renderWithRouter()
+
+      // Wait for the effect to run
+      await waitFor(() => {
+        expect(window.api.store.getRecentCourses).toHaveBeenCalled()
+      })
+      expect(screen.queryByText('Recent courses')).not.toBeInTheDocument()
+    })
+
+    it('calls loadRecentCourse when a recent course is clicked', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.course.loadRecentCourse).mockImplementation(
+        () => new Promise(() => {}),
+      )
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load Local Course' }))
+
+      await waitFor(() => {
+        expect(window.api.course.loadRecentCourse).toHaveBeenCalledWith('course-1')
+      })
+    })
+
+    it('navigates to /course when a recent course loads successfully', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.course.loadRecentCourse).mockResolvedValue({
+        success: true,
+        course: mockCourse,
+      })
+      const router = renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load Local Course' }))
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe('/course')
       })
     })
   })

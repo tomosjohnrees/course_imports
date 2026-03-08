@@ -1,11 +1,22 @@
 import Store from 'electron-store'
 import { safeStorage } from 'electron'
-import type { Preferences } from '../src/types/course.types'
+import type { Preferences, RecentCourse } from '../src/types/course.types'
+
+export interface StoredRecentCourse {
+  id: string
+  title: string
+  sourceType: 'local' | 'github'
+  sourcePath: string
+  lastLoaded: number
+}
 
 interface StoreSchema {
   preferences: Preferences
   encryptedGitHubToken?: string
+  recentCourses: StoredRecentCourse[]
 }
+
+const MAX_RECENT_COURSES = 10
 
 const store = new Store<StoreSchema>({
   schema: {
@@ -26,11 +37,28 @@ const store = new Store<StoreSchema>({
     encryptedGitHubToken: {
       type: 'string',
     },
+    recentCourses: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' },
+          sourceType: { type: 'string', enum: ['local', 'github'] },
+          sourcePath: { type: 'string' },
+          lastLoaded: { type: 'number' },
+        },
+        required: ['id', 'title', 'sourceType', 'sourcePath', 'lastLoaded'],
+        additionalProperties: false,
+      },
+      default: [],
+    },
   },
   defaults: {
     preferences: {
       theme: 'system',
     },
+    recentCourses: [],
   },
 })
 
@@ -61,6 +89,28 @@ export function setStoredGitHubToken(token: string): void {
 
 export function clearStoredGitHubToken(): void {
   store.delete('encryptedGitHubToken')
+}
+
+export function saveRecentCourse(entry: StoredRecentCourse): void {
+  const courses = store.get('recentCourses')
+  const filtered = courses.filter((c) => c.id !== entry.id)
+  const updated = [entry, ...filtered].slice(0, MAX_RECENT_COURSES)
+  store.set('recentCourses', updated)
+}
+
+export function getRecentCourses(): RecentCourse[] {
+  const courses = store.get('recentCourses')
+  return courses.map(({ id, title, sourceType, lastLoaded }) => ({
+    id,
+    title,
+    sourceType,
+    lastLoaded,
+  }))
+}
+
+export function getStoredRecentCourse(id: string): StoredRecentCourse | undefined {
+  const courses = store.get('recentCourses')
+  return courses.find((c) => c.id === id)
 }
 
 export default store

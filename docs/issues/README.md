@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0018 | [Implement recent courses persistence and display](0018-implement-recent-courses-persistence.md) | Milestone 3 — Recent Courses | todo |
 | 0019 | [Implement sidebar with topic navigation and progress indicators](0019-implement-sidebar-topic-navigation.md) | Milestone 4 — Sidebar | todo |
 | 0020 | [Implement block renderer and unknown block fallback](0020-implement-block-renderer.md) | Milestone 4 — Block Renderer | todo |
 | 0021 | [Implement text block with markdown rendering](0021-implement-text-block.md) | Milestone 4 — Text Block | todo |

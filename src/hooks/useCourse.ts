@@ -59,5 +59,25 @@ export function useCourse() {
     }
   }
 
-  return { loadLocalCourse, loadGitHubCourse }
+  async function loadRecentCourse(courseId: string) {
+    setError(null)
+    setLoading(true, 'Loading course…')
+
+    try {
+      const result = await window.api.course.loadRecentCourse(courseId)
+
+      if (result.success) {
+        setCourse(result.course)
+        navigate('/course')
+      } else {
+        setError(result.error)
+      }
+    } catch {
+      setError('An unexpected error occurred while loading the course.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return { loadLocalCourse, loadGitHubCourse, loadRecentCourse }
 }

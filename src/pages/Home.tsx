@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCourse, isValidGitHubUrl } from '@/hooks/useCourse'
 import { useUIStore } from '@/store/ui.store'
+import type { RecentCourse } from '@/types/course.types'
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -139,14 +140,79 @@ const validationStyle: React.CSSProperties = {
   margin: '6px 0 0',
 }
 
+const recentSectionStyle: React.CSSProperties = {
+  marginTop: '40px',
+  width: '100%',
+  maxWidth: '420px',
+}
+
+const recentHeadingStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 500,
+  color: '#6B6860',
+  margin: '0 0 12px',
+}
+
+const recentListStyle: React.CSSProperties = {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+}
+
+const recentItemStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: '10px 12px',
+  background: '#F9F8F6',
+  border: '1px solid #E8E6E1',
+  borderRadius: '6px',
+  cursor: 'default',
+  fontFamily: '"Geist", system-ui, sans-serif',
+}
+
+const recentTitleStyle: React.CSSProperties = {
+  fontSize: '14px',
+  fontWeight: 500,
+  color: '#1A1916',
+  margin: 0,
+}
+
+const recentMetaStyle: React.CSSProperties = {
+  fontSize: '12px',
+  color: '#A8A49D',
+  margin: 0,
+  textAlign: 'right' as const,
+}
+
+function formatRelativeTime(timestamp: number): string {
+  const seconds = Math.floor((Date.now() - timestamp) / 1000)
+  if (seconds < 60) return 'just now'
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(timestamp).toLocaleDateString()
+}
+
 export default function Home() {
-  const { loadLocalCourse, loadGitHubCourse } = useCourse()
+  const { loadLocalCourse, loadGitHubCourse, loadRecentCourse } = useCourse()
   const isLoading = useUIStore((s) => s.isLoading)
   const loadingMessage = useUIStore((s) => s.loadingMessage)
   const error = useUIStore((s) => s.error)
   const setError = useUIStore((s) => s.setError)
   const [githubUrl, setGithubUrl] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
+  const [recentCourses, setRecentCourses] = useState<RecentCourse[]>([])
+
+  useEffect(() => {
+    window.api.store.getRecentCourses().then(setRecentCourses).catch(() => {})
+  }, [])
 
   function handleLoadGitHub() {
     if (!githubUrl.trim()) {
@@ -215,7 +281,7 @@ export default function Home() {
 
         {isLoading && (
           <p style={loadingStyle} role="status">
-            {loadingMessage ?? 'Loading…'}
+            {loadingMessage ?? 'Loading\u2026'}
           </p>
         )}
 
@@ -233,6 +299,37 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {recentCourses.length > 0 && (
+        <div style={recentSectionStyle}>
+          <h2 style={recentHeadingStyle}>Recent courses</h2>
+          <ul style={recentListStyle}>
+            {recentCourses.map((course) => (
+              <li key={course.id}>
+                <button
+                  type="button"
+                  style={recentItemStyle}
+                  onClick={() => loadRecentCourse(course.id)}
+                  disabled={isLoading}
+                  aria-label={`Load ${course.title}`}
+                >
+                  <div>
+                    <p style={recentTitleStyle}>{course.title}</p>
+                  </div>
+                  <div>
+                    <p style={recentMetaStyle}>
+                      {course.sourceType === 'github' ? 'GitHub' : 'Local'}
+                    </p>
+                    <p style={recentMetaStyle}>
+                      {formatRelativeTime(course.lastLoaded)}
+                    </p>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

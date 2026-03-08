@@ -20,26 +20,26 @@ After loading a course, users should be able to quickly re-load it without re-en
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `store:saveRecentCourse` saves a course entry (title, source type, path/URL, last loaded timestamp) to `electron-store`
-- [ ] `store:getRecentCourses` returns the most recent 10 courses, ordered by last loaded
-- [ ] Duplicate entries are updated (moved to top) rather than creating a new entry
-- [ ] After a successful local folder load, the course is saved to recent courses
-- [ ] After a successful GitHub load, the course is saved to recent courses
-- [ ] Recent courses are displayed on the home screen below the load inputs
-- [ ] Each recent course entry shows the course title, source type (local/GitHub), and when it was last loaded
-- [ ] Clicking a recent course triggers the appropriate load flow (local or GitHub) for that source
+- [x] `store:saveRecentCourse` saves a course entry (title, source type, path/URL, last loaded timestamp) to `electron-store`
+- [x] `store:getRecentCourses` returns the most recent 10 courses, ordered by last loaded
+- [x] Duplicate entries are updated (moved to top) rather than creating a new entry
+- [x] After a successful local folder load, the course is saved to recent courses
+- [x] After a successful GitHub load, the course is saved to recent courses
+- [x] Recent courses are displayed on the home screen below the load inputs
+- [x] Each recent course entry shows the course title, source type (local/GitHub), and when it was last loaded
+- [x] Clicking a recent course triggers the appropriate load flow (local or GitHub) for that source
 
 ### Security
-- [ ] Local file paths stored in recent courses are not exposed to the renderer — only the course title, source type, and a course identifier are sent over IPC
-- [ ] The recent courses list does not store or expose GitHub auth tokens
+- [x] Local file paths stored in recent courses are not exposed to the renderer — only the course title, source type, and a course identifier are sent over IPC
+- [x] The recent courses list does not store or expose GitHub auth tokens
 
 ### Performance
-- [ ] Recent courses are loaded on home screen mount without blocking the initial render
-- [ ] The `electron-store` read for recent courses is fast (10 entries maximum)
+- [x] Recent courses are loaded on home screen mount without blocking the initial render
+- [x] The `electron-store` read for recent courses is fast (10 entries maximum)
 
 ### Testing
-- [ ] Tests verify saving and retrieving recent courses round-trips correctly
-- [ ] Tests verify duplicate handling updates existing entries
-- [ ] Tests verify the list is capped at 10 entries
-- [ ] Component tests verify recent courses render on the home screen
-- [ ] Component tests verify clicking a recent course triggers the correct load flow
+- [x] Tests verify saving and retrieving recent courses round-trips correctly
+- [x] Tests verify duplicate handling updates existing entries
+- [x] Tests verify the list is capped at 10 entries
+- [x] Component tests verify recent courses render on the home screen
+- [x] Component tests verify clicking a recent course triggers the correct load flow

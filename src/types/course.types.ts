@@ -88,7 +88,8 @@ export interface ValidationResult {
 export interface RecentCourse {
   id: string
   title: string
-  source: CourseSource
+  sourceType: 'local' | 'github'
+  lastLoaded: number
 }
 
 export interface Preferences {

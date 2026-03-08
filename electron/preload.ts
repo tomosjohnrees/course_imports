@@ -6,7 +6,8 @@ contextBridge.exposeInMainWorld('api', {
   course: {
     loadFromFolder: (folderPath: string) => ipcRenderer.invoke(IpcChannel.course.loadFromFolder, folderPath),
     loadFromGitHub: (repoUrl: string) => ipcRenderer.invoke(IpcChannel.course.loadFromGitHub, repoUrl),
-    selectFolder: () => ipcRenderer.invoke(IpcChannel.course.selectFolder)
+    selectFolder: () => ipcRenderer.invoke(IpcChannel.course.selectFolder),
+    loadRecentCourse: (courseId: string) => ipcRenderer.invoke(IpcChannel.course.loadRecentCourse, courseId)
   },
   store: {
     getRecentCourses: () => ipcRenderer.invoke(IpcChannel.store.getRecentCourses),
