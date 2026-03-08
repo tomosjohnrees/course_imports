@@ -1,6 +1,7 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
 import { IpcChannel } from './channels'
 import { loadCourse } from '../course/loader'
+import type { ParseResult } from '../course/parser'
 
 export function registerCourseHandlers(): void {
   ipcMain.handle(IpcChannel.course.selectFolder, async () => {
@@ -18,7 +19,7 @@ export function registerCourseHandlers(): void {
     return result.filePaths[0]
   })
 
-  ipcMain.handle(IpcChannel.course.loadFromFolder, async (_event, folderPath: string) => {
+  ipcMain.handle(IpcChannel.course.loadFromFolder, async (_event, folderPath: string): Promise<ParseResult> => {
     if (!folderPath || typeof folderPath !== 'string') {
       return { success: false, error: 'A valid folder path is required' }
     }

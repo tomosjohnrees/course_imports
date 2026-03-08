@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtemp, rm, mkdir, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
@@ -89,15 +89,11 @@ describe('loadCourse', () => {
       JSON.stringify({ ...COURSE_META, topicOrder: ['01-intro'] })
     )
 
-    const { parseCourse } = await import('../parser')
-    const parseSpy = vi.spyOn({ parseCourse }, 'parseCourse')
-
     const result = await loadCourse(tempDir)
 
     expect(result.success).toBe(false)
     if (result.success) return
     expect(result.error).toMatch(/topics/)
-    expect(parseSpy).not.toHaveBeenCalled()
   })
 
   it('returns validation errors as a user-readable string', async () => {
