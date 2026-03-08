@@ -1,4 +1,5 @@
-import { useCourse } from '@/hooks/useCourse'
+import { useState } from 'react'
+import { useCourse, isValidGitHubUrl } from '@/hooks/useCourse'
 import { useUIStore } from '@/store/ui.store'
 
 const containerStyle: React.CSSProperties = {
@@ -132,12 +133,33 @@ const dismissButtonStyle: React.CSSProperties = {
   lineHeight: 1,
 }
 
+const validationStyle: React.CSSProperties = {
+  fontSize: '13px',
+  color: '#991B1B',
+  margin: '6px 0 0',
+}
+
 export default function Home() {
-  const { loadLocalCourse } = useCourse()
+  const { loadLocalCourse, loadGitHubCourse } = useCourse()
   const isLoading = useUIStore((s) => s.isLoading)
   const loadingMessage = useUIStore((s) => s.loadingMessage)
   const error = useUIStore((s) => s.error)
   const setError = useUIStore((s) => s.setError)
+  const [githubUrl, setGithubUrl] = useState('')
+  const [validationError, setValidationError] = useState<string | null>(null)
+
+  function handleLoadGitHub() {
+    if (!githubUrl.trim()) {
+      setValidationError('Please enter a GitHub repository URL.')
+      return
+    }
+    if (!isValidGitHubUrl(githubUrl)) {
+      setValidationError('Please enter a valid GitHub URL (e.g. https://github.com/owner/repo).')
+      return
+    }
+    setValidationError(null)
+    loadGitHubCourse(githubUrl)
+  }
 
   return (
     <div style={containerStyle}>
@@ -154,12 +176,27 @@ export default function Home() {
             type="text"
             placeholder="https://github.com/owner/repo"
             style={inputStyle}
-            readOnly
+            value={githubUrl}
+            onChange={(e) => {
+              setGithubUrl(e.target.value)
+              if (validationError) setValidationError(null)
+            }}
+            disabled={isLoading}
           />
-          <button type="button" style={primaryButtonStyle}>
+          <button
+            type="button"
+            style={primaryButtonStyle}
+            onClick={handleLoadGitHub}
+            disabled={isLoading}
+          >
             Load course
           </button>
         </div>
+        {validationError && (
+          <p style={validationStyle} role="alert">
+            {validationError}
+          </p>
+        )}
 
         <div style={dividerStyle}>
           <span style={dividerLineStyle} />

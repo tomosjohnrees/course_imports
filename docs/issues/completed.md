@@ -80,3 +80,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0016 | [Implement loadFromGitHub IPC handler](0016-implement-load-from-github-ipc-handler.md) | Milestone 3 — IPC Handler | complete |
+
+## Milestone 3 — Home Screen
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0017 | [Add GitHub URL input and loading flow to home screen](0017-add-github-url-loading-to-home-screen.md) | Milestone 3 — Home Screen | complete |

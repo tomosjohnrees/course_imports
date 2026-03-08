@@ -75,10 +75,12 @@ describe('Home', () => {
     expect(screen.getByRole('button', { name: 'Open local folder' })).toBeInTheDocument()
   })
 
-  it('has an inert GitHub URL input', () => {
+  it('has an editable GitHub URL input', () => {
     renderWithRouter()
     const input = screen.getByLabelText('Load from GitHub')
-    expect(input).toHaveAttribute('readOnly')
+    expect(input).not.toBeDisabled()
+    fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } })
+    expect(input).toHaveValue('https://github.com/owner/repo')
   })
 
   it('calls selectFolder when Open local folder is clicked', async () => {
@@ -172,6 +174,122 @@ describe('Home', () => {
 
     await waitFor(() => {
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('GitHub loading', () => {
+    it('shows validation error for empty URL', async () => {
+      renderWithRouter()
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Please enter a GitHub repository URL.')).toBeInTheDocument()
+      })
+      expect(window.api.course.loadFromGitHub).not.toHaveBeenCalled()
+    })
+
+    it('shows validation error for invalid URL format', async () => {
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'not-a-github-url' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            'Please enter a valid GitHub URL (e.g. https://github.com/owner/repo).',
+          ),
+        ).toBeInTheDocument()
+      })
+      expect(window.api.course.loadFromGitHub).not.toHaveBeenCalled()
+    })
+
+    it('clears validation error when user types', async () => {
+      renderWithRouter()
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Please enter a GitHub repository URL.')).toBeInTheDocument()
+      })
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'h' },
+      })
+
+      expect(screen.queryByText('Please enter a GitHub repository URL.')).not.toBeInTheDocument()
+    })
+
+    it('shows loading state during GitHub fetch', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockImplementation(
+        () => new Promise(() => {}),
+      )
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Fetching course from GitHub…')).toBeInTheDocument()
+    })
+
+    it('navigates to /course on successful GitHub load', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: true,
+        course: { ...mockCourse, source: { type: 'github', path: 'https://github.com/owner/repo' } },
+      })
+      const router = renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe('/course')
+      })
+    })
+
+    it('displays error message on failed GitHub load', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: false,
+        error: 'Repository not found.',
+      })
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Repository not found.')).toBeInTheDocument()
+    })
+
+    it('displays error for rate-limited response', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: false,
+        error: 'GitHub API rate limit exceeded. Try again later or add a personal access token.',
+      })
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/rate limit exceeded/)).toBeInTheDocument()
+      })
     })
   })
 })
