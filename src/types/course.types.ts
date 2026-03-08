@@ -41,12 +41,21 @@ export interface CodeBlock {
   label?: string
 }
 
-export interface QuizBlock {
+export type QuizBlock = MultipleChoiceQuizBlock | FreeTextQuizBlock
+
+export interface MultipleChoiceQuizBlock {
   type: 'quiz'
+  variant: 'multiple-choice'
   question: string
-  variant: 'multiple-choice' | 'free-text'
-  options?: string[]
-  answer?: number
+  options: string[]
+  answer: number
+  explanation?: string
+}
+
+export interface FreeTextQuizBlock {
+  type: 'quiz'
+  variant: 'free-text'
+  question: string
   sampleAnswer?: string
   explanation?: string
 }
