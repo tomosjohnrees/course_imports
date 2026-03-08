@@ -20,22 +20,22 @@ Build the home screen that users see when no course is loaded. It contains a "Lo
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `Home.tsx` renders at the `/` route
-- [ ] The screen displays a "Load from GitHub" input field and button
-- [ ] The screen displays an "Open Local Folder" button
-- [ ] Both buttons are visible and styled but have no click handlers (or handlers that do nothing)
-- [ ] The layout is centred and visually balanced on typical window sizes
+- [x] `Home.tsx` renders at the `/` route
+- [x] The screen displays a "Load from GitHub" input field and button
+- [x] The screen displays an "Open Local Folder" button
+- [x] Both buttons are visible and styled but have no click handlers (or handlers that do nothing)
+- [x] The layout is centred and visually balanced on typical window sizes
 
 ### Security
-- [ ] No IPC calls are made from this screen yet — buttons are inert
-- [ ] The GitHub URL input does not submit or send data anywhere
+- [x] No IPC calls are made from this screen yet — buttons are inert
+- [x] The GitHub URL input does not submit or send data anywhere
 
 ### Performance
-- [ ] The home screen renders immediately with no loading state or delay
+- [x] The home screen renders immediately with no loading state or delay
 
 ### Testing
-- [ ] Component tests verify that both load actions (GitHub input + local folder button) are rendered
-- [ ] Component tests verify the screen renders without errors
+- [x] Component tests verify that both load actions (GitHub input + local folder button) are rendered
+- [x] Component tests verify the screen renders without errors
 
 ## Notes
 

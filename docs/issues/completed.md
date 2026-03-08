@@ -18,3 +18,4 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0004 | [Implement app shell layout with sidebar and routing](0004-implement-app-shell-layout-and-routing.md) | Milestone 1 — UI Shell | complete |
+| 0005 | [Implement home screen with placeholder load actions](0005-implement-home-screen-layout.md) | Milestone 1 — UI Shell | complete |

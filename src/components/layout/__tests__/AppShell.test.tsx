@@ -22,20 +22,26 @@ function renderWithRouter(initialRoute: string) {
 }
 
 describe('AppShell', () => {
-  it('renders the sidebar and main content area', () => {
+  it('hides the sidebar on the home route', () => {
     renderWithRouter('/')
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
+    expect(screen.getByRole('main')).toBeInTheDocument()
+  })
+
+  it('renders the sidebar on non-home routes', () => {
+    renderWithRouter('/course')
     expect(screen.getByRole('navigation')).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
   })
 
-  it('renders the sidebar with Topics heading', () => {
-    renderWithRouter('/')
+  it('renders the sidebar with Topics heading on course route', () => {
+    renderWithRouter('/course')
     expect(screen.getByText('Topics')).toBeInTheDocument()
   })
 
   it('renders the Home page at /', () => {
     renderWithRouter('/')
-    expect(screen.getByText('Home')).toBeInTheDocument()
+    expect(screen.getByText('Course Imports')).toBeInTheDocument()
   })
 
   it('renders the Course page at /course', () => {
