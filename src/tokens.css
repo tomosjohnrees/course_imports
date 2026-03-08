@@ -22,8 +22,8 @@
   --color-destructive: #DC2626;
 
   /* ——— Typography ——— */
-  --font-sans: "Geist", system-ui, sans-serif;
-  --font-serif: "Lora", Georgia, serif;
+  --font-sans: "Geist Sans", system-ui, sans-serif;
+  --font-serif: "Lora Variable", Georgia, serif;
   --font-mono: "Geist Mono", "Fira Code", monospace;
 
   --text-xs: 11px;

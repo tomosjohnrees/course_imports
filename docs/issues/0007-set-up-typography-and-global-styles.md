@@ -20,25 +20,25 @@ Install and configure the three typefaces used across the app (Geist for UI, Lor
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Geist is loaded and applied as the default UI font (body, buttons, labels, sidebar)
-- [ ] Lora is available for use in reading content components (applied by content components, not globally)
-- [ ] Geist Mono is available for use in code blocks (applied by code components, not globally)
-- [ ] A CSS reset is applied so elements render consistently across macOS, Windows, and Linux
-- [ ] `box-sizing: border-box` is set globally
-- [ ] Body background and text colours use the design tokens from #0006
-- [ ] Scrollbar styling matches the design guide (subtle, not default OS chrome)
+- [x] Geist is loaded and applied as the default UI font (body, buttons, labels, sidebar)
+- [x] Lora is available for use in reading content components (applied by content components, not globally)
+- [x] Geist Mono is available for use in code blocks (applied by code components, not globally)
+- [x] A CSS reset is applied so elements render consistently across macOS, Windows, and Linux
+- [x] `box-sizing: border-box` is set globally
+- [x] Body background and text colours use the design tokens from #0006
+- [x] Scrollbar styling matches the design guide (subtle, not default OS chrome)
 
 ### Security
-- [ ] Fonts are bundled with the app or loaded from local files — no external CDN requests at runtime
+- [x] Fonts are bundled with the app or loaded from local files — no external CDN requests at runtime
 
 ### Performance
-- [ ] Fonts are loaded from local files, not fetched over the network, so there is no flash of unstyled text (FOUT)
-- [ ] Only the font weights actually used in the design guide are included (no unnecessary weight variants)
+- [x] Fonts are loaded from local files, not fetched over the network, so there is no flash of unstyled text (FOUT)
+- [x] Only the font weights actually used in the design guide are included (no unnecessary weight variants)
 
 ### Testing
-- [ ] Visual verification that the correct fonts render for UI text, reading content, and code
-- [ ] Visual verification in both light and dark mode that base styles (background, text colour) are correct
-- [ ] No console warnings about missing fonts or failed font loads
+- [x] Visual verification that the correct fonts render for UI text, reading content, and code
+- [x] Visual verification in both light and dark mode that base styles (background, text colour) are correct
+- [x] No console warnings about missing fonts or failed font loads
 
 ## Notes
 
