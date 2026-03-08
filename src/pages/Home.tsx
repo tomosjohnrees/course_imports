@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useCourse, isValidGitHubUrl } from '@/hooks/useCourse'
+import { useRecentCourses } from '@/hooks/useRecentCourses'
 import { useUIStore } from '@/store/ui.store'
-import type { RecentCourse } from '@/types/course.types'
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -172,6 +172,7 @@ const recentItemStyle: React.CSSProperties = {
   borderRadius: '6px',
   cursor: 'default',
   fontFamily: '"Geist", system-ui, sans-serif',
+  width: '100%',
 }
 
 const recentTitleStyle: React.CSSProperties = {
@@ -208,11 +209,7 @@ export default function Home() {
   const setError = useUIStore((s) => s.setError)
   const [githubUrl, setGithubUrl] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
-  const [recentCourses, setRecentCourses] = useState<RecentCourse[]>([])
-
-  useEffect(() => {
-    window.api.store.getRecentCourses().then(setRecentCourses).catch(() => {})
-  }, [])
+  const recentCourses = useRecentCourses()
 
   function handleLoadGitHub() {
     if (!githubUrl.trim()) {
