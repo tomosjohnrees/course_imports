@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0014 | [Wire home screen to local folder loading pipeline](0014-wire-home-screen-local-loading.md) | Milestone 2 — Home Screen Wiring | todo |
 | 0015 | [Implement GitHub client for fetching course files](0015-implement-github-client.md) | Milestone 3 — GitHub Client | todo |
 | 0016 | [Implement loadFromGitHub IPC handler](0016-implement-load-from-github-ipc-handler.md) | Milestone 3 — IPC Handler | todo |
 | 0017 | [Add GitHub URL input and loading flow to home screen](0017-add-github-url-loading-to-home-screen.md) | Milestone 3 — Home Screen | todo |

@@ -62,3 +62,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0013 | [Implement Zustand stores for course and UI state](0013-implement-zustand-stores.md) | Milestone 2 — Zustand Store | complete |
+
+## Milestone 2 — Home Screen Wiring
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0014 | [Wire home screen to local folder loading pipeline](0014-wire-home-screen-local-loading.md) | Milestone 2 — Home Screen Wiring | complete |

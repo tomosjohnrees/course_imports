@@ -1,3 +1,6 @@
+import { useCourse } from '@/hooks/useCourse'
+import { useUIStore } from '@/store/ui.store'
+
 const containerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
@@ -94,7 +97,48 @@ const secondaryButtonStyle: React.CSSProperties = {
   fontFamily: '"Geist", system-ui, sans-serif',
 }
 
+const loadingStyle: React.CSSProperties = {
+  fontSize: '14px',
+  color: '#6B6860',
+  marginTop: '16px',
+  textAlign: 'center',
+}
+
+const errorContainerStyle: React.CSSProperties = {
+  marginTop: '16px',
+  padding: '12px 16px',
+  background: '#FEF2F2',
+  border: '1px solid #FECACA',
+  borderRadius: '6px',
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: '8px',
+}
+
+const errorTextStyle: React.CSSProperties = {
+  flex: 1,
+  fontSize: '14px',
+  color: '#991B1B',
+  margin: 0,
+}
+
+const dismissButtonStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  color: '#991B1B',
+  cursor: 'default',
+  fontSize: '16px',
+  padding: '0 4px',
+  lineHeight: 1,
+}
+
 export default function Home() {
+  const { loadLocalCourse } = useCourse()
+  const isLoading = useUIStore((s) => s.isLoading)
+  const loadingMessage = useUIStore((s) => s.loadingMessage)
+  const error = useUIStore((s) => s.error)
+  const setError = useUIStore((s) => s.setError)
+
   return (
     <div style={containerStyle}>
       <h1 style={headingStyle}>Course Imports</h1>
@@ -123,9 +167,34 @@ export default function Home() {
           <span style={dividerLineStyle} />
         </div>
 
-        <button type="button" style={secondaryButtonStyle}>
+        <button
+          type="button"
+          style={secondaryButtonStyle}
+          onClick={loadLocalCourse}
+          disabled={isLoading}
+        >
           Open local folder
         </button>
+
+        {isLoading && (
+          <p style={loadingStyle} role="status">
+            {loadingMessage ?? 'Loading…'}
+          </p>
+        )}
+
+        {error && !isLoading && (
+          <div style={errorContainerStyle} role="alert">
+            <p style={errorTextStyle}>{error}</p>
+            <button
+              type="button"
+              style={dismissButtonStyle}
+              onClick={() => setError(null)}
+              aria-label="Dismiss error"
+            >
+              ×
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -20,27 +20,27 @@ Connect the home screen's "Open Local Folder" button to the full local loading p
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Clicking "Open Local Folder" opens the native folder picker dialog
-- [ ] If the user cancels the dialog, nothing happens — no loading state, no error
-- [ ] If a folder is selected, the app shows a loading indicator while the course loads
-- [ ] On successful load, the course is set in `course.store` and the app navigates to `/course`
-- [ ] On failure (invalid structure or parse error), an error message is displayed on the home screen
-- [ ] The error message is the validation/parse error from the main process, not a generic message
-- [ ] The user can dismiss the error and try again
+- [x] Clicking "Open Local Folder" opens the native folder picker dialog
+- [x] If the user cancels the dialog, nothing happens — no loading state, no error
+- [x] If a folder is selected, the app shows a loading indicator while the course loads
+- [x] On successful load, the course is set in `course.store` and the app navigates to `/course`
+- [x] On failure (invalid structure or parse error), an error message is displayed on the home screen
+- [x] The error message is the validation/parse error from the main process, not a generic message
+- [x] The user can dismiss the error and try again
 
 ### Security
-- [ ] The renderer does not access the file system directly — all file operations go through the IPC bridge
-- [ ] Error messages shown to the user do not expose full file system paths outside the course folder
+- [x] The renderer does not access the file system directly — all file operations go through the IPC bridge
+- [x] Error messages shown to the user do not expose full file system paths outside the course folder
 
 ### Performance
-- [ ] The loading indicator appears immediately when loading starts — no perceived delay before feedback
-- [ ] The UI remains responsive while the main process validates and parses (IPC is async)
+- [x] The loading indicator appears immediately when loading starts — no perceived delay before feedback
+- [x] The UI remains responsive while the main process validates and parses (IPC is async)
 
 ### Testing
-- [ ] Component tests verify the loading state appears when a folder is selected
-- [ ] Component tests verify navigation occurs on successful load
-- [ ] Component tests verify the error message is displayed on failed load
-- [ ] Component tests verify cancelling the folder picker leaves the UI unchanged
+- [x] Component tests verify the loading state appears when a folder is selected
+- [x] Component tests verify navigation occurs on successful load
+- [x] Component tests verify the error message is displayed on failed load
+- [x] Component tests verify cancelling the folder picker leaves the UI unchanged
 
 ## Notes
 
