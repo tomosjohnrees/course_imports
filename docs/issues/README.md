@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0009 | [Define IPC bridge API surface and handler structure](0009-define-ipc-bridge-and-handler-structure.md) | Milestone 2 — IPC Bridge | todo |
 | 0010 | [Implement course validator](0010-implement-course-validator.md) | Milestone 2 — Course Validator | todo |
 | 0011 | [Implement course parser](0011-implement-course-parser.md) | Milestone 2 — Course Parser | todo |
 | 0012 | [Implement course loader and loadFromFolder IPC handler](0012-implement-course-loader-and-ipc-handler.md) | Milestone 2 — Course Loader | todo |

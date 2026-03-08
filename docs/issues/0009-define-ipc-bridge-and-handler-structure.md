@@ -21,26 +21,26 @@ Populate the preload script with the full `window.api` surface and set up the IP
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `window.api.course.selectFolder()` opens a native folder picker and returns the selected folder path
-- [ ] `window.api.course.selectFolder()` returns `null` if the user cancels the dialog
-- [ ] `window.api.course.loadFromFolder` exists as a stub that returns an error result
-- [ ] `window.api.course.loadFromGitHub` exists as a stub that returns an error result
-- [ ] `window.api.store.*` methods exist as stubs
-- [ ] All IPC handlers are registered from a central entry point called during app startup
-- [ ] The `window.api` TypeScript declaration matches the actual exposed API
+- [x] `window.api.course.selectFolder()` opens a native folder picker and returns the selected folder path
+- [x] `window.api.course.selectFolder()` returns `null` if the user cancels the dialog
+- [x] `window.api.course.loadFromFolder` exists as a stub that returns an error result
+- [x] `window.api.course.loadFromGitHub` exists as a stub that returns an error result
+- [x] `window.api.store.*` methods exist as stubs
+- [x] All IPC handlers are registered from a central entry point called during app startup
+- [x] The `window.api` TypeScript declaration matches the actual exposed API
 
 ### Security
-- [ ] The folder picker dialog is restricted to directories only (`properties: ['openDirectory']`)
-- [ ] IPC channel names use namespaced strings (e.g. `course:selectFolder`) to prevent collisions
-- [ ] No arbitrary channel names are accepted — only explicitly registered handlers respond to IPC calls
+- [x] The folder picker dialog is restricted to directories only (`properties: ['openDirectory']`)
+- [x] IPC channel names use namespaced strings (e.g. `course:selectFolder`) to prevent collisions
+- [x] No arbitrary channel names are accepted — only explicitly registered handlers respond to IPC calls
 
 ### Performance
-- [ ] The native dialog opens promptly without blocking the renderer
-- [ ] Stub handlers return immediately without unnecessary delays
+- [x] The native dialog opens promptly without blocking the renderer
+- [x] Stub handlers return immediately without unnecessary delays
 
 ### Testing
-- [ ] TypeScript compiles without errors with the updated preload and declaration files
-- [ ] The folder picker can be invoked from the renderer and returns a path or null
+- [x] TypeScript compiles without errors with the updated preload and declaration files
+- [x] The folder picker can be invoked from the renderer and returns a path or null
 
 ## Notes
 

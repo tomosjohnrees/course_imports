@@ -84,3 +84,14 @@ export interface ValidationResult {
   valid: boolean
   errors: string[]
 }
+
+export interface RecentCourse {
+  id: string
+  title: string
+  source: CourseSource
+}
+
+export interface Preferences {
+  theme: 'light' | 'dark' | 'system'
+  githubToken?: string
+}

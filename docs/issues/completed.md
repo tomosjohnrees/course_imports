@@ -32,3 +32,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0008 | [Define course and block type definitions](0008-define-course-type-definitions.md) | Milestone 2 — Course Loading (Local) | complete |
+
+## Milestone 2 — IPC Bridge
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0009 | [Define IPC bridge API surface and handler structure](0009-define-ipc-bridge-and-handler-structure.md) | Milestone 2 — IPC Bridge | complete |

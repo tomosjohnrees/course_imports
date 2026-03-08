@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
 import type { Course, ValidationResult } from '../src/types/course.types'
+import { registerIpcHandlers } from './ipc'
 
 export type { Course, ValidationResult }
 
@@ -41,6 +42,7 @@ if (!gotTheLock) {
 }
 
 app.whenReady().then(() => {
+  registerIpcHandlers()
   createWindow()
 
   app.on('second-instance', () => {

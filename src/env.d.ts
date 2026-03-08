@@ -1,9 +1,27 @@
 /// <reference types="vite/client" />
 
-// Type declaration for the IPC bridge exposed via contextBridge in the preload script.
-// This will be expanded as IPC methods are added in Milestone 2.
+import type {
+  Course,
+  CourseProgress,
+  Preferences,
+  RecentCourse,
+  ValidationResult
+} from './types/course.types'
+
 interface WindowApi {
-  // Empty for now — populated in Milestone 2
+  course: {
+    loadFromFolder: (folderPath: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
+    loadFromGitHub: (repoUrl: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
+    selectFolder: () => Promise<string | null>
+  }
+  store: {
+    getRecentCourses: () => Promise<RecentCourse[]>
+    saveRecentCourse: (course: RecentCourse) => Promise<void>
+    getProgress: (courseId: string) => Promise<CourseProgress | null>
+    saveProgress: (courseId: string, data: CourseProgress) => Promise<void>
+    getPreferences: () => Promise<Preferences>
+    savePreferences: (prefs: Preferences) => Promise<void>
+  }
 }
 
 declare global {
