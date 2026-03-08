@@ -1,7 +1,10 @@
+import { lazy, Suspense } from 'react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import AppShell from '@/components/layout/AppShell'
-import Home from '@/pages/Home'
-import Course from '@/pages/Course'
+
+const Home = lazy(() => import('@/pages/Home'))
+const Course = lazy(() => import('@/pages/Course'))
+const NotFound = lazy(() => import('@/pages/NotFound'))
 
 const router = createMemoryRouter([
   {
@@ -9,12 +12,17 @@ const router = createMemoryRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/course', element: <Course /> },
+      { path: '*', element: <NotFound /> },
     ],
   },
 ])
 
 function App(): React.JSX.Element {
-  return <RouterProvider router={router} />
+  return (
+    <Suspense>
+      <RouterProvider router={router} />
+    </Suspense>
+  )
 }
 
 export default App
