@@ -1,5 +1,6 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
 import { IpcChannel } from './channels'
+import { loadCourse } from '../course/loader'
 
 export function registerCourseHandlers(): void {
   ipcMain.handle(IpcChannel.course.selectFolder, async () => {
@@ -17,8 +18,16 @@ export function registerCourseHandlers(): void {
     return result.filePaths[0]
   })
 
-  ipcMain.handle(IpcChannel.course.loadFromFolder, async (_event, _folderPath: string) => {
-    return { success: false, error: 'Not implemented' }
+  ipcMain.handle(IpcChannel.course.loadFromFolder, async (_event, folderPath: string) => {
+    if (!folderPath || typeof folderPath !== 'string') {
+      return { success: false, error: 'A valid folder path is required' }
+    }
+
+    try {
+      return await loadCourse(folderPath)
+    } catch {
+      return { success: false, error: 'An unexpected error occurred while loading the course' }
+    }
   })
 
   ipcMain.handle(IpcChannel.course.loadFromGitHub, async (_event, _repoUrl: string) => {

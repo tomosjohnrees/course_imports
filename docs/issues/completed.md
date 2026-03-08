@@ -50,3 +50,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0011 | [Implement course parser](0011-implement-course-parser.md) | Milestone 2 — Course Parser | complete |
+
+## Milestone 2 — Course Loader
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0012 | [Implement course loader and loadFromFolder IPC handler](0012-implement-course-loader-and-ipc-handler.md) | Milestone 2 — Course Loader | complete |

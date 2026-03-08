@@ -20,26 +20,26 @@ Build the course loader that orchestrates the validator-then-parser pipeline for
 ## Acceptance criteria
 
 ### Functionality
-- [ ] The loader runs the validator first — if validation fails, parsing is skipped and the validation errors are returned
-- [ ] On successful validation, the loader runs the parser and returns the resolved Course object
-- [ ] Topics in the returned Course are ordered according to `topicOrder` from `course.json`
-- [ ] The `course:loadFromFolder` IPC handler accepts a folder path string and returns the loader result
-- [ ] Validation errors are returned as a user-readable string (e.g. listing all issues found)
-- [ ] Parser errors are caught and returned as `{ success: false, error: string }`
+- [x] The loader runs the validator first — if validation fails, parsing is skipped and the validation errors are returned
+- [x] On successful validation, the loader runs the parser and returns the resolved Course object
+- [x] Topics in the returned Course are ordered according to `topicOrder` from `course.json`
+- [x] The `course:loadFromFolder` IPC handler accepts a folder path string and returns the loader result
+- [x] Validation errors are returned as a user-readable string (e.g. listing all issues found)
+- [x] Parser errors are caught and returned as `{ success: false, error: string }`
 
 ### Security
-- [ ] The IPC handler validates that the folder path argument is a non-empty string before proceeding
-- [ ] Errors returned to the renderer do not expose internal file system paths beyond the course folder
+- [x] The IPC handler validates that the folder path argument is a non-empty string before proceeding
+- [x] Errors returned to the renderer do not expose internal file system paths beyond the course folder
 
 ### Performance
-- [ ] Validation short-circuits before parsing — no file content is read if the structure is invalid
-- [ ] The full load pipeline (validate + parse) completes in under 2 seconds for a typical course (10 topics, 50 blocks)
+- [x] Validation short-circuits before parsing — no file content is read if the structure is invalid
+- [x] The full load pipeline (validate + parse) completes in under 2 seconds for a typical course (10 topics, 50 blocks)
 
 ### Testing
-- [ ] Integration tests verify the full pipeline: valid folder → success with correct Course object
-- [ ] Integration tests verify the pipeline: invalid folder → failure with descriptive error
-- [ ] Tests verify topic ordering matches `topicOrder`
-- [ ] Tests verify that validation errors prevent parsing from running
+- [x] Integration tests verify the full pipeline: valid folder → success with correct Course object
+- [x] Integration tests verify the pipeline: invalid folder → failure with descriptive error
+- [x] Tests verify topic ordering matches `topicOrder`
+- [x] Tests verify that validation errors prevent parsing from running
 
 ## Notes
 
