@@ -44,3 +44,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0010 | [Implement course validator](0010-implement-course-validator.md) | Milestone 2 — Course Validator | complete |
+
+## Milestone 2 — Course Parser
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0011 | [Implement course parser](0011-implement-course-parser.md) | Milestone 2 — Course Parser | complete |
