@@ -37,8 +37,7 @@ beforeEach(() => {
       loadFromFolder: vi.fn(),
       loadFromGitHub: vi.fn(),
       loadRecentCourse: vi.fn(),
-      onFetchProgress: vi.fn(),
-      offFetchProgress: vi.fn(),
+      onFetchProgress: vi.fn().mockReturnValue(vi.fn()),
     },
     store: {
       getRecentCourses: vi.fn().mockResolvedValue([]),
@@ -287,9 +286,11 @@ describe('Home', () => {
       )
 
       // Capture the progress callback
-      let progressCallback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void
+      const cleanup = vi.fn()
+      let progressCallback: (progress: { topicIndex: number; topicCount: number }) => void
       vi.mocked(window.api.course.onFetchProgress).mockImplementation((cb) => {
         progressCallback = cb
+        return cleanup
       })
 
       renderWithRouter()
@@ -304,7 +305,7 @@ describe('Home', () => {
       })
 
       // Simulate progress event
-      progressCallback!(null, { topicIndex: 2, topicCount: 5 })
+      progressCallback!({ topicIndex: 2, topicCount: 5 })
 
       await waitFor(() => {
         expect(screen.getByText('Loading topic 2 of 5')).toBeInTheDocument()
@@ -314,7 +315,7 @@ describe('Home', () => {
       resolveLoad!({ success: true, course: { ...mockCourse, source: { type: 'github', path: 'https://github.com/owner/repo' } } })
 
       await waitFor(() => {
-        expect(window.api.course.offFetchProgress).toHaveBeenCalled()
+        expect(cleanup).toHaveBeenCalled()
       })
     })
 
@@ -324,6 +325,9 @@ describe('Home', () => {
         error: 'Some error',
       })
 
+      const cleanup = vi.fn()
+      vi.mocked(window.api.course.onFetchProgress).mockReturnValue(cleanup)
+
       renderWithRouter()
 
       fireEvent.change(screen.getByLabelText('Load from GitHub'), {
@@ -332,7 +336,7 @@ describe('Home', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
 
       await waitFor(() => {
-        expect(window.api.course.offFetchProgress).toHaveBeenCalled()
+        expect(cleanup).toHaveBeenCalled()
       })
     })
 

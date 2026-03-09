@@ -20,8 +20,7 @@ interface WindowApi {
     loadFromGitHub: (repoUrl: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
     selectFolder: () => Promise<string | null>
     loadRecentCourse: (courseId: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
-    onFetchProgress: (callback: (_event: unknown, progress: FetchProgressEvent) => void) => void
-    offFetchProgress: (callback: (_event: unknown, progress: FetchProgressEvent) => void) => void
+    onFetchProgress: (callback: (progress: FetchProgressEvent) => void) => () => void
   }
   store: {
     getRecentCourses: () => Promise<RecentCourse[]>

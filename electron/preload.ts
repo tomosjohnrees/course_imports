@@ -12,11 +12,12 @@ contextBridge.exposeInMainWorld('api', {
     loadFromGitHub: (repoUrl: string) => ipcRenderer.invoke(IpcChannel.course.loadFromGitHub, repoUrl),
     selectFolder: () => ipcRenderer.invoke(IpcChannel.course.selectFolder),
     loadRecentCourse: (courseId: string) => ipcRenderer.invoke(IpcChannel.course.loadRecentCourse, courseId),
-    onFetchProgress: (callback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void) => {
-      ipcRenderer.on(IpcChannel.course.fetchProgress, callback)
-    },
-    offFetchProgress: (callback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void) => {
-      ipcRenderer.removeListener(IpcChannel.course.fetchProgress, callback)
+    onFetchProgress: (callback: (progress: { topicIndex: number; topicCount: number }) => void) => {
+      const handler = (_event: Electron.IpcRendererEvent, progress: { topicIndex: number; topicCount: number }) => {
+        callback(progress)
+      }
+      ipcRenderer.on(IpcChannel.course.fetchProgress, handler)
+      return () => { ipcRenderer.removeListener(IpcChannel.course.fetchProgress, handler) }
     }
   },
   store: {

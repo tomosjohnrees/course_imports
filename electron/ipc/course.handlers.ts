@@ -23,6 +23,12 @@ function classifyGitHubError(message: string, repo: GitHubRepo): string {
   return `Failed to load course from ${repo.owner}/${repo.repo}. Please check the repository URL and try again.`
 }
 
+function sendProgress(progress: FetchProgress) {
+  for (const win of BrowserWindow.getAllWindows()) {
+    win.webContents.send(IpcChannel.course.fetchProgress, progress)
+  }
+}
+
 export function registerCourseHandlers(): void {
   ipcMain.handle(IpcChannel.course.selectFolder, async () => {
     const win = BrowserWindow.getFocusedWindow()
@@ -76,12 +82,6 @@ export function registerCourseHandlers(): void {
     }
 
     const token = getStoredGitHubToken()
-
-    function sendProgress(progress: FetchProgress) {
-      for (const win of BrowserWindow.getAllWindows()) {
-        win.webContents.send(IpcChannel.course.fetchProgress, progress)
-      }
-    }
 
     let result: GitHubFetchResult
     try {
@@ -139,12 +139,6 @@ export function registerCourseHandlers(): void {
     }
 
     const token = getStoredGitHubToken()
-
-    function sendProgress(progress: FetchProgress) {
-      for (const win of BrowserWindow.getAllWindows()) {
-        win.webContents.send(IpcChannel.course.fetchProgress, progress)
-      }
-    }
 
     let result: GitHubFetchResult
     try {

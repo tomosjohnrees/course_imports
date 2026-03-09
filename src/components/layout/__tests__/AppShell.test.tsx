@@ -13,8 +13,7 @@ beforeEach(() => {
       loadFromFolder: vi.fn(),
       loadFromGitHub: vi.fn(),
       loadRecentCourse: vi.fn(),
-      onFetchProgress: vi.fn(),
-      offFetchProgress: vi.fn(),
+      onFetchProgress: vi.fn().mockReturnValue(vi.fn()),
     },
     store: {
       getRecentCourses: vi.fn().mockResolvedValue([]),
