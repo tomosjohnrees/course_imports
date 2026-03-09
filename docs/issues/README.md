@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0023 | [Implement quiz block with answer feedback](0023-implement-quiz-block.md) | Milestone 4 — Quiz Block | todo |
 | 0024 | [Implement callout block](0024-implement-callout-block.md) | Milestone 4 — Callout Block | todo |
 | 0025 | [Implement image block](0025-implement-image-block.md) | Milestone 4 — Image Block | todo |
 | 0026 | [Implement in-session progress tracking](0026-implement-in-session-progress-tracking.md) | Milestone 5 — Progress Tracking | todo |

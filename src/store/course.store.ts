@@ -1,14 +1,16 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { Course, CourseProgress } from '@/types/course.types'
+import type { Course, CourseProgress, QuizAnswer } from '@/types/course.types'
 
 interface CourseStore {
   course: Course | null
   activeTopic: string | null
   progress: CourseProgress
+  quizAnswers: Record<string, QuizAnswer>
   setCourse: (course: Course) => void
   setActiveTopic: (topicId: string) => void
   markTopicComplete: (topicId: string) => void
+  recordQuizAnswer: (key: string, answer: QuizAnswer) => void
   clearCourse: () => void
 }
 
@@ -16,6 +18,7 @@ const initialState = {
   course: null as Course | null,
   activeTopic: null as string | null,
   progress: {} as CourseProgress,
+  quizAnswers: {} as Record<string, QuizAnswer>,
 }
 
 export const useCourseStore = create<CourseStore>()(
@@ -29,6 +32,7 @@ export const useCourseStore = create<CourseStore>()(
             course,
             activeTopic: null,
             progress: {},
+            quizAnswers: {},
           },
           false,
           'setCourse',
@@ -47,6 +51,18 @@ export const useCourseStore = create<CourseStore>()(
           }),
           false,
           'markTopicComplete',
+        ),
+
+      recordQuizAnswer: (key, answer) =>
+        set(
+          (state) => ({
+            quizAnswers: {
+              ...state.quizAnswers,
+              [key]: answer,
+            },
+          }),
+          false,
+          'recordQuizAnswer',
         ),
 
       clearCourse: () =>

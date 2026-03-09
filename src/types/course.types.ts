@@ -92,6 +92,12 @@ export interface RecentCourse {
   lastLoaded: number
 }
 
+export interface QuizAnswer {
+  selectedOption?: number
+  textAnswer?: string
+  correct: boolean
+}
+
 export interface Preferences {
   theme: 'light' | 'dark' | 'system'
   githubToken?: string

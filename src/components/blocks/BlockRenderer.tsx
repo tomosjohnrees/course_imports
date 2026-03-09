@@ -44,14 +44,20 @@ interface BlockRendererProps {
   blocks: Block[]
 }
 
-const BlockComponent = memo(function BlockComponent({ block }: { block: Block }) {
+const BlockComponent = memo(function BlockComponent({
+  block,
+  index,
+}: {
+  block: Block
+  index: number
+}) {
   switch (block.type) {
     case 'text':
       return <TextBlock {...block} />
     case 'code':
       return <CodeBlock {...block} />
     case 'quiz':
-      return <QuizBlock {...block} />
+      return <QuizBlock {...block} blockIndex={index} />
     case 'callout':
       return <CalloutBlock {...block} />
     case 'image':
@@ -75,7 +81,7 @@ export default memo(function BlockRenderer({ blocks }: BlockRendererProps) {
     >
       {blocks.map((block, index) => (
         <BlockErrorBoundary key={index}>
-          <BlockComponent block={block} />
+          <BlockComponent block={block} index={index} />
         </BlockErrorBoundary>
       ))}
     </div>

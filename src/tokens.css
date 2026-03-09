@@ -20,6 +20,7 @@
   --color-tip: #16A34A;
   --color-tip-subtle: #F0FDF4;
   --color-destructive: #DC2626;
+  --color-destructive-subtle: #FEF2F2;
 
   /* ——— Typography ——— */
   --font-sans: "Geist Sans", system-ui, sans-serif;
@@ -82,5 +83,6 @@
     --color-tip: #22C55E;
     --color-tip-subtle: #052E16;
     --color-destructive: #F87171;
+    --color-destructive-subtle: #2D0F0F;
   }
 }

@@ -22,32 +22,32 @@ Quiz blocks are how courses test understanding. They support multiple-choice and
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Multiple-choice questions display options as full-width clickable rows
-- [ ] Free-text questions display a textarea and a submit button
-- [ ] Selecting an answer (multiple-choice) or submitting text (free-text) triggers answer evaluation
-- [ ] Correct answers show green/success colour feedback on the selected option
-- [ ] Incorrect answers show red/error colour feedback on the selected option and highlight the correct answer
-- [ ] The `explanation` text is displayed below the options after the user answers
-- [ ] After answering, the block is locked — options are disabled and cannot be changed
-- [ ] The answer is recorded in the course store for progress tracking
-- [ ] If the block was already answered (loaded from persisted progress), it renders in its answered/locked state immediately on mount
-- [ ] Free-text answers are evaluated by exact match against the expected answer (case-insensitive)
+- [x] Multiple-choice questions display options as full-width clickable rows
+- [x] Free-text questions display a textarea and a submit button
+- [x] Selecting an answer (multiple-choice) or submitting text (free-text) triggers answer evaluation
+- [x] Correct answers show green/success colour feedback on the selected option
+- [x] Incorrect answers show red/error colour feedback on the selected option and highlight the correct answer
+- [x] The `explanation` text is displayed below the options after the user answers
+- [x] After answering, the block is locked — options are disabled and cannot be changed
+- [x] The answer is recorded in the course store for progress tracking
+- [x] If the block was already answered (loaded from persisted progress), it renders in its answered/locked state immediately on mount
+- [x] Free-text answers are evaluated by exact match against the expected answer (case-insensitive)
 
 ### Security
-- [ ] Quiz answers and explanations are not visible in the DOM before the user answers (no hidden elements with correct answer data that could be inspected)
-- [ ] User input in free-text answers is sanitised before any rendering or comparison
+- [x] Quiz answers and explanations are not visible in the DOM before the user answers (no hidden elements with correct answer data that could be inspected)
+- [x] User input in free-text answers is sanitised before any rendering or comparison
 
 ### Performance
-- [ ] Quiz blocks render efficiently — no unnecessary re-renders when other blocks in the topic update
-- [ ] Answer evaluation happens instantly (client-side, no async delay)
+- [x] Quiz blocks render efficiently — no unnecessary re-renders when other blocks in the topic update
+- [x] Answer evaluation happens instantly (client-side, no async delay)
 
 ### Testing
-- [ ] Component tests verify multiple-choice options render correctly
-- [ ] Component tests verify free-text textarea and submit button render correctly
-- [ ] Component tests verify correct/incorrect feedback is shown after answering
-- [ ] Component tests verify explanation text appears after answering
-- [ ] Component tests verify the block locks after answering
-- [ ] Component tests verify pre-answered blocks render in locked state on mount
+- [x] Component tests verify multiple-choice options render correctly
+- [x] Component tests verify free-text textarea and submit button render correctly
+- [x] Component tests verify correct/incorrect feedback is shown after answering
+- [x] Component tests verify explanation text appears after answering
+- [x] Component tests verify the block locks after answering
+- [x] Component tests verify pre-answered blocks render in locked state on mount
 
 ## Notes
 

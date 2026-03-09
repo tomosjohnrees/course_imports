@@ -116,3 +116,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0022 | [Implement code block with syntax highlighting](0022-implement-code-block.md) | Milestone 4 — Code Block | complete |
+
+## Milestone 4 — Quiz Block
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0023 | [Implement quiz block with answer feedback](0023-implement-quiz-block.md) | Milestone 4 — Quiz Block | complete |
