@@ -122,3 +122,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0023 | [Implement quiz block with answer feedback](0023-implement-quiz-block.md) | Milestone 4 — Quiz Block | complete |
+
+## Milestone 4 — Callout Block
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0024 | [Implement callout block](0024-implement-callout-block.md) | Milestone 4 — Callout Block | complete |

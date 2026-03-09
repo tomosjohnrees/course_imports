@@ -1,0 +1,80 @@
+/* Callout block styles */
+
+.callout {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--color-text-primary);
+}
+
+.callout-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.callout-body {
+  min-width: 0;
+}
+
+/* Variant: info (blue) */
+
+.callout--info {
+  border-left-color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+
+.callout--info .callout-icon {
+  color: var(--color-accent);
+}
+
+/* Variant: warning (amber) */
+
+.callout--warning {
+  border-left-color: var(--color-warning);
+  background: var(--color-warning-subtle);
+}
+
+.callout--warning .callout-icon {
+  color: var(--color-warning);
+}
+
+/* Variant: tip (green) */
+
+.callout--tip {
+  border-left-color: var(--color-tip);
+  background: var(--color-tip-subtle);
+}
+
+.callout--tip .callout-icon {
+  color: var(--color-tip);
+}
+
+/* Inline markdown styles */
+
+.callout-body a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.callout-body a:hover {
+  text-decoration: underline;
+  color: var(--color-accent-hover);
+}
+
+.callout-inline-code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.callout-body strong {
+  font-weight: 700;
+}

@@ -19,20 +19,20 @@ Callout blocks are visual callouts used to highlight tips, warnings, and informa
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `CalloutBlock` renders `block.body` as inline markdown (supporting bold, italic, inline code, links)
-- [ ] The `info` variant renders with a blue colour scheme and an info icon
-- [ ] The `warning` variant renders with an amber colour scheme and a warning icon
-- [ ] The `tip` variant renders with a green colour scheme and a tip/lightbulb icon
-- [ ] An unrecognised `block.style` value falls back to the `info` style rather than crashing
-- [ ] Icons are sourced from the Lucide icon library
+- [x] `CalloutBlock` renders `block.body` as inline markdown (supporting bold, italic, inline code, links)
+- [x] The `info` variant renders with a blue colour scheme and an info icon
+- [x] The `warning` variant renders with an amber colour scheme and a warning icon
+- [x] The `tip` variant renders with a green colour scheme and a tip/lightbulb icon
+- [x] An unrecognised `block.style` value falls back to the `info` style rather than crashing
+- [x] Icons are sourced from the Lucide icon library
 
 ### Security
-- [ ] Markdown body content is rendered safely — no raw HTML passthrough
+- [x] Markdown body content is rendered safely — no raw HTML passthrough
 
 ### Performance
-- [ ] Callout blocks render efficiently with no unnecessary re-renders
+- [x] Callout blocks render efficiently with no unnecessary re-renders
 
 ### Testing
-- [ ] Component tests verify each variant renders with the correct colour scheme and icon
-- [ ] Component tests verify markdown content within the body is rendered correctly
-- [ ] Component tests verify the fallback style for unrecognised variants
+- [x] Component tests verify each variant renders with the correct colour scheme and icon
+- [x] Component tests verify markdown content within the body is rendered correctly
+- [x] Component tests verify the fallback style for unrecognised variants
