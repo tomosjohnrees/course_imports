@@ -65,19 +65,21 @@ export default memo(function QuizBlock(props: QuizBlockProps) {
         />
       )}
 
-      {isLocked && (
-        <>
-          <div
-            className={`quiz-block-feedback ${answered.correct ? 'quiz-block-feedback--correct' : 'quiz-block-feedback--incorrect'}`}
-            role="status"
-          >
-            {answered.correct ? 'Correct!' : 'Incorrect'}
-          </div>
-          {explanation && (
-            <p className="quiz-block-explanation">{explanation}</p>
-          )}
-        </>
-      )}
+      <div aria-live="assertive">
+        {isLocked && (
+          <>
+            <div
+              className={`quiz-block-feedback ${answered.correct ? 'quiz-block-feedback--correct' : 'quiz-block-feedback--incorrect'}`}
+              role="status"
+            >
+              {answered.correct ? 'Correct!' : 'Incorrect'}
+            </div>
+            {explanation && (
+              <p className="quiz-block-explanation">{explanation}</p>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 })
@@ -96,7 +98,7 @@ function MultipleChoiceOptions({
   onSelect: (index: number) => void
 }) {
   return (
-    <div className="quiz-block-options" role="group" aria-label="Answer options">
+    <div className="quiz-block-options" role="radiogroup" aria-label="Answer options">
       {options.map((option, i) => {
         let className = 'quiz-block-option'
         if (isLocked && i === correctIndex) {
@@ -105,12 +107,15 @@ function MultipleChoiceOptions({
         if (isLocked && answered && i === answered.selectedOption && !answered.correct) {
           className += ' quiz-block-option--incorrect'
         }
+        const isSelected = answered?.selectedOption === i
         return (
           <button
             key={i}
             className={className}
             onClick={() => onSelect(i)}
             disabled={isLocked}
+            role="radio"
+            aria-checked={isSelected}
           >
             {option}
           </button>
@@ -141,6 +146,7 @@ function FreeTextInput({
         onChange={(e) => onTextChange(e.target.value)}
         disabled={isLocked}
         placeholder="Type your answer…"
+        aria-label="Your answer"
         rows={3}
       />
       {!isLocked && (

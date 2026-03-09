@@ -55,6 +55,20 @@ describe('Sidebar', () => {
     expect(activeButton).toHaveAttribute('data-active', '')
   })
 
+  it('sets aria-current on the active topic', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      activeTopic: 'topic-2',
+    })
+    render(<Sidebar onOpenSettings={() => {}} />)
+
+    const activeButton = screen.getByText('Getting Started').closest('button')!
+    expect(activeButton).toHaveAttribute('aria-current', 'true')
+
+    const inactiveButton = screen.getByText('Introduction').closest('button')!
+    expect(inactiveButton).not.toHaveAttribute('aria-current')
+  })
+
   it('updates active topic when a topic is clicked', async () => {
     useCourseStore.setState({ course: mockCourse })
     render(<Sidebar onOpenSettings={() => {}} />)

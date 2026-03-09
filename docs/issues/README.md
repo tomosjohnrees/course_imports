@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0037 | [Add ARIA attributes and screen reader support](0037-add-aria-attributes-and-screen-reader-support.md) | Milestone 6 — Accessibility | todo |
 | 0038 | [Design and implement empty and error state screens](0038-design-empty-and-error-state-screens.md) | Milestone 6 — Visual Polish | todo |
 | 0039 | [Audit spacing and typography consistency](0039-audit-spacing-and-typography-consistency.md) | Milestone 6 — Visual Polish | todo |
 | 0040 | [Final dark mode review and fixes](0040-final-dark-mode-review.md) | Milestone 6 — Visual Polish | todo |

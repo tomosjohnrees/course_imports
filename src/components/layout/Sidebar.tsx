@@ -167,6 +167,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
                   data-active={isActive ? '' : undefined}
                   onClick={() => setActiveTopic(topic.id)}
                   tabIndex={isTabbable ? 0 : -1}
+                  aria-current={isActive ? 'true' : undefined}
                   style={{
                     display: 'flex',
                     alignItems: 'center',

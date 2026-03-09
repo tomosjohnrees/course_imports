@@ -29,11 +29,12 @@ describe('QuizBlock — multiple choice', () => {
     expect(screen.getByText('What is 2+2?')).toBeInTheDocument()
   })
 
-  it('renders all options as buttons', () => {
+  it('renders all options as radio buttons in a radiogroup', () => {
     render(<QuizBlock {...mcProps} />)
-    expect(screen.getByRole('button', { name: '3' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '4' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '5' })).toBeInTheDocument()
+    expect(screen.getByRole('radiogroup', { name: 'Answer options' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '3' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '4' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '5' })).toBeInTheDocument()
   })
 
   it('does not show explanation before answering', () => {
@@ -45,7 +46,7 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '4' }))
+    await user.click(screen.getByRole('radio', { name: '4' }))
 
     expect(screen.getByRole('status')).toHaveTextContent('Correct!')
   })
@@ -54,7 +55,7 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     const { container } = render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '4' }))
+    await user.click(screen.getByRole('radio', { name: '4' }))
 
     const correctOption = container.querySelector('.quiz-block-option--correct')
     expect(correctOption).toBeInTheDocument()
@@ -65,7 +66,7 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     const { container } = render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '3' }))
+    await user.click(screen.getByRole('radio', { name: '3' }))
 
     expect(screen.getByRole('status')).toHaveTextContent('Incorrect')
 
@@ -84,7 +85,7 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '4' }))
+    await user.click(screen.getByRole('radio', { name: '4' }))
 
     expect(screen.getByText('Two plus two equals four.')).toBeInTheDocument()
   })
@@ -93,17 +94,17 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '4' }))
+    await user.click(screen.getByRole('radio', { name: '4' }))
 
-    const buttons = screen.getAllByRole('button')
-    buttons.forEach((btn) => expect(btn).toBeDisabled())
+    const radios = screen.getAllByRole('radio')
+    radios.forEach((r) => expect(r).toBeDisabled())
   })
 
   it('records the answer in the course store', async () => {
     const user = userEvent.setup()
     render(<QuizBlock {...mcProps} />)
 
-    await user.click(screen.getByRole('button', { name: '4' }))
+    await user.click(screen.getByRole('radio', { name: '4' }))
 
     const { quizAnswers } = useCourseStore.getState()
     expect(quizAnswers['topic-1:0']).toEqual({
@@ -122,8 +123,8 @@ describe('QuizBlock — multiple choice', () => {
     const { container } = render(<QuizBlock {...mcProps} />)
 
     // All options are disabled
-    const buttons = screen.getAllByRole('button')
-    buttons.forEach((btn) => expect(btn).toBeDisabled())
+    const radios = screen.getAllByRole('radio')
+    radios.forEach((r) => expect(r).toBeDisabled())
 
     // Feedback is shown
     expect(screen.getByRole('status')).toHaveTextContent('Correct!')
@@ -133,6 +134,34 @@ describe('QuizBlock — multiple choice', () => {
 
     // Correct option is highlighted
     expect(container.querySelector('.quiz-block-option--correct')).toHaveTextContent('4')
+  })
+
+  it('marks selected option as aria-checked', async () => {
+    const user = userEvent.setup()
+    render(<QuizBlock {...mcProps} />)
+
+    // Before selection, no option is checked
+    const radios = screen.getAllByRole('radio')
+    radios.forEach((r) => expect(r).toHaveAttribute('aria-checked', 'false'))
+
+    await user.click(screen.getByRole('radio', { name: '4' }))
+
+    expect(screen.getByRole('radio', { name: '4' })).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('radio', { name: '3' })).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it('announces feedback via aria-live region after selection', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<QuizBlock {...mcProps} />)
+
+    const liveRegion = container.querySelector('[aria-live="assertive"]')
+    expect(liveRegion).toBeInTheDocument()
+    expect(liveRegion).toHaveTextContent('')
+
+    await user.click(screen.getByRole('radio', { name: '4' }))
+
+    expect(liveRegion).toHaveTextContent('Correct!')
+    expect(liveRegion).toHaveTextContent('Two plus two equals four.')
   })
 
   it('does not render correct answer index in DOM before answering', () => {

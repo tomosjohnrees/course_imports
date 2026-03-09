@@ -180,3 +180,4 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0036 | [Audit colour contrast and semantic HTML hierarchy](0036-audit-colour-contrast-and-semantic-html.md) | Milestone 6 — Accessibility | complete |
+| 0037 | [Add ARIA attributes and screen reader support](0037-add-aria-attributes-and-screen-reader-support.md) | Milestone 6 — Accessibility | complete |

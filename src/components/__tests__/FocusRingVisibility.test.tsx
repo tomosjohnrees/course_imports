@@ -102,7 +102,7 @@ describe('Focus ring visibility', () => {
       />,
     )
 
-    const options = screen.getAllByRole('button')
+    const options = screen.getAllByRole('radio')
     options.forEach((btn) => {
       expect(btn).toHaveClass('quiz-block-option')
     })

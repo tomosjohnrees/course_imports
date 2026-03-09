@@ -79,7 +79,7 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
       <div className="settings-backdrop" onClick={onClose} />
 
       {/* Panel */}
-      <aside className="settings-panel" role="dialog" aria-label="Settings">
+      <div className="settings-panel" role="dialog" aria-label="Settings">
         {/* Header */}
         <div className="settings-header">
           <h2 className="settings-title">Settings</h2>
@@ -183,7 +183,7 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             )}
           </section>
         </div>
-      </aside>
+      </div>
     </>
   )
 }
