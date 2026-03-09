@@ -43,9 +43,7 @@ function validateBlock(block: Block): string | null {
       break
     case 'quiz':
       if (typeof block.question !== 'string') return 'Quiz block is missing a question.'
-      if (block.variant === 'multiple-choice' && !Array.isArray(block.options)) {
-        return 'Multiple-choice quiz block is missing options.'
-      }
+      if (!Array.isArray(block.options)) return 'Quiz block is missing options.'
       break
     case 'callout':
       if (typeof block.body !== 'string') return 'Callout block is missing body text.'

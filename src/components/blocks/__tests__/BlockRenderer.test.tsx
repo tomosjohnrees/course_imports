@@ -44,7 +44,6 @@ describe('BlockRenderer', () => {
     const blocks: Block[] = [
       {
         type: 'quiz',
-        variant: 'multiple-choice',
         question: 'What is 2+2?',
         options: ['3', '4', '5'],
         answer: 1,
@@ -98,8 +97,9 @@ describe('BlockRenderer', () => {
       { type: 'code', language: 'js', content: 'let x = 1' },
       {
         type: 'quiz',
-        variant: 'free-text',
         question: 'Explain this',
+        options: ['Option A', 'Option B'],
+        answer: 0,
       },
       { type: 'callout', style: 'tip', body: 'Pro tip here' },
       { type: 'image', src: 'https://example.com/photo.jpg', alt: 'A photo' },
@@ -128,7 +128,6 @@ describe('BlockRenderer', () => {
     const blocks = [
       {
         type: 'quiz',
-        variant: 'multiple-choice',
         question: 'What is 2+2?',
         // options intentionally omitted
         answer: 1,

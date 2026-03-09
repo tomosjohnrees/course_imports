@@ -134,14 +134,13 @@ One of `src` or `content` must be provided.
 
 ---
 
-### Quiz — Multiple Choice
+### Quiz
 
 Presents a question with selectable options.
 
 ```json
 {
   "type": "quiz",
-  "variant": "multiple-choice",
   "question": "What does the print() function do?",
   "options": [
     "Saves a file",
@@ -157,35 +156,10 @@ Presents a question with selectable options.
 | Field         | Type                 | Required | Description                                       |
 | ------------- | -------------------- | -------- | ------------------------------------------------- |
 | `type`        | `"quiz"`             | Yes      | Must be `"quiz"`.                                 |
-| `variant`     | `"multiple-choice"`  | Yes      | Selects the multiple-choice quiz format.          |
 | `question`    | `string`             | Yes      | The question text.                                |
 | `options`     | `string[]`           | Yes      | List of answer choices.                           |
 | `answer`      | `number`             | Yes      | Zero-based index of the correct option.           |
 | `explanation` | `string`             | No       | Shown after the user answers.                     |
-
----
-
-### Quiz — Free Text
-
-Presents a question with an open text input.
-
-```json
-{
-  "type": "quiz",
-  "variant": "free-text",
-  "question": "Explain the difference between a list and a tuple.",
-  "sampleAnswer": "Lists are mutable, tuples are immutable.",
-  "explanation": "Tuples cannot be changed after creation."
-}
-```
-
-| Field          | Type          | Required | Description                                  |
-| -------------- | ------------- | -------- | -------------------------------------------- |
-| `type`         | `"quiz"`      | Yes      | Must be `"quiz"`.                            |
-| `variant`      | `"free-text"` | Yes      | Selects the free-text quiz format.           |
-| `question`     | `string`      | Yes      | The question text.                           |
-| `sampleAnswer` | `string`      | No       | A model answer shown after submission.       |
-| `explanation`  | `string`      | No       | Shown after the user answers.                |
 
 ---
 
@@ -329,9 +303,13 @@ print("Hello, World!")
   { "type": "text", "src": "variables.md" },
   {
     "type": "quiz",
-    "variant": "free-text",
     "question": "What is the difference between an integer and a float?",
-    "sampleAnswer": "An integer is a whole number, a float has a decimal point."
+    "options": [
+      "An integer is a whole number, a float has a decimal point.",
+      "They are the same thing.",
+      "A float is a whole number, an integer has a decimal point."
+    ],
+    "answer": 0
   }
 ]
 ```

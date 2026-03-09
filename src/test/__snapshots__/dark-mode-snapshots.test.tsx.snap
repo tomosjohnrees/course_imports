@@ -462,40 +462,7 @@ exports[`Dark mode snapshot tests > ImageBlock with fallback matches dark mode s
 </div>
 `;
 
-exports[`Dark mode snapshot tests > QuizBlock free-text matches dark mode snapshot 1`] = `
-<div>
-  <div
-    class="quiz-block"
-  >
-    <p
-      class="quiz-block-question"
-    >
-      Explain closures.
-    </p>
-    <div
-      class="quiz-block-freetext"
-    >
-      <textarea
-        aria-label="Your answer"
-        class="quiz-block-textarea"
-        placeholder="Type your answer…"
-        rows="3"
-      />
-      <button
-        class="quiz-block-submit"
-        disabled=""
-      >
-        Submit
-      </button>
-    </div>
-    <div
-      aria-live="polite"
-    />
-  </div>
-</div>
-`;
-
-exports[`Dark mode snapshot tests > QuizBlock multiple-choice matches dark mode snapshot 1`] = `
+exports[`Dark mode snapshot tests > QuizBlock matches dark mode snapshot 1`] = `
 <div>
   <div
     class="quiz-block"

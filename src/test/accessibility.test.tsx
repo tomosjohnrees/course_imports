@@ -63,7 +63,6 @@ describe('Accessibility audit', () => {
     const { container } = render(
       <QuizBlock
         type="quiz"
-        variant="multiple-choice"
         question="What is 2+2?"
         options={['3', '4', '5']}
         answer={1}
@@ -75,14 +74,14 @@ describe('Accessibility audit', () => {
     expect(results).toHaveNoViolations()
   })
 
-  it('QuizBlock (free-text) has no critical axe violations', async () => {
+  it('QuizBlock with explanation has no critical axe violations', async () => {
     const { container } = render(
       <QuizBlock
         type="quiz"
-        variant="free-text"
         question="What does HTML stand for?"
-        sampleAnswer="HyperText Markup Language"
-        explanation="HTML."
+        options={['HyperText Markup Language', 'High Tech ML', 'Home Tool ML']}
+        answer={0}
+        explanation="HTML is the standard markup language for web pages."
         blockIndex={1}
       />,
     )

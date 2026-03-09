@@ -16,7 +16,6 @@
   },
   {
     "type": "quiz",
-    "variant": "multiple-choice",
     "question": "What file extension do Markdown files use?",
     "options": [".txt", ".md", ".mkd", ".html"],
     "answer": 1,

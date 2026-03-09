@@ -16,9 +16,14 @@
   },
   {
     "type": "quiz",
-    "variant": "free-text",
     "question": "How would you write the word 'hello' in bold Markdown?",
-    "sampleAnswer": "**hello**",
+    "options": [
+      "**hello**",
+      "*hello*",
+      "__hello_",
+      "~~hello~~"
+    ],
+    "answer": 0,
     "explanation": "Wrap text in double asterisks to make it bold."
   }
 ]

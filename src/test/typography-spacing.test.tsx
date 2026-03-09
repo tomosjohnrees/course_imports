@@ -70,7 +70,6 @@ describe('Typography and spacing snapshot tests', () => {
     const { container } = render(
       <QuizBlock
         type="quiz"
-        variant="multiple-choice"
         question="What is 2+2?"
         options={['3', '4', '5']}
         answer={1}

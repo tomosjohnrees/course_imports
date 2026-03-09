@@ -8,8 +8,7 @@ import type {
   CodeBlock,
   ImageBlock,
   CalloutBlock,
-  MultipleChoiceQuizBlock,
-  FreeTextQuizBlock,
+  QuizBlock,
 } from '../../src/types/course.types'
 
 export type GitHubFetchResult =
@@ -263,23 +262,12 @@ async function resolveBlockFromGitHub(
     }
 
     case 'quiz': {
-      if (rawBlock.options) {
-        const block: MultipleChoiceQuizBlock = {
-          type: 'quiz',
-          variant: 'multiple-choice',
-          question: rawBlock.question as string,
-          options: rawBlock.options as string[],
-          answer: rawBlock.answer as number,
-        }
-        if (rawBlock.explanation) block.explanation = rawBlock.explanation as string
-        return block
-      }
-      const block: FreeTextQuizBlock = {
+      const block: QuizBlock = {
         type: 'quiz',
-        variant: 'free-text',
         question: rawBlock.question as string,
+        options: rawBlock.options as string[],
+        answer: rawBlock.answer as number,
       }
-      if (rawBlock.sampleAnswer) block.sampleAnswer = rawBlock.sampleAnswer as string
       if (rawBlock.explanation) block.explanation = rawBlock.explanation as string
       return block
     }

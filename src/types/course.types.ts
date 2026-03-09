@@ -42,22 +42,11 @@ export interface CodeBlock {
   label?: string
 }
 
-export type QuizBlock = MultipleChoiceQuizBlock | FreeTextQuizBlock
-
-export interface MultipleChoiceQuizBlock {
+export interface QuizBlock {
   type: 'quiz'
-  variant: 'multiple-choice'
   question: string
   options: string[]
   answer: number
-  explanation?: string
-}
-
-export interface FreeTextQuizBlock {
-  type: 'quiz'
-  variant: 'free-text'
-  question: string
-  sampleAnswer?: string
   explanation?: string
 }
 
@@ -100,8 +89,7 @@ export interface RecentCourse {
 }
 
 export interface QuizAnswer {
-  selectedOption?: number
-  textAnswer?: string
+  selectedOption: number
   correct: boolean
 }
 

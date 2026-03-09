@@ -86,27 +86,14 @@ describe('Dark mode snapshot tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('QuizBlock multiple-choice matches dark mode snapshot', () => {
+  it('QuizBlock matches dark mode snapshot', () => {
     const { container } = render(
       <QuizBlock
         type="quiz"
-        variant="multiple-choice"
         question="What is 2+2?"
         options={['3', '4', '5']}
         answer={1}
         blockIndex={0}
-      />,
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  it('QuizBlock free-text matches dark mode snapshot', () => {
-    const { container } = render(
-      <QuizBlock
-        type="quiz"
-        variant="free-text"
-        question="Explain closures."
-        blockIndex={1}
       />,
     )
     expect(container).toMatchSnapshot()

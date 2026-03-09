@@ -13,10 +13,9 @@ beforeEach(() => {
   })
 })
 
-describe('QuizBlock — multiple choice', () => {
+describe('QuizBlock', () => {
   const mcProps = {
     type: 'quiz' as const,
-    variant: 'multiple-choice' as const,
     question: 'What is 2+2?',
     options: ['3', '4', '5'],
     answer: 1,
@@ -176,109 +175,5 @@ describe('QuizBlock — multiple choice', () => {
     options.forEach((opt) => {
       expect(opt.getAttribute('data-correct')).toBeNull()
     })
-  })
-})
-
-describe('QuizBlock — free text', () => {
-  const ftProps = {
-    type: 'quiz' as const,
-    variant: 'free-text' as const,
-    question: 'What does HTML stand for?',
-    sampleAnswer: 'HyperText Markup Language',
-    explanation: 'HTML is the standard markup language for web pages.',
-    blockIndex: 1,
-  }
-
-  it('renders the question text', () => {
-    render(<QuizBlock {...ftProps} />)
-    expect(screen.getByText('What does HTML stand for?')).toBeInTheDocument()
-  })
-
-  it('renders a textarea and submit button', () => {
-    render(<QuizBlock {...ftProps} />)
-    expect(screen.getByPlaceholderText('Type your answer…')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
-  })
-
-  it('disables submit button when textarea is empty', () => {
-    render(<QuizBlock {...ftProps} />)
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
-  })
-
-  it('shows correct feedback for matching answer (case-insensitive)', async () => {
-    const user = userEvent.setup()
-    render(<QuizBlock {...ftProps} />)
-
-    await user.type(screen.getByPlaceholderText('Type your answer…'), 'hypertext markup language')
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    expect(screen.getByRole('status')).toHaveTextContent('Correct!')
-  })
-
-  it('shows incorrect feedback for non-matching answer', async () => {
-    const user = userEvent.setup()
-    render(<QuizBlock {...ftProps} />)
-
-    await user.type(screen.getByPlaceholderText('Type your answer…'), 'wrong answer')
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    expect(screen.getByRole('status')).toHaveTextContent('Incorrect')
-  })
-
-  it('shows explanation text after submitting', async () => {
-    const user = userEvent.setup()
-    render(<QuizBlock {...ftProps} />)
-
-    await user.type(screen.getByPlaceholderText('Type your answer…'), 'test answer')
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    expect(screen.getByText('HTML is the standard markup language for web pages.')).toBeInTheDocument()
-  })
-
-  it('locks the block after submitting — textarea disabled, submit hidden', async () => {
-    const user = userEvent.setup()
-    render(<QuizBlock {...ftProps} />)
-
-    await user.type(screen.getByPlaceholderText('Type your answer…'), 'test answer')
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    expect(screen.getByPlaceholderText('Type your answer…')).toBeDisabled()
-    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
-  })
-
-  it('records the answer in the course store', async () => {
-    const user = userEvent.setup()
-    render(<QuizBlock {...ftProps} />)
-
-    await user.type(screen.getByPlaceholderText('Type your answer…'), 'hypertext markup language')
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    const { quizAnswers } = useCourseStore.getState()
-    expect(quizAnswers['topic-1:1']).toEqual({
-      textAnswer: 'hypertext markup language',
-      correct: true,
-    })
-  })
-
-  it('renders in locked state when pre-answered from store', () => {
-    useCourseStore.setState({
-      quizAnswers: {
-        'topic-1:1': { textAnswer: 'HyperText Markup Language', correct: true },
-      },
-    })
-
-    render(<QuizBlock {...ftProps} />)
-
-    // Textarea shows saved answer and is disabled
-    const textarea = screen.getByPlaceholderText('Type your answer…')
-    expect(textarea).toBeDisabled()
-    expect(textarea).toHaveValue('HyperText Markup Language')
-
-    // Submit button is hidden
-    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
-
-    // Feedback and explanation shown
-    expect(screen.getByRole('status')).toHaveTextContent('Correct!')
-    expect(screen.getByText('HTML is the standard markup language for web pages.')).toBeInTheDocument()
   })
 })

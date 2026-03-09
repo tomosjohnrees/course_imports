@@ -32,16 +32,15 @@ const courseWithQuizzes: Course = {
         { type: 'text', content: 'Intro' },
         {
           type: 'quiz',
-          variant: 'multiple-choice',
           question: 'Q1?',
           options: ['A', 'B'],
           answer: 0,
         },
         {
           type: 'quiz',
-          variant: 'free-text',
           question: 'Q2?',
-          sampleAnswer: 'yes',
+          options: ['yes', 'no'],
+          answer: 0,
         },
       ],
     },
@@ -51,7 +50,6 @@ const courseWithQuizzes: Course = {
       blocks: [
         {
           type: 'quiz',
-          variant: 'multiple-choice',
           question: 'Q?',
           options: ['X', 'Y'],
           answer: 1,
@@ -175,7 +173,7 @@ describe('course.store', () => {
         correct: true,
       })
       useCourseStore.getState().recordQuizAnswer('topic-with-quiz:2', {
-        textAnswer: 'yes',
+        selectedOption: 0,
         correct: true,
       })
 

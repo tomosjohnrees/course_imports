@@ -529,8 +529,9 @@ describe('fetchCourse', () => {
             },
             {
               type: 'quiz',
-              question: 'Explain recursion',
-              sampleAnswer: 'A function that calls itself',
+              question: 'What is recursion?',
+              options: ['A loop', 'A function that calls itself', 'A variable'],
+              answer: 1,
             },
           ])
         ),
@@ -544,7 +545,6 @@ describe('fetchCourse', () => {
 
     expect(result.course.topics[0].blocks[0]).toEqual({
       type: 'quiz',
-      variant: 'multiple-choice',
       question: 'What is 1+1?',
       options: ['1', '2', '3'],
       answer: 1,
@@ -553,9 +553,9 @@ describe('fetchCourse', () => {
 
     expect(result.course.topics[0].blocks[1]).toEqual({
       type: 'quiz',
-      variant: 'free-text',
-      question: 'Explain recursion',
-      sampleAnswer: 'A function that calls itself',
+      question: 'What is recursion?',
+      options: ['A loop', 'A function that calls itself', 'A variable'],
+      answer: 1,
     })
   })
 })

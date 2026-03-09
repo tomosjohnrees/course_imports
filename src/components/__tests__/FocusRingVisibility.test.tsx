@@ -103,7 +103,6 @@ describe('Focus ring visibility', () => {
     render(
       <QuizBlock
         type="quiz"
-        variant="multiple-choice"
         question="Q?"
         options={['A', 'B']}
         answer={0}
@@ -117,20 +116,6 @@ describe('Focus ring visibility', () => {
     })
   })
 
-  it('quiz block submit button has the quiz-block-submit class', () => {
-    render(
-      <QuizBlock
-        type="quiz"
-        variant="free-text"
-        question="Q?"
-        sampleAnswer="A"
-        blockIndex={0}
-      />,
-    )
-
-    const submitBtn = screen.getByRole('button', { name: 'Submit' })
-    expect(submitBtn).toHaveClass('quiz-block-submit')
-  })
 
   it('all interactive elements in sidebar are focusable', () => {
     renderSidebar()

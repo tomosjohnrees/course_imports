@@ -344,10 +344,8 @@ interface CodeBlock {
 interface QuizBlock {
   type: 'quiz'
   question: string
-  variant: 'multiple-choice' | 'free-text'
-  options?: string[]       // multiple-choice only
-  answer?: number          // index into options, multiple-choice only
-  sampleAnswer?: string    // free-text only
+  options: string[]
+  answer: number           // index into options
   explanation?: string
 }
 
