@@ -6,6 +6,7 @@ import Sidebar from '../Sidebar'
 import { useCourseStore } from '@/store/course.store'
 import { flushProgress } from '@/hooks/useProgressPersistence'
 import { flushBookmarks } from '@/hooks/useBookmarksPersistence'
+import { flushNotes } from '@/hooks/useNotesPersistence'
 
 vi.mock('@/hooks/useProgressPersistence', async () => {
   const actual = await vi.importActual('@/hooks/useProgressPersistence')
@@ -15,6 +16,11 @@ vi.mock('@/hooks/useProgressPersistence', async () => {
 vi.mock('@/hooks/useBookmarksPersistence', async () => {
   const actual = await vi.importActual('@/hooks/useBookmarksPersistence')
   return { ...actual, flushBookmarks: vi.fn().mockResolvedValue(undefined) }
+})
+
+vi.mock('@/hooks/useNotesPersistence', async () => {
+  const actual = await vi.importActual('@/hooks/useNotesPersistence')
+  return { ...actual, flushNotes: vi.fn().mockResolvedValue(undefined) }
 })
 
 const mockSaveIndicatorVisible = { value: false }
@@ -339,6 +345,16 @@ describe('Sidebar', () => {
     await user.click(screen.getByRole('button', { name: 'Back to courses' }))
 
     expect(flushBookmarks).toHaveBeenCalled()
+  })
+
+  it('flushes notes before navigating home', async () => {
+    useCourseStore.setState({ course: mockCourse })
+    renderSidebar()
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Back to courses' }))
+
+    expect(flushNotes).toHaveBeenCalled()
   })
 
   it('shows "Progress saved" indicator when save completes', () => {
