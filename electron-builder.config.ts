@@ -11,13 +11,22 @@ const config: Configuration = {
   },
   files: [
     'out/**/*',
-    '!out/**/*.map'
+    '!out/**/*.map',
+    '!out/**/*.test.*',
+    '!out/**/*.spec.*',
+    '!out/**/test/**',
+    '!out/**/tests/**',
+    '!out/**/__tests__/**'
   ],
+  icon: 'build/icon',
   asar: true,
   afterPack: async (context) => {
     const ext = { darwin: '.app', win32: '.exe', linux: '' }
     const suffix = ext[context.electronPlatformName as keyof typeof ext] ?? ''
-    const execPath = join(context.appOutDir, `${context.packager.appInfo.productFilename}${suffix}`)
+    const name = context.electronPlatformName === 'linux'
+      ? context.packager.executableName
+      : context.packager.appInfo.productFilename
+    const execPath = join(context.appOutDir, `${name}${suffix}`)
     await flipFuses(execPath, {
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
@@ -35,6 +44,7 @@ const config: Configuration = {
         arch: ['universal']
       }
     ],
+    icon: 'build/icon.icns',
     hardenedRuntime: true,
     category: 'public.app-category.education'
   },
@@ -44,7 +54,8 @@ const config: Configuration = {
         target: 'nsis',
         arch: ['x64']
       }
-    ]
+    ],
+    icon: 'build/icon.ico'
   },
   nsis: {
     oneClick: false,
@@ -57,6 +68,7 @@ const config: Configuration = {
         arch: ['x64']
       }
     ],
+    icon: 'build/icon.png',
     category: 'Education'
   }
 }
