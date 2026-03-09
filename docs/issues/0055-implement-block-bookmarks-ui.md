@@ -20,23 +20,23 @@ Add the user-facing interface for bookmarking blocks and navigating to bookmarke
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Every content block displays a bookmark toggle on hover/focus
-- [ ] Clicking the toggle on an unbookmarked block adds a bookmark (icon becomes filled/active)
-- [ ] Clicking the toggle on a bookmarked block removes the bookmark
-- [ ] A bookmarks panel lists all bookmarks for the current course, grouped by topic
-- [ ] Each bookmark entry shows the topic name and a preview of the block content (e.g. first line of text, code language, quiz question)
-- [ ] Clicking a bookmark navigates to the correct topic and scrolls to the block
-- [ ] The bookmarks panel shows an empty state when there are no bookmarks
+- [x] Every content block displays a bookmark toggle on hover/focus
+- [x] Clicking the toggle on an unbookmarked block adds a bookmark (icon becomes filled/active)
+- [x] Clicking the toggle on a bookmarked block removes the bookmark
+- [x] A bookmarks panel lists all bookmarks for the current course, grouped by topic
+- [x] Each bookmark entry shows the topic name and a preview of the block content (e.g. first line of text, code language, quiz question)
+- [x] Clicking a bookmark navigates to the correct topic and scrolls to the block
+- [x] The bookmarks panel shows an empty state when there are no bookmarks
 
 ### Security
-- [ ] Bookmark labels and preview text are rendered as plain text — no HTML interpretation
+- [x] Bookmark labels and preview text are rendered as plain text — no HTML interpretation
 
 ### Performance
-- [ ] Rendering bookmark toggles on every block does not measurably impact scroll performance
-- [ ] The bookmarks panel loads bookmarks from the store (already in memory) — no IPC call on open
+- [x] Rendering bookmark toggles on every block does not measurably impact scroll performance
+- [x] The bookmarks panel loads bookmarks from the store (already in memory) — no IPC call on open
 
 ### Testing
-- [ ] Component tests cover: bookmark toggle appears on hover, toggling adds/removes bookmark, bookmarks panel lists bookmarks grouped by topic, clicking a bookmark triggers navigation, empty state renders correctly
+- [x] Component tests cover: bookmark toggle appears on hover, toggling adds/removes bookmark, bookmarks panel lists bookmarks grouped by topic, clicking a bookmark triggers navigation, empty state renders correctly
 
 ## Notes
 

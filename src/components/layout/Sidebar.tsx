@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, BookOpen, Check, Circle, PenLine, Settings } from 'lucide-react'
+import { ArrowLeft, Bookmark, BookOpen, Check, Circle, PenLine, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import { flushProgress } from '@/hooks/useProgressPersistence'
 import { useSaveIndicator } from '@/hooks/useSaveIndicator'
@@ -9,9 +9,10 @@ import EmptyState from '@/components/EmptyState'
 
 interface SidebarProps {
   onOpenSettings: () => void
+  onOpenBookmarks: () => void
 }
 
-export default function Sidebar({ onOpenSettings }: SidebarProps) {
+export default function Sidebar({ onOpenSettings, onOpenBookmarks }: SidebarProps) {
   const navigate = useNavigate()
   const course = useCourseStore((s) => s.course)
   const activeTopic = useCourseStore((s) => s.activeTopic)
@@ -279,13 +280,41 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
         </ul>
       )}
 
-      {/* Settings trigger */}
+      {/* Bottom actions */}
       <div
         style={{
           padding: 'var(--space-3) var(--space-4)',
           borderTop: '1px solid var(--color-border)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--space-1)',
         }}
       >
+        <button
+          className="sidebar-topic-btn"
+          onClick={onOpenBookmarks}
+          aria-label="Open bookmarks"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            width: '100%',
+            height: '36px',
+            padding: '0 var(--space-2)',
+            border: 'none',
+            color: 'var(--color-text-secondary)',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 500,
+            textAlign: 'left',
+            cursor: 'pointer',
+            borderRadius: 'var(--radius-sm)',
+            transition: 'background 100ms',
+          }}
+        >
+          <Bookmark size={16} strokeWidth={1.5} />
+          Bookmarks
+        </button>
         <button
           className="sidebar-topic-btn"
           onClick={onOpenSettings}

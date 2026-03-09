@@ -39,7 +39,7 @@ function renderSidebar(initialRoute = '/course') {
       { path: '/', element: <div data-testid="home-page">Home</div> },
       {
         path: '/course',
-        element: <Sidebar onOpenSettings={() => {}} />,
+        element: <Sidebar onOpenSettings={() => {}} onOpenBookmarks={() => {}} />,
       },
     ],
     { initialEntries: [initialRoute] },
@@ -94,8 +94,8 @@ describe('Sidebar', () => {
     renderSidebar()
 
     const buttons = screen.getAllByRole('button')
-    // 1 back button + 3 topic buttons + 1 settings button
-    expect(buttons).toHaveLength(5)
+    // 1 back button + 3 topic buttons + 1 bookmarks button + 1 settings button
+    expect(buttons).toHaveLength(6)
     expect(buttons[1]).toHaveTextContent('Introduction')
     expect(buttons[2]).toHaveTextContent('Getting Started')
     expect(buttons[3]).toHaveTextContent('Advanced Topics')
@@ -185,8 +185,8 @@ describe('Sidebar', () => {
   it('handles no course loaded gracefully', () => {
     renderSidebar()
 
-    // Back button + settings button when no course loaded
-    expect(screen.queryAllByRole('button')).toHaveLength(2)
+    // Back button + bookmarks button + settings button when no course loaded
+    expect(screen.queryAllByRole('button')).toHaveLength(3)
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
   })
 

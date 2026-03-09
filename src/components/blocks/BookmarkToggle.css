@@ -1,0 +1,44 @@
+/* ——— Bookmark Toggle (appears on block hover/focus) ——— */
+
+.block-wrapper {
+  position: relative;
+}
+
+.bookmark-toggle {
+  position: absolute;
+  top: var(--space-1);
+  right: calc(-1 * var(--space-8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms, color 100ms, background 100ms;
+}
+
+.block-wrapper:hover .bookmark-toggle,
+.block-wrapper:focus-within .bookmark-toggle,
+.bookmark-toggle:focus-visible {
+  opacity: 1;
+}
+
+.bookmark-toggle[data-active] {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
+.bookmark-toggle:hover {
+  background: var(--color-bg);
+  color: var(--color-accent);
+}
+
+.bookmark-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

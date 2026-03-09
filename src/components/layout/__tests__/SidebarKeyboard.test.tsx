@@ -23,7 +23,7 @@ const mockCourse: Course = {
 
 function renderSidebar() {
   const router = createMemoryRouter(
-    [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} /> }],
+    [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} onOpenBookmarks={() => {}} /> }],
     { initialEntries: ['/course'] },
   )
   return render(<RouterProvider router={router} />)

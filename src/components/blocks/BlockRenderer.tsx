@@ -9,6 +9,7 @@ import RevealBlock from './RevealBlock'
 import CheckpointBlock from './CheckpointBlock'
 import ErrorBlock from './ErrorBlock'
 import UnknownBlock from './UnknownBlock'
+import BookmarkToggle from './BookmarkToggle'
 
 export class BlockErrorBoundary extends Component<
   { children: ReactNode },
@@ -113,9 +114,12 @@ export default memo(function BlockRenderer({ blocks }: BlockRendererProps) {
       }}
     >
       {blocks.map((block, index) => (
-        <BlockErrorBoundary key={index}>
-          <BlockComponent block={block} index={index} />
-        </BlockErrorBoundary>
+        <div key={index} className="block-wrapper" data-block-index={index}>
+          <BlockErrorBoundary>
+            <BlockComponent block={block} index={index} />
+          </BlockErrorBoundary>
+          <BookmarkToggle blockIndex={index} />
+        </div>
       ))}
     </div>
   )

@@ -110,7 +110,7 @@ describe('Accessibility audit', () => {
 
   it('Sidebar has no critical axe violations', async () => {
     const router = createMemoryRouter(
-      [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} /> }],
+      [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} onOpenBookmarks={() => {}} /> }],
       { initialEntries: ['/course'] },
     )
     const { container } = render(<RouterProvider router={router} />)
