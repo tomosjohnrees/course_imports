@@ -54,6 +54,7 @@ beforeEach(() => {
     course: null,
     activeTopic: null,
     progress: {},
+    notes: {},
   })
   window.api = {
     initialTheme: 'system',

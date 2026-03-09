@@ -7,7 +7,7 @@ export default function NotesPanel() {
   const [expanded, setExpanded] = useState(false)
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const noteText = useCourseStore(
-    (s) => (activeTopic ? s.notes[activeTopic]?.text : undefined) ?? '',
+    (s) => (s.activeTopic ? s.notes[s.activeTopic]?.text : undefined) ?? '',
   )
   const updateNote = useCourseStore((s) => s.updateNote)
 
