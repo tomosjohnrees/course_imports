@@ -16,7 +16,8 @@ const config: Configuration = {
     '!out/**/*.spec.*',
     '!out/**/test/**',
     '!out/**/tests/**',
-    '!out/**/__tests__/**'
+    '!out/**/__tests__/**',
+    '!out/**/.env*'
   ],
   icon: 'build/icon',
   asar: true,
