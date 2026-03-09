@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { axe } from 'vitest-axe'
 import QuizBlock from '@/components/blocks/QuizBlock'
@@ -98,7 +99,11 @@ describe('Accessibility audit', () => {
   })
 
   it('Sidebar has no critical axe violations', async () => {
-    const { container } = render(<Sidebar onOpenSettings={() => {}} />)
+    const router = createMemoryRouter(
+      [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} /> }],
+      { initialEntries: ['/course'] },
+    )
+    const { container } = render(<RouterProvider router={router} />)
     const results = await axe(container)
     expect(results).toHaveNoViolations()
   })

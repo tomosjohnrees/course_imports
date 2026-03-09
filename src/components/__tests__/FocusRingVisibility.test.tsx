@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import Sidebar from '@/components/layout/Sidebar'
 import SettingsPanel from '@/components/layout/SettingsPanel'
@@ -53,16 +54,24 @@ beforeEach(() => {
   }
 })
 
+function renderSidebar() {
+  const router = createMemoryRouter(
+    [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} /> }],
+    { initialEntries: ['/course'] },
+  )
+  return render(<RouterProvider router={router} />)
+}
+
 describe('Focus ring visibility', () => {
   it('sidebar topic buttons have the sidebar-topic-btn class for focus styling', () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const topicButton = screen.getByText('T1').closest('button')!
     expect(topicButton).toHaveClass('sidebar-topic-btn')
   })
 
   it('sidebar settings button has the sidebar-topic-btn class for focus styling', () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const settingsButton = screen.getByLabelText('Open settings')
     expect(settingsButton).toHaveClass('sidebar-topic-btn')
@@ -124,7 +133,7 @@ describe('Focus ring visibility', () => {
   })
 
   it('all interactive elements in sidebar are focusable', () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const buttons = screen.getAllByRole('button')
     // All buttons should be in the DOM and not disabled

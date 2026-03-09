@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import Sidebar from '../Sidebar'
 import { useCourseStore } from '@/store/course.store'
 import type { Course } from '@/types/course.types'
@@ -20,17 +21,44 @@ const mockCourse: Course = {
   source: { type: 'local', path: '/test' },
 }
 
+function renderSidebar() {
+  const router = createMemoryRouter(
+    [{ path: '/course', element: <Sidebar onOpenSettings={() => {}} /> }],
+    { initialEntries: ['/course'] },
+  )
+  return render(<RouterProvider router={router} />)
+}
+
 beforeEach(() => {
   useCourseStore.setState({
     course: mockCourse,
     activeTopic: 'topic-1',
     progress: {},
   })
+  window.api = {
+    initialTheme: 'system',
+    course: {
+      selectFolder: vi.fn(),
+      loadFromFolder: vi.fn(),
+      loadFromGitHub: vi.fn(),
+      loadRecentCourse: vi.fn(),
+      onFetchProgress: vi.fn().mockReturnValue(vi.fn()),
+    },
+    store: {
+      getRecentCourses: vi.fn().mockResolvedValue([]),
+      saveRecentCourse: vi.fn(),
+      getProgress: vi.fn(),
+      saveProgress: vi.fn(),
+      getPreferences: vi.fn().mockResolvedValue({ theme: 'system' }),
+      savePreferences: vi.fn(),
+      clearAllProgress: vi.fn(),
+    },
+  }
 })
 
 describe('Sidebar keyboard navigation', () => {
   it('moves focus to the next topic on ArrowDown', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const firstButton = screen.getByText('Introduction').closest('button')!
@@ -41,7 +69,7 @@ describe('Sidebar keyboard navigation', () => {
   })
 
   it('moves focus to the previous topic on ArrowUp', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const secondButton = screen.getByText('Getting Started').closest('button')!
@@ -52,7 +80,7 @@ describe('Sidebar keyboard navigation', () => {
   })
 
   it('wraps from last topic to first on ArrowDown', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const lastButton = screen.getByText('Advanced Topics').closest('button')!
@@ -63,7 +91,7 @@ describe('Sidebar keyboard navigation', () => {
   })
 
   it('wraps from first topic to last on ArrowUp', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const firstButton = screen.getByText('Introduction').closest('button')!
@@ -74,7 +102,7 @@ describe('Sidebar keyboard navigation', () => {
   })
 
   it('navigates to topic on Enter key press', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const secondButton = screen.getByText('Getting Started').closest('button')!
@@ -86,27 +114,28 @@ describe('Sidebar keyboard navigation', () => {
 
   it('sets tabIndex 0 only on the active topic button', () => {
     useCourseStore.setState({ activeTopic: 'topic-2' })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const buttons = screen.getAllByRole('button')
-    // topic-1 = tabIndex -1, topic-2 = tabIndex 0, topic-3 = tabIndex -1, settings = no tabIndex set
-    expect(buttons[0]).toHaveAttribute('tabindex', '-1')
-    expect(buttons[1]).toHaveAttribute('tabindex', '0')
-    expect(buttons[2]).toHaveAttribute('tabindex', '-1')
+    // back button, topic-1 = tabIndex -1, topic-2 = tabIndex 0, topic-3 = tabIndex -1, settings
+    expect(buttons[1]).toHaveAttribute('tabindex', '-1')
+    expect(buttons[2]).toHaveAttribute('tabindex', '0')
+    expect(buttons[3]).toHaveAttribute('tabindex', '-1')
   })
 
   it('makes the first topic tabbable when no topic is active', () => {
     useCourseStore.setState({ activeTopic: null })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const buttons = screen.getAllByRole('button')
-    expect(buttons[0]).toHaveAttribute('tabindex', '0')
-    expect(buttons[1]).toHaveAttribute('tabindex', '-1')
+    // back button, topic-1 = tabIndex 0 (first tabbable), topic-2, topic-3
+    expect(buttons[1]).toHaveAttribute('tabindex', '0')
     expect(buttons[2]).toHaveAttribute('tabindex', '-1')
+    expect(buttons[3]).toHaveAttribute('tabindex', '-1')
   })
 
   it('navigates through all three topics sequentially', async () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
     const user = userEvent.setup()
 
     const firstButton = screen.getByText('Introduction').closest('button')!

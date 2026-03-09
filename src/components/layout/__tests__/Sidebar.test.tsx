@@ -1,6 +1,7 @@
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import Sidebar from '../Sidebar'
 import { useCourseStore } from '@/store/course.store'
 import type { Course } from '@/types/course.types'
@@ -20,25 +21,59 @@ const mockCourse: Course = {
   source: { type: 'local', path: '/test' },
 }
 
+function renderSidebar(initialRoute = '/course') {
+  const router = createMemoryRouter(
+    [
+      { path: '/', element: <div data-testid="home-page">Home</div> },
+      {
+        path: '/course',
+        element: <Sidebar onOpenSettings={() => {}} />,
+      },
+    ],
+    { initialEntries: [initialRoute] },
+  )
+  render(<RouterProvider router={router} />)
+  return router
+}
+
 beforeEach(() => {
   useCourseStore.setState({
     course: null,
     activeTopic: null,
     progress: {},
   })
+  window.api = {
+    initialTheme: 'system',
+    course: {
+      selectFolder: vi.fn(),
+      loadFromFolder: vi.fn(),
+      loadFromGitHub: vi.fn(),
+      loadRecentCourse: vi.fn(),
+      onFetchProgress: vi.fn().mockReturnValue(vi.fn()),
+    },
+    store: {
+      getRecentCourses: vi.fn().mockResolvedValue([]),
+      saveRecentCourse: vi.fn(),
+      getProgress: vi.fn(),
+      saveProgress: vi.fn(),
+      getPreferences: vi.fn().mockResolvedValue({ theme: 'system' }),
+      savePreferences: vi.fn(),
+      clearAllProgress: vi.fn(),
+    },
+  }
 })
 
 describe('Sidebar', () => {
   it('displays all topics in the correct order', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const buttons = screen.getAllByRole('button')
-    // 3 topic buttons + 1 settings button
-    expect(buttons).toHaveLength(4)
-    expect(buttons[0]).toHaveTextContent('Introduction')
-    expect(buttons[1]).toHaveTextContent('Getting Started')
-    expect(buttons[2]).toHaveTextContent('Advanced Topics')
+    // 1 back button + 3 topic buttons + 1 settings button
+    expect(buttons).toHaveLength(5)
+    expect(buttons[1]).toHaveTextContent('Introduction')
+    expect(buttons[2]).toHaveTextContent('Getting Started')
+    expect(buttons[3]).toHaveTextContent('Advanced Topics')
   })
 
   it('highlights the active topic', () => {
@@ -46,7 +81,7 @@ describe('Sidebar', () => {
       course: mockCourse,
       activeTopic: 'topic-2',
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const activeButton = screen.getByText('Getting Started').closest('button')!
     expect(activeButton.style.borderLeft).toBe(
@@ -60,7 +95,7 @@ describe('Sidebar', () => {
       course: mockCourse,
       activeTopic: 'topic-2',
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const activeButton = screen.getByText('Getting Started').closest('button')!
     expect(activeButton).toHaveAttribute('aria-current', 'true')
@@ -71,7 +106,7 @@ describe('Sidebar', () => {
 
   it('updates active topic when a topic is clicked', async () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const user = userEvent.setup()
     await user.click(screen.getByText('Advanced Topics'))
@@ -86,14 +121,14 @@ describe('Sidebar', () => {
         'topic-1': { viewed: true, complete: true },
       },
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
   })
 
   it('displays the course title', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.getByText('Test Course')).toBeInTheDocument()
   })
@@ -106,7 +141,7 @@ describe('Sidebar', () => {
         'topic-3': { viewed: true, complete: true },
       },
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '67')
@@ -115,7 +150,7 @@ describe('Sidebar', () => {
 
   it('shows 0% progress when no topics are complete', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '0')
@@ -123,10 +158,10 @@ describe('Sidebar', () => {
   })
 
   it('handles no course loaded gracefully', () => {
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
-    // Only the settings button when no course loaded
-    expect(screen.queryAllByRole('button')).toHaveLength(1)
+    // Back button + settings button when no course loaded
+    expect(screen.queryAllByRole('button')).toHaveLength(2)
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
   })
 
@@ -136,7 +171,7 @@ describe('Sidebar', () => {
       topics: [],
     }
     useCourseStore.setState({ course: emptyCourse })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.getByText('No topics')).toBeInTheDocument()
     expect(
@@ -158,7 +193,7 @@ describe('Sidebar', () => {
         'topic-2': { viewed: true, complete: false },
       },
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
     expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
@@ -173,13 +208,13 @@ describe('Sidebar', () => {
         // topic-3 has no progress entry → not started
       },
     })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
-    // not-started topics have no icon
+    // not-started topics have no icon (index 3 = third topic, after back button)
     const buttons = screen.getAllByRole('button')
-    expect(buttons[2].querySelector('[aria-label]')).toBeNull()
+    expect(buttons[3].querySelector('[aria-label]')).toBeNull()
   })
 
   it('truncates long topic titles and shows tooltip', () => {
@@ -192,7 +227,7 @@ describe('Sidebar', () => {
       ],
     }
     useCourseStore.setState({ course: courseWithLongTitles })
-    render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     // Course title has tooltip
     const heading = screen.getByText(longTitle, { selector: 'h2' })
@@ -212,7 +247,7 @@ describe('Sidebar', () => {
       course: mockCourse,
       progress: {},
     })
-    const { rerender } = render(<Sidebar onOpenSettings={() => {}} />)
+    renderSidebar()
 
     expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('In progress')).not.toBeInTheDocument()
@@ -225,10 +260,46 @@ describe('Sidebar', () => {
         },
       })
     })
-    rerender(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
     expect(screen.getByText('1 of 3 topics complete')).toBeInTheDocument()
+  })
+
+  it('renders a "Back to courses" button in the sidebar', () => {
+    useCourseStore.setState({ course: mockCourse })
+    renderSidebar()
+
+    const backButton = screen.getByRole('button', { name: 'Back to courses' })
+    expect(backButton).toBeInTheDocument()
+    expect(backButton).toHaveTextContent('Back to courses')
+  })
+
+  it('navigates to home when "Back to courses" is clicked', async () => {
+    useCourseStore.setState({ course: mockCourse })
+    const router = renderSidebar()
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Back to courses' }))
+
+    expect(router.state.location.pathname).toBe('/')
+  })
+
+  it('persists progress before navigating home', async () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      progress: {
+        'topic-1': { viewed: true, complete: true },
+      },
+    })
+    renderSidebar()
+
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Back to courses' }))
+
+    expect(window.api.store.saveProgress).toHaveBeenCalledWith(
+      'test-course',
+      { 'topic-1': { viewed: true, complete: true } },
+    )
   })
 })

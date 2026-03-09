@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { BookOpen, Check, Circle, Settings } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft, BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
 import EmptyState from '@/components/EmptyState'
@@ -9,12 +10,22 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ onOpenSettings }: SidebarProps) {
+  const navigate = useNavigate()
   const course = useCourseStore((s) => s.course)
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const progress = useCourseStore((s) => s.progress)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
 
   const listRef = useRef<HTMLUListElement>(null)
+
+  const handleNavigateHome = () => {
+    // Flush any pending progress save before leaving
+    const { course: currentCourse, progress: currentProgress } = useCourseStore.getState()
+    if (currentCourse?.id) {
+      window.api.store.saveProgress(currentCourse.id, currentProgress)
+    }
+    navigate('/')
+  }
 
   const handleTopicKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
     if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
@@ -54,6 +65,40 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
         overflow: 'hidden',
       }}
     >
+      {/* Home navigation */}
+      <div
+        style={{
+          padding: 'var(--space-2) var(--space-4)',
+          borderBottom: '1px solid var(--color-border)',
+        }}
+      >
+        <button
+          className="sidebar-topic-btn"
+          onClick={handleNavigateHome}
+          aria-label="Back to courses"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            width: '100%',
+            height: '32px',
+            padding: '0 var(--space-2)',
+            border: 'none',
+            color: 'var(--color-text-secondary)',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 500,
+            textAlign: 'left',
+            cursor: 'pointer',
+            borderRadius: 'var(--radius-sm)',
+            transition: 'background 100ms',
+          }}
+        >
+          <ArrowLeft size={16} strokeWidth={1.5} />
+          Back to courses
+        </button>
+      </div>
+
       {/* Course header */}
       <div style={{ padding: 'var(--space-4)' }}>
         <h2

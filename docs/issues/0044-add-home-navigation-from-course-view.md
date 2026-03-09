@@ -19,19 +19,19 @@ Once a course is loaded and the user navigates to the course view, there is no v
 ## Acceptance criteria
 
 ### Functionality
-- [ ] A visible "Home" or "Back to courses" action is present in the sidebar when viewing a course
-- [ ] Clicking the action navigates to the home screen
-- [ ] The recent courses list on the home screen includes the course that was just open
-- [ ] Progress made in the current session is saved before navigating away
-- [ ] The action is discoverable without prior knowledge — no hidden keyboard shortcut required
+- [x] A visible "Home" or "Back to courses" action is present in the sidebar when viewing a course
+- [x] Clicking the action navigates to the home screen
+- [x] The recent courses list on the home screen includes the course that was just open
+- [x] Progress made in the current session is saved before navigating away
+- [x] The action is discoverable without prior knowledge — no hidden keyboard shortcut required
 
 ### Security
-- [ ] Navigation does not bypass the progress persistence flush — no data loss on transition
+- [x] Navigation does not bypass the progress persistence flush — no data loss on transition
 
 ### Performance
-- [ ] Navigation to home is instant (no re-fetching or re-parsing of recent courses data beyond reading from the store)
+- [x] Navigation to home is instant (no re-fetching or re-parsing of recent courses data beyond reading from the store)
 
 ### Testing
-- [ ] Component tests verify the home navigation element renders in the sidebar
-- [ ] Integration tests verify that clicking the action navigates to the home route
-- [ ] Integration tests verify that progress is persisted before navigation completes
+- [x] Component tests verify the home navigation element renders in the sidebar
+- [x] Integration tests verify that clicking the action navigates to the home route
+- [x] Integration tests verify that progress is persisted before navigation completes
