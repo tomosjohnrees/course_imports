@@ -3,6 +3,17 @@ import { useCourseStore } from '@/store/course.store'
 
 const DEBOUNCE_MS = 800
 
+const saveListeners = new Set<() => void>()
+
+export function onProgressSaved(cb: () => void): () => void {
+  saveListeners.add(cb)
+  return () => { saveListeners.delete(cb) }
+}
+
+function notifySaved(): void {
+  saveListeners.forEach((cb) => cb())
+}
+
 export function flushProgress(): void {
   const { course, progress } = useCourseStore.getState()
   if (course?.id) {
@@ -25,7 +36,9 @@ export function useProgressPersistence(): void {
         if (timerRef.current) clearTimeout(timerRef.current)
         timerRef.current = setTimeout(() => {
           timerRef.current = null
-          window.api.store.saveProgress(courseId, progressSnapshot)
+          Promise.resolve(
+            window.api.store.saveProgress(courseId, progressSnapshot),
+          ).then(notifySaved)
         }, DEBOUNCE_MS)
       },
     )

@@ -19,19 +19,19 @@ Sarah's key concern is that she might lose progress when she closes and reopens 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] A visual indicator (e.g. small text, icon, or subtle animation near the progress bar) confirms when progress has been saved
-- [ ] The indicator appears after the debounced write completes successfully, not on every topic click
-- [ ] The indicator fades or disappears automatically after a short duration (2-3 seconds)
-- [ ] The indicator does not appear on the initial progress hydration (only on new saves)
+- [x] A visual indicator (e.g. small text, icon, or subtle animation near the progress bar) confirms when progress has been saved
+- [x] The indicator appears after the debounced write completes successfully, not on every topic click
+- [x] The indicator fades or disappears automatically after a short duration (2-3 seconds)
+- [x] The indicator does not appear on the initial progress hydration (only on new saves)
 
 ### Security
-- [ ] The save confirmation does not expose any internal file paths or storage details
+- [x] The save confirmation does not expose any internal file paths or storage details
 
 ### Performance
-- [ ] The confirmation is rendered with CSS transitions only — no JavaScript animation libraries
-- [ ] The save confirmation does not add additional IPC round trips — it hooks into the existing save callback
+- [x] The confirmation is rendered with CSS transitions only — no JavaScript animation libraries
+- [x] The save confirmation does not add additional IPC round trips — it hooks into the existing save callback
 
 ### Testing
-- [ ] Component tests verify the save indicator appears after a progress persistence event
-- [ ] Component tests verify the indicator disappears after the specified timeout
-- [ ] Component tests verify the indicator does not appear on initial hydration
+- [x] Component tests verify the save indicator appears after a progress persistence event
+- [x] Component tests verify the indicator disappears after the specified timeout
+- [x] Component tests verify the indicator does not appear on initial hydration

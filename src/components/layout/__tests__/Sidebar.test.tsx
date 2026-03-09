@@ -10,6 +10,12 @@ vi.mock('@/hooks/useProgressPersistence', async () => {
   const actual = await vi.importActual('@/hooks/useProgressPersistence')
   return { ...actual, flushProgress: vi.fn() }
 })
+
+const mockSaveIndicatorVisible = { value: false }
+vi.mock('@/hooks/useSaveIndicator', () => ({
+  useSaveIndicator: () => mockSaveIndicatorVisible.value,
+}))
+
 import type { Course } from '@/types/course.types'
 
 const mockCourse: Course = {
@@ -43,6 +49,7 @@ function renderSidebar(initialRoute = '/course') {
 }
 
 beforeEach(() => {
+  mockSaveIndicatorVisible.value = false
   useCourseStore.setState({
     course: null,
     activeTopic: null,
@@ -304,5 +311,32 @@ describe('Sidebar', () => {
     await user.click(screen.getByRole('button', { name: 'Back to courses' }))
 
     expect(flushProgress).toHaveBeenCalled()
+  })
+
+  it('shows "Progress saved" indicator when save completes', () => {
+    mockSaveIndicatorVisible.value = true
+    useCourseStore.setState({ course: mockCourse })
+    renderSidebar()
+
+    const indicator = screen.getByText('Progress saved')
+    expect(indicator).toBeInTheDocument()
+    expect(indicator.style.opacity).toBe('1')
+  })
+
+  it('hides "Progress saved" indicator when not visible', () => {
+    mockSaveIndicatorVisible.value = false
+    useCourseStore.setState({ course: mockCourse })
+    renderSidebar()
+
+    const indicator = screen.getByText('Progress saved')
+    expect(indicator.style.opacity).toBe('0')
+  })
+
+  it('does not show save indicator on initial render (hydration)', () => {
+    useCourseStore.setState({ course: mockCourse })
+    renderSidebar()
+
+    const indicator = screen.getByText('Progress saved')
+    expect(indicator.style.opacity).toBe('0')
   })
 })

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import { flushProgress } from '@/hooks/useProgressPersistence'
+import { useSaveIndicator } from '@/hooks/useSaveIndicator'
 import type { TopicStatus } from '@/hooks/useProgress'
 import EmptyState from '@/components/EmptyState'
 
@@ -16,6 +17,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const progress = useCourseStore((s) => s.progress)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
+  const saveIndicatorVisible = useSaveIndicator()
 
   const listRef = useRef<HTMLUListElement>(null)
 
@@ -150,6 +152,23 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
           }}
         >
           {completedCount} of {topics.length} topics complete
+        </p>
+
+        <p
+          aria-live="polite"
+          style={{
+            margin: 0,
+            marginTop: 'var(--space-1)',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--color-success)',
+            fontFamily: 'var(--font-sans)',
+            opacity: saveIndicatorVisible ? 1 : 0,
+            transition: 'opacity 300ms ease',
+            height: 'var(--text-xs)',
+            lineHeight: 'var(--text-xs)',
+          }}
+        >
+          Progress saved
         </p>
       </div>
 
