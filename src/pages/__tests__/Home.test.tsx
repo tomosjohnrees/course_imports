@@ -356,6 +356,42 @@ describe('Home', () => {
         expect(screen.getByText(/rate limit exceeded/)).toBeInTheDocument()
       })
     })
+
+    it('displays offline error when user is offline', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: false,
+        error: "You're offline. Check your internet connection and try again.",
+      })
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+      expect(screen.getByText("You're offline. Check your internet connection and try again.")).toBeInTheDocument()
+    })
+
+    it('displays mid-fetch network error when connection drops', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: false,
+        error: 'The network connection was lost during the fetch. Check your connection and try again.',
+      })
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+      expect(screen.getByText(/network connection was lost/)).toBeInTheDocument()
+    })
   })
 
   describe('Recent courses', () => {
@@ -445,6 +481,26 @@ describe('Home', () => {
       expect(titleEl).toHaveAttribute('title', longTitle)
       expect(titleEl.style.overflow).toBe('hidden')
       expect(titleEl.style.textOverflow).toBe('ellipsis')
+    })
+
+    it('displays offline error when clicking a GitHub recent course while offline', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.course.loadRecentCourse).mockResolvedValue({
+        success: false,
+        error: "You're offline. Check your internet connection and try again.",
+      })
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('GitHub Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load GitHub Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+      expect(screen.getByText("You're offline. Check your internet connection and try again.")).toBeInTheDocument()
     })
 
     it('navigates to /course when a recent course loads successfully', async () => {

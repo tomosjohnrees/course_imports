@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0034 | [Handle offline state for GitHub courses](0034-handle-offline-state-for-github-courses.md) | Milestone 6 — Edge Cases & Robustness | todo |
 | 0035 | [Implement keyboard navigation and focus management](0035-implement-keyboard-navigation-and-focus-management.md) | Milestone 6 — Keyboard Navigation | todo |
 | 0036 | [Audit colour contrast and semantic HTML hierarchy](0036-audit-colour-contrast-and-semantic-html.md) | Milestone 6 — Accessibility | todo |
 | 0037 | [Add ARIA attributes and screen reader support](0037-add-aria-attributes-and-screen-reader-support.md) | Milestone 6 — Accessibility | todo |

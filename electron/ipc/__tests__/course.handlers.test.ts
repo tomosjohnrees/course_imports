@@ -15,6 +15,7 @@ vi.mock('electron', () => ({
   },
   net: {
     fetch: vi.fn(),
+    isOnline: vi.fn().mockReturnValue(true),
   },
 }))
 
@@ -27,13 +28,14 @@ vi.mock('../../store', () => ({
 }))
 
 import { ipcMain } from 'electron'
-import { getStoredGitHubToken } from '../../store'
+import { getStoredGitHubToken, getStoredRecentCourse } from '../../store'
 import { registerCourseHandlers } from '../course.handlers'
 import { net } from 'electron'
 
 const mockHandle = vi.mocked(ipcMain.handle)
 const mockGetToken = vi.mocked(getStoredGitHubToken)
 const mockFetch = vi.mocked(net.fetch)
+const mockIsOnline = vi.mocked(net.isOnline)
 
 function base64Encode(str: string): string {
   return Buffer.from(str).toString('base64')
@@ -74,6 +76,7 @@ describe('course:loadFromGitHub handler', () => {
     mockFetch.mockReset()
     mockGetToken.mockReset()
     mockGetToken.mockReturnValue(undefined)
+    mockIsOnline.mockReturnValue(true)
 
     registerCourseHandlers()
 
@@ -171,7 +174,7 @@ describe('course:loadFromGitHub handler', () => {
 
     expect(result).toEqual({
       success: false,
-      error: expect.stringContaining('Network error'),
+      error: expect.stringContaining('network connection was lost'),
     })
   })
 
@@ -272,5 +275,88 @@ describe('course:loadFromGitHub handler', () => {
 
     expect(result.success).toBe(false)
     expect(result.error).not.toContain('ghp_secret_token_12345')
+  })
+
+  it('returns offline error when network is unavailable', async () => {
+    mockIsOnline.mockReturnValue(false)
+
+    const result = await handler(null, 'https://github.com/acme/course')
+
+    expect(result).toEqual({
+      success: false,
+      error: "You're offline. Check your internet connection and try again.",
+    })
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
+
+  it('returns mid-fetch network error when connection drops during fetch', async () => {
+    mockIsOnline.mockReturnValue(true)
+    mockFetch.mockRejectedValueOnce(new Error('net::ERR_INTERNET_DISCONNECTED'))
+
+    const result = (await handler(null, 'https://github.com/acme/course')) as {
+      success: false
+      error: string
+    }
+
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('network connection was lost')
+  })
+})
+
+describe('course:loadRecentCourse offline handling', () => {
+  const mockGetRecentCourse = vi.mocked(getStoredRecentCourse)
+  let handler: (event: unknown, courseId: string) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    mockFetch.mockReset()
+    mockGetToken.mockReset()
+    mockGetToken.mockReturnValue(undefined)
+    mockIsOnline.mockReturnValue(true)
+    mockGetRecentCourse.mockReset()
+
+    registerCourseHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'course:loadRecentCourse'
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown, courseId: string) => Promise<unknown>
+  })
+
+  it('returns offline error for a GitHub recent course when offline', async () => {
+    mockGetRecentCourse.mockReturnValue({
+      id: 'gh-course',
+      title: 'GitHub Course',
+      sourceType: 'github',
+      sourcePath: 'https://github.com/acme/course',
+      lastLoaded: Date.now(),
+    })
+    mockIsOnline.mockReturnValue(false)
+
+    const result = await handler(null, 'gh-course')
+
+    expect(result).toEqual({
+      success: false,
+      error: "You're offline. Check your internet connection and try again.",
+    })
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
+
+  it('does not return offline error for a local recent course when offline', async () => {
+    mockGetRecentCourse.mockReturnValue({
+      id: 'local-course',
+      title: 'Local Course',
+      sourceType: 'local',
+      sourcePath: '/path/to/course',
+      lastLoaded: Date.now(),
+    })
+    mockIsOnline.mockReturnValue(false)
+
+    const result = (await handler(null, 'local-course')) as { success: boolean; error?: string }
+
+    // Should attempt to load (will fail due to missing mock for loadCourse, but not with offline error)
+    expect(result.success).toBe(false)
+    expect(result.error).not.toContain("You're offline")
   })
 })

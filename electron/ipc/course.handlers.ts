@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { BrowserWindow, dialog, ipcMain, net } from 'electron'
 import { IpcChannel } from './channels'
 import { loadCourse } from '../course/loader'
 import { fetchCourse, parseGitHubUrl } from '../course/github'
@@ -6,12 +6,14 @@ import type { GitHubFetchResult, GitHubRepo, FetchProgress } from '../course/git
 import type { ParseResult } from '../course/parser'
 import { getStoredGitHubToken, saveRecentCourse, getStoredRecentCourse } from '../store'
 
+const OFFLINE_ERROR = "You're offline. Check your internet connection and try again."
+
 function classifyGitHubError(message: string, repo: GitHubRepo): string {
   if (message.includes('rate limit')) {
     return 'GitHub API rate limit exceeded. Try again later or add a personal access token in Settings.'
   }
   if (message.includes('net::') || message.includes('ENOTFOUND') || message.includes('ECONNREFUSED')) {
-    return 'Network error: unable to reach GitHub. Check your internet connection and try again.'
+    return 'The network connection was lost during the fetch. Check your connection and try again.'
   }
   if (/Not found.*course\.json/.test(message)) {
     return `Repository not found or missing course.json: ${repo.owner}/${repo.repo}. Check the URL and ensure the repository contains a valid course.`
@@ -81,6 +83,10 @@ export function registerCourseHandlers(): void {
       return { success: false, error: `Invalid GitHub URL: "${repoUrl}". Expected format: https://github.com/owner/repo` }
     }
 
+    if (!net.isOnline()) {
+      return { success: false, error: OFFLINE_ERROR }
+    }
+
     const token = getStoredGitHubToken()
 
     let result: GitHubFetchResult
@@ -131,6 +137,10 @@ export function registerCourseHandlers(): void {
     }
 
     // GitHub source
+    if (!net.isOnline()) {
+      return { success: false, error: OFFLINE_ERROR }
+    }
+
     let repo
     try {
       repo = parseGitHubUrl(entry.sourcePath)
