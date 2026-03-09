@@ -1,0 +1,13 @@
+{
+  "id": "markdown-essentials",
+  "title": "Markdown Essentials",
+  "description": "A short course covering the basics of Markdown syntax.",
+  "version": "1.0.0",
+  "author": "Example Author",
+  "tags": ["markdown", "writing", "beginner"],
+  "topicOrder": [
+    "01-what-is-markdown",
+    "02-formatting-text",
+    "03-lists-and-links"
+  ]
+}

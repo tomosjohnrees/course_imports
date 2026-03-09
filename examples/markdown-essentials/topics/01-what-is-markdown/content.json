@@ -1,0 +1,25 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "Markdown files use the `.md` extension."
+  },
+  {
+    "type": "code",
+    "language": "markdown",
+    "content": "# This is a heading\n\nThis is a paragraph of plain text.",
+    "label": "example.md"
+  },
+  {
+    "type": "quiz",
+    "variant": "multiple-choice",
+    "question": "What file extension do Markdown files use?",
+    "options": [".txt", ".md", ".mkd", ".html"],
+    "answer": 1,
+    "explanation": "Markdown files conventionally use the .md extension."
+  }
+]

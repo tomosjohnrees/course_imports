@@ -1,0 +1,25 @@
+[
+  {
+    "type": "text",
+    "src": "lists-and-links.md"
+  },
+  {
+    "type": "code",
+    "language": "markdown",
+    "content": "- Item one\n- Item two\n  - Nested item\n\n1. First\n2. Second\n3. Third\n\n[Visit Example](https://example.com)",
+    "label": "lists-and-links.md"
+  },
+  {
+    "type": "quiz",
+    "variant": "multiple-choice",
+    "question": "Which syntax creates a hyperlink in Markdown?",
+    "options": [
+      "<a href=\"url\">text</a>",
+      "[text](url)",
+      "{text}(url)",
+      "link(text, url)"
+    ],
+    "answer": 1,
+    "explanation": "Markdown links use the format [display text](url)."
+  }
+]

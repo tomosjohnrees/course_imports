@@ -1,0 +1,24 @@
+[
+  {
+    "type": "text",
+    "src": "formatting.md"
+  },
+  {
+    "type": "code",
+    "language": "markdown",
+    "content": "This is **bold** text.\nThis is *italic* text.\nThis is ~~strikethrough~~ text.",
+    "label": "formatting.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "You can combine styles: `***bold and italic***` renders as ***bold and italic***."
+  },
+  {
+    "type": "quiz",
+    "variant": "free-text",
+    "question": "How would you write the word 'hello' in bold Markdown?",
+    "sampleAnswer": "**hello**",
+    "explanation": "Wrap text in double asterisks to make it bold."
+  }
+]
