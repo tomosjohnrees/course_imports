@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import type { Course, ValidationResult } from '../src/types/course.types'
 import { registerIpcHandlers } from './ipc'
@@ -35,7 +35,12 @@ function createWindow(): void {
     }
   })
 
-  win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://')) {
+      shell.openExternal(url)
+    }
+    return { action: 'deny' }
+  })
 }
 
 const gotTheLock = app.requestSingleInstanceLock()
