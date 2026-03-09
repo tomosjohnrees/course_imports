@@ -20,8 +20,8 @@ describe('EmptyState', () => {
     expect(svg).toBeInTheDocument()
   })
 
-  it('renders heading as h2', () => {
-    render(
+  it('renders heading as h2 by default and h3 when specified', () => {
+    const { unmount } = render(
       <EmptyState
         icon={FileText}
         heading="No content"
@@ -31,6 +31,20 @@ describe('EmptyState', () => {
 
     const heading = screen.getByRole('heading', { level: 2 })
     expect(heading).toHaveTextContent('No content')
+
+    unmount()
+
+    render(
+      <EmptyState
+        icon={FileText}
+        heading="No content"
+        message="This topic does not have any content yet."
+        headingLevel={3}
+      />,
+    )
+
+    const h3 = screen.getByRole('heading', { level: 3 })
+    expect(h3).toHaveTextContent('No content')
   })
 
   it('accepts different icons', () => {

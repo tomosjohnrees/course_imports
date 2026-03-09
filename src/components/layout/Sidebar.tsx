@@ -117,6 +117,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
           icon={BookOpen}
           heading="No topics"
           message="This course has no topics yet."
+          headingLevel={3}
           style={{ flex: 1, padding: 'var(--space-6)' }}
         />
       ) : (

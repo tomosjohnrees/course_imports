@@ -5,6 +5,7 @@ interface EmptyStateProps {
   heading: string
   message: string
   style?: React.CSSProperties
+  headingLevel?: 2 | 3
 }
 
 const containerStyle: React.CSSProperties = {
@@ -32,11 +33,12 @@ const messageStyle: React.CSSProperties = {
   lineHeight: 'var(--leading-sm)',
 }
 
-export default function EmptyState({ icon: Icon, heading, message, style }: EmptyStateProps) {
+export default function EmptyState({ icon: Icon, heading, message, style, headingLevel = 2 }: EmptyStateProps) {
+  const Heading = `h${headingLevel}` as const
   return (
     <div style={{ ...containerStyle, ...style }}>
       <Icon size={32} strokeWidth={1.5} aria-hidden="true" />
-      <h2 style={headingStyle}>{heading}</h2>
+      <Heading style={headingStyle}>{heading}</Heading>
       <p style={messageStyle}>{message}</p>
     </div>
   )

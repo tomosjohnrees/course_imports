@@ -143,6 +143,9 @@ describe('Sidebar', () => {
       screen.getByText('This course has no topics yet.'),
     ).toBeInTheDocument()
     expect(document.querySelector('svg')).toBeInTheDocument()
+    // Empty state heading should be h3, not h2, to maintain heading hierarchy
+    const emptyHeading = screen.getByRole('heading', { level: 3 })
+    expect(emptyHeading).toHaveTextContent('No topics')
     // Progress bar should show 100% (nothing to complete)
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '100')
