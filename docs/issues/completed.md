@@ -174,3 +174,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0035 | [Implement keyboard navigation and focus management](0035-implement-keyboard-navigation-and-focus-management.md) | Milestone 6 — Keyboard Navigation | complete |
+
+## Milestone 6 — Accessibility
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0036 | [Audit colour contrast and semantic HTML hierarchy](0036-audit-colour-contrast-and-semantic-html.md) | Milestone 6 — Accessibility | complete |

@@ -78,3 +78,15 @@
 .callout-body strong {
   font-weight: 700;
 }
+
+/* Dark-mode link contrast: accent is too low against callout backgrounds,
+   so use accent-hover which is lighter and meets 4.5:1. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .callout-body a {
+    color: var(--color-accent-hover);
+  }
+}
+
+[data-theme="dark"] .callout-body a {
+  color: var(--color-accent-hover);
+}

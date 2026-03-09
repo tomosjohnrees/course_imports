@@ -20,21 +20,21 @@ All text and interactive elements must meet WCAG AA colour contrast requirements
 ## Acceptance criteria
 
 ### Functionality
-- [ ] All body text achieves at least 4.5:1 contrast ratio against its background in both themes
-- [ ] All large text (headings, buttons) achieves at least 3:1 contrast ratio in both themes
-- [ ] Callout block text meets contrast requirements against info (blue), warning (amber), and tip (green) backgrounds
-- [ ] Muted/secondary text (captions, timestamps) meets at least 4.5:1 contrast ratio
-- [ ] Markdown headings render with correct semantic hierarchy (`h1` > `h2` > `h3`, no skipped levels)
+- [x] All body text achieves at least 4.5:1 contrast ratio against its background in both themes
+- [x] All large text (headings, buttons) achieves at least 3:1 contrast ratio in both themes
+- [x] Callout block text meets contrast requirements against info (blue), warning (amber), and tip (green) backgrounds
+- [x] Muted/secondary text (captions, timestamps) meets at least 4.5:1 contrast ratio
+- [x] Markdown headings render with correct semantic hierarchy (`h1` > `h2` > `h3`, no skipped levels)
 
 ### Security
-- [ ] No user-supplied content is rendered as raw HTML — markdown rendering uses safe defaults
+- [x] No user-supplied content is rendered as raw HTML — markdown rendering uses safe defaults
 
 ### Performance
-- [ ] Contrast fixes are CSS-only token changes with no runtime overhead
+- [x] Contrast fixes are CSS-only token changes with no runtime overhead
 
 ### Testing
-- [ ] Automated contrast checks run against all colour token pairs and verify WCAG AA compliance
-- [ ] Component tests verify rendered markdown headings use sequential heading levels
+- [x] Automated contrast checks run against all colour token pairs and verify WCAG AA compliance
+- [x] Component tests verify rendered markdown headings use sequential heading levels
 
 ## Notes
 

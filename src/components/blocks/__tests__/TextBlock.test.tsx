@@ -76,4 +76,43 @@ describe('TextBlock', () => {
     const { container } = render(<TextBlock type="text" content="Hello" />)
     expect(container.firstElementChild).toHaveClass('text-block')
   })
+
+  // Semantic heading hierarchy — no skipped levels
+  describe('heading level normalisation', () => {
+    it('collapses skipped heading levels to sequential order', () => {
+      render(
+        <TextBlock type="text" content={'## Second\n\n#### Fourth\n\n###### Sixth'} />,
+      )
+      // h2 → h1, h4 → h2, h6 → h3  (sequential, no gaps)
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Second')
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Fourth')
+      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Sixth')
+    })
+
+    it('preserves already-sequential headings unchanged', () => {
+      render(
+        <TextBlock type="text" content={'# One\n\n## Two\n\n### Three'} />,
+      )
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('One')
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Two')
+      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Three')
+    })
+
+    it('normalises h3 + h5 to h1 + h2', () => {
+      render(
+        <TextBlock type="text" content={'### Alpha\n\n##### Beta'} />,
+      )
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Alpha')
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Beta')
+    })
+  })
+
+  // Security — raw HTML stripped
+  it('does not render raw HTML tags', () => {
+    const { container } = render(
+      <TextBlock type="text" content='<script>alert("xss")</script><div id="injected">bad</div>' />,
+    )
+    expect(container.querySelector('script')).toBeNull()
+    expect(container.querySelector('#injected')).toBeNull()
+  })
 })
