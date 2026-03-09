@@ -17,7 +17,11 @@ function notifySaved(): void {
 export function flushProgress(): void {
   const { course, progress } = useCourseStore.getState()
   if (course?.id) {
-    window.api.store.saveProgress(course.id, progress)
+    Promise.resolve(
+      window.api.store.saveProgress(course.id, progress),
+    ).catch((err) => {
+      console.error('Failed to flush progress on cleanup:', err)
+    })
   }
 }
 
