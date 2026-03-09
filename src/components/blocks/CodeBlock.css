@@ -45,6 +45,11 @@
   opacity: 1;
 }
 
+.code-block-copy:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
 .code-block-copy:hover {
   color: var(--color-text-primary);
   background: var(--color-border);

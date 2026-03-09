@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BookOpen, FileText } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
@@ -31,6 +32,13 @@ const emptyStateMessageStyle: React.CSSProperties = {
 export default function Course() {
   const course = useCourseStore((s) => s.course)
   const activeTopic = useCourseStore((s) => s.activeTopic)
+
+  useEffect(() => {
+    if (!activeTopic) return
+    const main = document.getElementById('main-content')
+    main?.focus()
+    main?.scrollTo(0, 0)
+  }, [activeTopic])
 
   const topic = course?.topics.find((t) => t.id === activeTopic)
 

@@ -42,6 +42,16 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
     }
   }, [open])
 
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [open, onClose])
+
   const handleThemeChange = (newTheme: Theme) => {
     setTheme(newTheme)
     window.api.store.savePreferences({ theme: newTheme, githubToken: undefined })

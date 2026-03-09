@@ -16,7 +16,7 @@ export default function AppShell() {
       {showSidebar && (
         <Sidebar onOpenSettings={() => setSettingsOpen(true)} />
       )}
-      <main style={{ flex: 1, overflow: 'auto' }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, overflow: 'auto', outline: 'none' }}>
         <Outlet />
       </main>
       <SettingsPanel

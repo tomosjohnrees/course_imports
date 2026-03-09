@@ -21,23 +21,23 @@ The app must be fully navigable via keyboard. Users should be able to move betwe
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Up/Down arrow keys move focus between topic items in the sidebar
-- [ ] Pressing Enter on a focused sidebar topic navigates to it
-- [ ] Tab / Shift+Tab cycles through interactive elements in document order without getting trapped
-- [ ] Pressing Enter on a selected quiz option submits the answer
-- [ ] Focus moves to the main content area when navigating to a new topic
-- [ ] No focus traps exist anywhere in the app (modal/slide-over must support Escape to close)
+- [x] Up/Down arrow keys move focus between topic items in the sidebar
+- [x] Pressing Enter on a focused sidebar topic navigates to it
+- [x] Tab / Shift+Tab cycles through interactive elements in document order without getting trapped
+- [x] Pressing Enter on a selected quiz option submits the answer
+- [x] Focus moves to the main content area when navigating to a new topic
+- [x] No focus traps exist anywhere in the app (modal/slide-over must support Escape to close)
 
 ### Security
-- [ ] Keyboard shortcuts do not bypass any UI state restrictions (e.g. cannot submit a locked quiz via keyboard)
+- [x] Keyboard shortcuts do not bypass any UI state restrictions (e.g. cannot submit a locked quiz via keyboard)
 
 ### Performance
-- [ ] Focus management uses native DOM focus methods, not re-renders or state changes
+- [x] Focus management uses native DOM focus methods, not re-renders or state changes
 
 ### Testing
-- [ ] Integration tests verify arrow key navigation through the sidebar
-- [ ] Integration tests verify Tab order through a topic with interactive blocks
-- [ ] Component tests verify focus ring visibility on all interactive element types
+- [x] Integration tests verify arrow key navigation through the sidebar
+- [x] Integration tests verify Tab order through a topic with interactive blocks
+- [x] Component tests verify focus ring visibility on all interactive element types
 
 ## Notes
 

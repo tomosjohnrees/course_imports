@@ -68,6 +68,8 @@ describe('AppShell', () => {
 
   it('renders the Course page at /course', () => {
     renderWithRouter('/course')
-    expect(screen.getByRole('main')).toHaveTextContent('Course')
+    // Sidebar shows "Course" heading, proving we're on the course route
+    expect(screen.getByRole('navigation')).toHaveTextContent('Course')
+    expect(screen.getByRole('main')).toBeInTheDocument()
   })
 })

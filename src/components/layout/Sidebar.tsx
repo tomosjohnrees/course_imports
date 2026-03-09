@@ -1,3 +1,4 @@
+import { useRef, useCallback } from 'react'
 import { BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
@@ -30,6 +31,27 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const progress = useCourseStore((s) => s.progress)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
+
+  const listRef = useRef<HTMLUListElement>(null)
+
+  const handleTopicKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLUListElement>) => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
+      e.preventDefault()
+      const list = listRef.current
+      if (!list) return
+      const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>('button'))
+      const currentIndex = buttons.findIndex((btn) => btn === document.activeElement)
+      let nextIndex: number
+      if (e.key === 'ArrowDown') {
+        nextIndex = currentIndex < buttons.length - 1 ? currentIndex + 1 : 0
+      } else {
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : buttons.length - 1
+      }
+      buttons[nextIndex]?.focus()
+    },
+    [],
+  )
 
   const topics = course?.topics ?? []
   const completedCount = topics.filter(
@@ -120,6 +142,9 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
         </div>
       ) : (
         <ul
+          ref={listRef}
+          aria-label="Topics"
+          onKeyDown={handleTopicKeyDown}
           style={{
             listStyle: 'none',
             margin: 0,
@@ -128,8 +153,9 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
             flex: 1,
           }}
         >
-          {topics.map((topic) => {
+          {topics.map((topic, index) => {
             const isActive = topic.id === activeTopic
+            const isTabbable = isActive || (!activeTopic && index === 0)
             const entry = progress[topic.id]
             const status: TopicStatus = entry
               ? entry.complete
@@ -143,6 +169,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
                   className="sidebar-topic-btn"
                   data-active={isActive ? '' : undefined}
                   onClick={() => setActiveTopic(topic.id)}
+                  tabIndex={isTabbable ? 0 : -1}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
