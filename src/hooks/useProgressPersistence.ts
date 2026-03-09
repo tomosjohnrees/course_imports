@@ -3,6 +3,13 @@ import { useCourseStore } from '@/store/course.store'
 
 const DEBOUNCE_MS = 800
 
+export function flushProgress(): void {
+  const { course, progress } = useCourseStore.getState()
+  if (course?.id) {
+    window.api.store.saveProgress(course.id, progress)
+  }
+}
+
 export function useProgressPersistence(): void {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -27,11 +34,7 @@ export function useProgressPersistence(): void {
       unsubscribe()
       if (timerRef.current) {
         clearTimeout(timerRef.current)
-        // Flush pending save on unmount
-        const { course, progress } = useCourseStore.getState()
-        if (course?.id) {
-          window.api.store.saveProgress(course.id, progress)
-        }
+        flushProgress()
         timerRef.current = null
       }
     }

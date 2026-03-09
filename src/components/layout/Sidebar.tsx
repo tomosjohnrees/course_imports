@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
+import { flushProgress } from '@/hooks/useProgressPersistence'
 import type { TopicStatus } from '@/hooks/useProgress'
 import EmptyState from '@/components/EmptyState'
 
@@ -19,11 +20,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const listRef = useRef<HTMLUListElement>(null)
 
   const handleNavigateHome = () => {
-    // Flush any pending progress save before leaving
-    const { course: currentCourse, progress: currentProgress } = useCourseStore.getState()
-    if (currentCourse?.id) {
-      window.api.store.saveProgress(currentCourse.id, currentProgress)
-    }
+    flushProgress()
     navigate('/')
   }
 

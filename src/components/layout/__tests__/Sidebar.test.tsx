@@ -4,6 +4,12 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import Sidebar from '../Sidebar'
 import { useCourseStore } from '@/store/course.store'
+import { flushProgress } from '@/hooks/useProgressPersistence'
+
+vi.mock('@/hooks/useProgressPersistence', async () => {
+  const actual = await vi.importActual('@/hooks/useProgressPersistence')
+  return { ...actual, flushProgress: vi.fn() }
+})
 import type { Course } from '@/types/course.types'
 
 const mockCourse: Course = {
@@ -297,9 +303,6 @@ describe('Sidebar', () => {
     const user = userEvent.setup()
     await user.click(screen.getByRole('button', { name: 'Back to courses' }))
 
-    expect(window.api.store.saveProgress).toHaveBeenCalledWith(
-      'test-course',
-      { 'topic-1': { viewed: true, complete: true } },
-    )
+    expect(flushProgress).toHaveBeenCalled()
   })
 })
