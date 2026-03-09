@@ -185,6 +185,16 @@ const recentTitleStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 }
 
+const recentTitleWrapperStyle: React.CSSProperties = {
+  overflow: 'hidden',
+  minWidth: 0,
+  flex: 1,
+}
+
+const recentMetaWrapperStyle: React.CSSProperties = {
+  flexShrink: 0,
+}
+
 const recentMetaStyle: React.CSSProperties = {
   fontSize: '12px',
   color: '#A8A49D',
@@ -313,10 +323,10 @@ export default function Home() {
                   disabled={isLoading}
                   aria-label={`Load ${course.title}`}
                 >
-                  <div style={{ overflow: 'hidden', minWidth: 0, flex: 1 }}>
+                  <div style={recentTitleWrapperStyle}>
                     <p title={course.title} style={recentTitleStyle}>{course.title}</p>
                   </div>
-                  <div style={{ flexShrink: 0 }}>
+                  <div style={recentMetaWrapperStyle}>
                     <p style={recentMetaStyle}>
                       {course.sourceType === 'github' ? 'GitHub' : 'Local'}
                     </p>
