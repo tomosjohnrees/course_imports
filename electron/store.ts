@@ -10,8 +10,12 @@ export interface StoredRecentCourse {
   lastLoaded: number
 }
 
+interface StoredPreferences {
+  theme: Preferences['theme']
+}
+
 interface StoreSchema {
-  preferences: Preferences
+  preferences: StoredPreferences
   encryptedGitHubToken?: string
   recentCourses: StoredRecentCourse[]
   progress: Record<string, CourseProgress>
@@ -27,9 +31,6 @@ const store = new Store<StoreSchema>({
         theme: {
           type: 'string',
           enum: ['light', 'dark', 'system'],
-        },
-        githubToken: {
-          type: 'string',
         },
       },
       required: ['theme'],
