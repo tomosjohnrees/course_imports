@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react'
+import { memo, useState } from 'react'
 import { ImageOff } from 'lucide-react'
 import type { ImageBlock as ImageBlockType } from '@/types/course.types'
 import './ImageBlock.css'
@@ -10,7 +10,7 @@ function isValidImageSrc(src: string): boolean {
 export default memo(function ImageBlock({ src, alt, caption }: ImageBlockType) {
   const [error, setError] = useState(false)
 
-  const handleError = useCallback(() => setError(true), [])
+  const handleError = () => setError(true)
 
   const altText = alt || caption || 'Course image'
   const validSrc = isValidImageSrc(src)
