@@ -54,7 +54,7 @@ beforeEach(() => {
       getPreferences: vi.fn().mockResolvedValue({ theme: 'system' }),
       savePreferences: vi.fn().mockResolvedValue(undefined),
       clearAllProgress: vi.fn(),
-      removeRecentCourse: vi.fn().mockResolvedValue(true).mockResolvedValue(undefined),
+      removeRecentCourse: vi.fn().mockResolvedValue(true),
     },
   }
 })

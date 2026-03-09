@@ -311,9 +311,9 @@ export default function Home() {
   const retryAction = useUIStore((s) => s.retryAction)
   const [githubUrl, setGithubUrl] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
-  const { recentCourses, removeRecentCourse } = useRecentCourses()
+  const { recentCourses, removeRecentCourse, hasProgress } = useRecentCourses()
   const [confirmRemove, setConfirmRemove] = useState<{ id: string; title: string } | null>(null)
-  const [hasProgress, setHasProgress] = useState(false)
+  const [showProgressOptions, setShowProgressOptions] = useState(false)
 
   function handleRetry() {
     if (!retryAction) {
@@ -334,22 +334,16 @@ export default function Home() {
   }
 
   async function handleRemoveClick(course: { id: string; title: string }) {
-    const progress = await window.api.store.getProgress(course.id)
-    const courseHasProgress = progress !== null && Object.keys(progress).length > 0
-    if (courseHasProgress) {
-      setHasProgress(true)
-      setConfirmRemove(course)
-    } else {
-      setHasProgress(false)
-      setConfirmRemove(course)
-    }
+    const courseHasProgress = await hasProgress(course.id)
+    setShowProgressOptions(courseHasProgress)
+    setConfirmRemove(course)
   }
 
   async function handleConfirmRemove(clearProgress: boolean) {
     if (!confirmRemove) return
     await removeRecentCourse(confirmRemove.id, clearProgress)
     setConfirmRemove(null)
-    setHasProgress(false)
+    setShowProgressOptions(false)
   }
 
   function handleLoadGitHub() {
@@ -484,7 +478,7 @@ export default function Home() {
         <div style={confirmOverlayStyle} role="dialog" aria-label="Confirm removal">
           <div style={confirmDialogStyle}>
             <h2 style={confirmHeadingStyle}>Remove course</h2>
-            {hasProgress ? (
+            {showProgressOptions ? (
               <>
                 <p style={confirmMessageStyle}>
                   &ldquo;{confirmRemove.title}&rdquo; has saved progress. Would you like to keep the progress data or remove it too?
