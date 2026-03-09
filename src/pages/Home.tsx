@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { Inbox } from 'lucide-react'
 import { useCourse, isValidGitHubUrl } from '@/hooks/useCourse'
 import { useRecentCourses } from '@/hooks/useRecentCourses'
 import { useUIStore } from '@/store/ui.store'
+import ErrorState from '@/components/ErrorState'
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
@@ -106,32 +108,28 @@ const loadingStyle: React.CSSProperties = {
   textAlign: 'center',
 }
 
-const errorContainerStyle: React.CSSProperties = {
-  marginTop: '16px',
-  padding: '12px 16px',
-  background: '#FEF2F2',
-  border: '1px solid #FECACA',
-  borderRadius: '6px',
+const recentEmptyStyle: React.CSSProperties = {
   display: 'flex',
-  alignItems: 'flex-start',
+  flexDirection: 'column',
+  alignItems: 'center',
   gap: '8px',
+  padding: '24px 16px',
+  color: '#A8A49D',
+  textAlign: 'center',
 }
 
-const errorTextStyle: React.CSSProperties = {
-  flex: 1,
-  fontSize: '14px',
-  color: '#991B1B',
+const recentEmptyHeadingStyle: React.CSSProperties = {
   margin: 0,
+  fontSize: '14px',
+  fontWeight: 600,
+  color: '#6B6860',
 }
 
-const dismissButtonStyle: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  color: '#991B1B',
-  cursor: 'default',
-  fontSize: '16px',
-  padding: '0 4px',
-  lineHeight: 1,
+const recentEmptyMessageStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: '13px',
+  lineHeight: 1.5,
+  color: '#A8A49D',
 }
 
 const validationStyle: React.CSSProperties = {
@@ -296,23 +294,17 @@ export default function Home() {
         )}
 
         {error && !isLoading && (
-          <div style={errorContainerStyle} role="alert">
-            <p style={errorTextStyle}>{error}</p>
-            <button
-              type="button"
-              style={dismissButtonStyle}
-              onClick={() => setError(null)}
-              aria-label="Dismiss error"
-            >
-              ×
-            </button>
-          </div>
+          <ErrorState
+            message={error}
+            onRetry={() => setError(null)}
+            onDismiss={() => setError(null)}
+          />
         )}
       </div>
 
-      {recentCourses.length > 0 && (
-        <div style={recentSectionStyle}>
-          <h2 style={recentHeadingStyle}>Recent courses</h2>
+      <div style={recentSectionStyle}>
+        <h2 style={recentHeadingStyle}>Recent courses</h2>
+        {recentCourses.length > 0 ? (
           <ul style={recentListStyle}>
             {recentCourses.map((course) => (
               <li key={course.id}>
@@ -338,8 +330,16 @@ export default function Home() {
               </li>
             ))}
           </ul>
-        </div>
-      )}
+        ) : (
+          <div style={recentEmptyStyle}>
+            <Inbox size={32} strokeWidth={1.5} aria-hidden="true" />
+            <h3 style={recentEmptyHeadingStyle}>No courses yet</h3>
+            <p style={recentEmptyMessageStyle}>
+              Load a course from GitHub or open a local folder to get started.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

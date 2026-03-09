@@ -130,7 +130,7 @@ describe('Sidebar', () => {
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
   })
 
-  it('shows empty state when course has zero topics', () => {
+  it('shows empty state with icon, heading, and message when course has zero topics', () => {
     const emptyCourse: Course = {
       ...mockCourse,
       topics: [],
@@ -138,9 +138,11 @@ describe('Sidebar', () => {
     useCourseStore.setState({ course: emptyCourse })
     render(<Sidebar onOpenSettings={() => {}} />)
 
+    expect(screen.getByText('No topics')).toBeInTheDocument()
     expect(
       screen.getByText('This course has no topics yet.'),
     ).toBeInTheDocument()
+    expect(document.querySelector('svg')).toBeInTheDocument()
     // Progress bar should show 100% (nothing to complete)
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '100')

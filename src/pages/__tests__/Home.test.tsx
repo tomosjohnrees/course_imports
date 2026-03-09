@@ -181,6 +181,24 @@ describe('Home', () => {
     })
   })
 
+  it('shows error state with heading and Try again action on load failure', async () => {
+    vi.mocked(window.api.course.selectFolder).mockResolvedValue('/test/folder')
+    vi.mocked(window.api.course.loadFromFolder).mockResolvedValue({
+      success: false,
+      error: 'Missing course.json',
+    })
+    renderWithRouter()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open local folder' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+    })
+    expect(screen.getByText("Couldn't load course")).toBeInTheDocument()
+    expect(screen.getByText('Missing course.json')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
+  })
+
   describe('GitHub loading', () => {
     it('shows validation error for empty URL', async () => {
       renderWithRouter()
@@ -431,15 +449,16 @@ describe('Home', () => {
       expect(screen.getByText('GitHub')).toBeInTheDocument()
     })
 
-    it('does not show recent courses section when list is empty', async () => {
+    it('shows empty state when no recent courses exist', async () => {
       vi.mocked(window.api.store.getRecentCourses).mockResolvedValue([])
       renderWithRouter()
 
-      // Wait for the effect to run
       await waitFor(() => {
         expect(window.api.store.getRecentCourses).toHaveBeenCalled()
       })
-      expect(screen.queryByText('Recent courses')).not.toBeInTheDocument()
+      expect(screen.getByText('Recent courses')).toBeInTheDocument()
+      expect(screen.getByText('No courses yet')).toBeInTheDocument()
+      expect(screen.getByText('Load a course from GitHub or open a local folder to get started.')).toBeInTheDocument()
     })
 
     it('calls loadRecentCourse when a recent course is clicked', async () => {

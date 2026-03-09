@@ -2,25 +2,7 @@ import { useRef } from 'react'
 import { BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
-
-const emptyStateStyle: React.CSSProperties = {
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 'var(--space-6)',
-  gap: 'var(--space-3)',
-  color: 'var(--color-text-muted)',
-  fontFamily: 'var(--font-sans)',
-  textAlign: 'center',
-}
-
-const emptyStateTextStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 'var(--text-sm)',
-  lineHeight: 'var(--leading-sm)',
-}
+import EmptyState from '@/components/EmptyState'
 
 interface SidebarProps {
   onOpenSettings: () => void
@@ -131,12 +113,12 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
 
       {/* Topic list */}
       {course && topics.length === 0 ? (
-        <div style={emptyStateStyle}>
-          <BookOpen size={24} strokeWidth={1.5} />
-          <p style={emptyStateTextStyle}>
-            This course has no topics yet.
-          </p>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          heading="No topics"
+          message="This course has no topics yet."
+          style={{ flex: 1, padding: 'var(--space-6)' }}
+        />
       ) : (
         <ul
           ref={listRef}
