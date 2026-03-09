@@ -29,12 +29,17 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   // Load preferences when panel opens
   useEffect(() => {
     if (!open) return
+    let ignore = false
     setConfirmingClear(false)
     setTokenVisible(false)
     window.api.store.getPreferences().then((prefs) => {
+      if (ignore) return
       setGithubToken(prefs.githubToken ?? '')
       setTokenLoaded(true)
     })
+    return () => {
+      ignore = true
+    }
   }, [open])
 
   const handleThemeChange = (newTheme: Theme) => {
