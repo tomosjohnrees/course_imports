@@ -140,3 +140,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0026 | [Implement in-session progress tracking](0026-implement-in-session-progress-tracking.md) | Milestone 5 — Progress Tracking | complete |
+
+## Milestone 5 — Progress Persistence
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0027 | [Implement progress persistence via IPC](0027-implement-progress-persistence.md) | Milestone 5 — Progress Persistence | complete |

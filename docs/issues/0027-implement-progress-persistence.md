@@ -20,26 +20,26 @@ Persist course progress to disk so users can close the app and pick up where the
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `store:saveProgress` IPC handler writes progress data for a given course ID to `electron-store`
-- [ ] `store:getProgress` IPC handler returns previously saved progress for a given course ID, or null if none exists
-- [ ] Progress is saved to disk after a quiz answer is recorded (debounced)
-- [ ] Progress is saved to disk after a topic is viewed for the first time (debounced)
-- [ ] On course load, the app fetches persisted progress and hydrates the course store before rendering the course view
-- [ ] Progress survives a full app restart — closing and reopening the app with the same course shows previously completed topics as complete
-- [ ] Loading a different course does not affect another course's persisted progress
+- [x] `store:saveProgress` IPC handler writes progress data for a given course ID to `electron-store`
+- [x] `store:getProgress` IPC handler returns previously saved progress for a given course ID, or null if none exists
+- [x] Progress is saved to disk after a quiz answer is recorded (debounced)
+- [x] Progress is saved to disk after a topic is viewed for the first time (debounced)
+- [x] On course load, the app fetches persisted progress and hydrates the course store before rendering the course view
+- [x] Progress survives a full app restart — closing and reopening the app with the same course shows previously completed topics as complete
+- [x] Loading a different course does not affect another course's persisted progress
 
 ### Security
-- [ ] Progress data does not include raw course content — only identifiers and completion states are persisted
-- [ ] IPC handlers validate that the course ID parameter is a non-empty string before reading or writing
+- [x] Progress data does not include raw course content — only identifiers and completion states are persisted
+- [x] IPC handlers validate that the course ID parameter is a non-empty string before reading or writing
 
 ### Performance
-- [ ] Disk writes are debounced (e.g. 500ms–1s) so rapid navigation does not cause excessive I/O
-- [ ] Progress hydration on course load does not block rendering — the course view should appear promptly with progress applied
+- [x] Disk writes are debounced (e.g. 500ms–1s) so rapid navigation does not cause excessive I/O
+- [x] Progress hydration on course load does not block rendering — the course view should appear promptly with progress applied
 
 ### Testing
-- [ ] Unit tests for `store:saveProgress` and `store:getProgress` IPC handlers covering save, retrieve, and missing-course-ID paths
-- [ ] Test that debouncing prevents multiple rapid saves from each triggering a disk write
-- [ ] Integration test verifying the full cycle: load course → answer quiz → restart → reload course → progress is restored
+- [x] Unit tests for `store:saveProgress` and `store:getProgress` IPC handlers covering save, retrieve, and missing-course-ID paths
+- [x] Test that debouncing prevents multiple rapid saves from each triggering a disk write
+- [x] Integration test verifying the full cycle: load course → answer quiz → restart → reload course → progress is restored
 
 ## Notes
 

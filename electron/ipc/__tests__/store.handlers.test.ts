@@ -11,7 +11,7 @@ vi.mock('electron', () => ({
 }))
 
 vi.mock('electron-store', () => {
-  const data: Record<string, unknown> = { recentCourses: [] }
+  const data: Record<string, unknown> = { recentCourses: [], progress: {} }
   return {
     default: class {
       get(key: string) { return data[key] }
@@ -25,7 +25,12 @@ vi.mock('electron-store', () => {
 
 import { ipcMain } from 'electron'
 import { registerStoreHandlers } from '../store.handlers'
-import { saveRecentCourse, getRecentCourses } from '../../store'
+import {
+  saveRecentCourse,
+  getRecentCourses,
+  getProgress,
+  saveProgress,
+} from '../../store'
 import type { StoredRecentCourse } from '../../store'
 
 const mockHandle = vi.mocked(ipcMain.handle)
@@ -37,6 +42,7 @@ beforeEach(async () => {
   const mod = await import('electron-store')
   StoreClass = mod.default
   StoreClass._data.recentCourses = []
+  StoreClass._data.progress = {}
 })
 
 describe('store:getRecentCourses handler', () => {
@@ -196,5 +202,135 @@ describe('getRecentCourses store function', () => {
 
     expect(stringified).not.toContain('token')
     expect(stringified).not.toContain('ghp_')
+  })
+})
+
+describe('store:getProgress handler', () => {
+  let handler: (event: unknown, courseId: string) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:getProgress',
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown, courseId: string) => Promise<unknown>
+  })
+
+  it('returns null when no progress exists for a course', async () => {
+    const result = await handler(null, 'nonexistent-course')
+    expect(result).toBeNull()
+  })
+
+  it('returns saved progress for a course', async () => {
+    const progress = { 'topic-1': { viewed: true, complete: false } }
+    saveProgress('my-course', progress)
+
+    const result = await handler(null, 'my-course')
+    expect(result).toEqual(progress)
+  })
+
+  it('returns null for empty course ID', async () => {
+    const result = await handler(null, '')
+    expect(result).toBeNull()
+  })
+
+  it('returns null for non-string course ID', async () => {
+    const result = await handler(null, undefined as unknown as string)
+    expect(result).toBeNull()
+  })
+})
+
+describe('store:saveProgress handler', () => {
+  let handler: (event: unknown, courseId: string, data: unknown) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:saveProgress',
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown, courseId: string, data: unknown) => Promise<unknown>
+  })
+
+  it('saves progress data for a course', async () => {
+    const progress = {
+      'topic-1': { viewed: true, complete: false },
+      'topic-2': { viewed: true, complete: true },
+    }
+
+    await handler(null, 'my-course', progress)
+
+    expect(getProgress('my-course')).toEqual(progress)
+  })
+
+  it('does not save when course ID is empty', async () => {
+    await handler(null, '', { 'topic-1': { viewed: true, complete: false } })
+
+    expect(getProgress('')).toBeNull()
+  })
+
+  it('does not save when course ID is not a string', async () => {
+    await handler(null, undefined as unknown as string, {
+      'topic-1': { viewed: true, complete: false },
+    })
+
+    // Store should remain empty
+    expect(getProgress('undefined')).toBeNull()
+  })
+
+  it('does not save when data is not valid progress', async () => {
+    await handler(null, 'my-course', 'not-an-object')
+    expect(getProgress('my-course')).toBeNull()
+
+    await handler(null, 'my-course', { 'topic-1': 'invalid' })
+    expect(getProgress('my-course')).toBeNull()
+
+    await handler(null, 'my-course', null)
+    expect(getProgress('my-course')).toBeNull()
+  })
+
+  it('does not overwrite progress for other courses', async () => {
+    const progress1 = { 'topic-1': { viewed: true, complete: true } }
+    const progress2 = { 'topic-a': { viewed: true, complete: false } }
+
+    await handler(null, 'course-1', progress1)
+    await handler(null, 'course-2', progress2)
+
+    expect(getProgress('course-1')).toEqual(progress1)
+    expect(getProgress('course-2')).toEqual(progress2)
+  })
+})
+
+describe('progress store functions', () => {
+  it('getProgress returns null for unknown course', () => {
+    expect(getProgress('unknown')).toBeNull()
+  })
+
+  it('saveProgress and getProgress round-trip', () => {
+    const progress = {
+      'topic-1': { viewed: true, complete: false },
+      'topic-2': { viewed: true, complete: true },
+    }
+
+    saveProgress('course-abc', progress)
+    expect(getProgress('course-abc')).toEqual(progress)
+  })
+
+  it('persists only identifiers and completion states', () => {
+    const progress = { 'topic-1': { viewed: true, complete: false } }
+    saveProgress('c1', progress)
+
+    const result = getProgress('c1')
+    const stringified = JSON.stringify(result)
+
+    // Should not contain any course content
+    expect(Object.keys(result!['topic-1'])).toEqual(['viewed', 'complete'])
+    expect(stringified).not.toContain('content')
+    expect(stringified).not.toContain('blocks')
   })
 })

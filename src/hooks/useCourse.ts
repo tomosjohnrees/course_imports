@@ -11,8 +11,14 @@ export function isValidGitHubUrl(url: string): boolean {
 export function useCourse() {
   const navigate = useNavigate()
   const setCourse = useCourseStore((s) => s.setCourse)
+  const hydrateProgress = useCourseStore((s) => s.hydrateProgress)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
+
+  async function hydrateFromDisk(courseId: string) {
+    const saved = await window.api.store.getProgress(courseId)
+    if (saved) hydrateProgress(saved)
+  }
 
   async function loadLocalCourse() {
     setError(null)
@@ -27,6 +33,7 @@ export function useCourse() {
 
       if (result.success) {
         setCourse(result.course)
+        await hydrateFromDisk(result.course.id)
         navigate('/course')
       } else {
         setError(result.error)
@@ -48,6 +55,7 @@ export function useCourse() {
 
       if (result.success) {
         setCourse(result.course)
+        await hydrateFromDisk(result.course.id)
         navigate('/course')
       } else {
         setError(result.error)
@@ -68,6 +76,7 @@ export function useCourse() {
 
       if (result.success) {
         setCourse(result.course)
+        await hydrateFromDisk(result.course.id)
         navigate('/course')
       } else {
         setError(result.error)

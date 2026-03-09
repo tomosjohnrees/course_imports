@@ -8,6 +8,7 @@ interface CourseStore {
   progress: CourseProgress
   quizAnswers: Record<string, QuizAnswer>
   setCourse: (course: Course) => void
+  hydrateProgress: (progress: CourseProgress) => void
   setActiveTopic: (topicId: string) => void
   markTopicComplete: (topicId: string) => void
   recordQuizAnswer: (key: string, answer: QuizAnswer) => void
@@ -37,6 +38,9 @@ export const useCourseStore = create<CourseStore>()(
           false,
           'setCourse',
         ),
+
+      hydrateProgress: (progress) =>
+        set({ progress }, false, 'hydrateProgress'),
 
       setActiveTopic: (topicId) =>
         set(

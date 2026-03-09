@@ -1,6 +1,6 @@
 import Store from 'electron-store'
 import { safeStorage } from 'electron'
-import type { Preferences, RecentCourse } from '../src/types/course.types'
+import type { CourseProgress, Preferences, RecentCourse } from '../src/types/course.types'
 
 export interface StoredRecentCourse {
   id: string
@@ -14,6 +14,7 @@ interface StoreSchema {
   preferences: Preferences
   encryptedGitHubToken?: string
   recentCourses: StoredRecentCourse[]
+  progress: Record<string, CourseProgress>
 }
 
 const MAX_RECENT_COURSES = 10
@@ -53,12 +54,29 @@ const store = new Store<StoreSchema>({
       },
       default: [],
     },
+    progress: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            viewed: { type: 'boolean' },
+            complete: { type: 'boolean' },
+          },
+          required: ['viewed', 'complete'],
+          additionalProperties: false,
+        },
+      },
+      default: {},
+    },
   },
   defaults: {
     preferences: {
       theme: 'system',
     },
     recentCourses: [],
+    progress: {},
   },
 })
 
@@ -111,6 +129,16 @@ export function getRecentCourses(): RecentCourse[] {
 export function getStoredRecentCourse(id: string): StoredRecentCourse | undefined {
   const courses = store.get('recentCourses')
   return courses.find((c) => c.id === id)
+}
+
+export function getProgress(courseId: string): CourseProgress | null {
+  const allProgress = store.get('progress')
+  return allProgress[courseId] ?? null
+}
+
+export function saveProgress(courseId: string, data: CourseProgress): void {
+  const allProgress = store.get('progress')
+  store.set('progress', { ...allProgress, [courseId]: data })
 }
 
 export default store

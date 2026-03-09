@@ -256,6 +256,31 @@ describe('course.store', () => {
     })
   })
 
+  describe('hydrateProgress', () => {
+    it('sets progress from persisted data', () => {
+      useCourseStore.getState().setCourse(mockCourse)
+      const saved = {
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: false },
+      }
+      useCourseStore.getState().hydrateProgress(saved)
+
+      expect(useCourseStore.getState().progress).toEqual(saved)
+    })
+
+    it('does not affect course or activeTopic', () => {
+      useCourseStore.getState().setCourse(mockCourse)
+      useCourseStore.getState().setActiveTopic('topic-1')
+
+      useCourseStore.getState().hydrateProgress({
+        'topic-1': { viewed: true, complete: true },
+      })
+
+      expect(useCourseStore.getState().course).toBe(mockCourse)
+      expect(useCourseStore.getState().activeTopic).toBe('topic-1')
+    })
+  })
+
   describe('clearCourse', () => {
     it('resets all course-related state', () => {
       useCourseStore.setState({
