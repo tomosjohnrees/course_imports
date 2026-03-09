@@ -85,6 +85,7 @@
     --color-tip-subtle: #052E16;
     --color-destructive: #F87171;
     --color-destructive-subtle: #2D0F0F;
+    --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.4);
   }
 }
 
@@ -107,4 +108,5 @@
   --color-tip-subtle: #052E16;
   --color-destructive: #F87171;
   --color-destructive-subtle: #2D0F0F;
+  --shadow-focus: 0 0 0 3px rgba(59, 130, 246, 0.4);
 }

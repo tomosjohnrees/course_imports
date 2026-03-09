@@ -21,23 +21,23 @@ A complete visual review of every surface and component in dark mode to catch an
 ## Acceptance criteria
 
 ### Functionality
-- [ ] All surfaces (sidebar, content area, home screen, settings panel) use dark mode tokens when active
-- [ ] Code block syntax highlighting uses the dark theme variant
-- [ ] Callout blocks (info, warning, tip) are legible and visually distinct in dark mode
-- [ ] Quiz blocks (default, correct, incorrect states) are visually clear in dark mode
-- [ ] Borders, dividers, and shadows are visible but not harsh in dark mode
-- [ ] The progress bar and completion indicators are visible in dark mode
-- [ ] No white flashes or light-mode surfaces appear during navigation in dark mode
+- [x] All surfaces (sidebar, content area, home screen, settings panel) use dark mode tokens when active
+- [x] Code block syntax highlighting uses the dark theme variant
+- [x] Callout blocks (info, warning, tip) are legible and visually distinct in dark mode
+- [x] Quiz blocks (default, correct, incorrect states) are visually clear in dark mode
+- [x] Borders, dividers, and shadows are visible but not harsh in dark mode
+- [x] The progress bar and completion indicators are visible in dark mode
+- [x] No white flashes or light-mode surfaces appear during navigation in dark mode
 
 ### Security
-- [ ] Theme preference is stored locally only — not transmitted externally
+- [x] Theme preference is stored locally only — not transmitted externally
 
 ### Performance
-- [ ] Theme switching is instantaneous with no visible repaint delay
+- [x] Theme switching is instantaneous with no visible repaint delay
 
 ### Testing
-- [ ] Visual snapshot tests capture every block type and screen in dark mode
-- [ ] Automated contrast checks pass for dark mode colour token pairs
+- [x] Visual snapshot tests capture every block type and screen in dark mode
+- [x] Automated contrast checks pass for dark mode colour token pairs
 
 ## Notes
 

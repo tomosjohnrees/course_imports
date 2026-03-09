@@ -164,6 +164,20 @@ describe('WCAG AA colour contrast — dark mode', () => {
     }
   })
 
+  it('success text meets 4.5:1 on surface and success-subtle', () => {
+    expectContrast(dark['--color-success'], dark['--color-surface'], 4.5, 'success on surface')
+    expectContrast(dark['--color-success'], dark['--color-success-subtle'], 4.5, 'success on success-subtle')
+  })
+
+  it('destructive text meets 4.5:1 on surface and destructive-subtle', () => {
+    expectContrast(dark['--color-destructive'], dark['--color-surface'], 4.5, 'destructive on surface')
+    expectContrast(dark['--color-destructive'], dark['--color-destructive-subtle'], 4.5, 'destructive on destructive-subtle')
+  })
+
+  it('warning text meets 4.5:1 on surface', () => {
+    expectContrast(dark['--color-warning'], dark['--color-surface'], 4.5, 'warning on surface')
+  })
+
   it('headings (large text) meet 3:1 on bg', () => {
     expectContrast(dark['--color-text-primary'], dark['--color-bg'], 3, 'primary heading on bg')
     expectContrast(dark['--color-text-secondary'], dark['--color-bg'], 3, 'secondary heading (h6) on bg')
