@@ -1,6 +1,25 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { Course, CourseProgress, QuizAnswer } from '@/types/course.types'
+import type { Course, CourseProgress, QuizAnswer, Topic } from '@/types/course.types'
+
+/**
+ * Returns the topic ID to auto-select when a course loads.
+ * - No topics → null
+ * - Has progress → first incomplete topic (or first topic if all complete)
+ * - No progress → first topic
+ */
+export function pickInitialTopic(
+  topics: Topic[],
+  progress: CourseProgress,
+): string | null {
+  if (topics.length === 0) return null
+
+  const hasProgress = Object.keys(progress).length > 0
+  if (!hasProgress) return topics[0].id
+
+  const firstIncomplete = topics.find((t) => !progress[t.id]?.complete)
+  return firstIncomplete?.id ?? topics[0].id
+}
 
 interface CourseStore {
   course: Course | null

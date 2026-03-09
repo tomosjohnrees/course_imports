@@ -20,19 +20,19 @@ When a course finishes loading and the user lands on the course view, no topic i
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Loading a course for the first time automatically selects and displays the first topic
-- [ ] Loading a course with saved progress automatically selects the topic the user was last viewing, or the first incomplete topic
-- [ ] The sidebar highlights the auto-selected topic
-- [ ] The content area renders the selected topic's blocks without requiring a user click
-- [ ] If the course has no topics, the empty state still renders correctly
+- [x] Loading a course for the first time automatically selects and displays the first topic
+- [x] Loading a course with saved progress automatically selects the topic the user was last viewing, or the first incomplete topic
+- [x] The sidebar highlights the auto-selected topic
+- [x] The content area renders the selected topic's blocks without requiring a user click
+- [x] If the course has no topics, the empty state still renders correctly
 
 ### Security
-- [ ] Auto-selection reads only from locally persisted progress data — no network requests
+- [x] Auto-selection reads only from locally persisted progress data — no network requests
 
 ### Performance
-- [ ] Topic auto-selection happens synchronously after progress hydration — no visible delay or flicker
+- [x] Topic auto-selection happens synchronously after progress hydration — no visible delay or flicker
 
 ### Testing
-- [ ] Unit tests verify that after setCourse + hydrateProgress, the activeTopic is set to the expected topic
-- [ ] Component tests verify the course view renders content immediately after loading a course
-- [ ] Component tests verify that resuming a course with saved progress lands on the correct topic
+- [x] Unit tests verify that after setCourse + hydrateProgress, the activeTopic is set to the expected topic
+- [x] Component tests verify the course view renders content immediately after loading a course
+- [x] Component tests verify that resuming a course with saved progress lands on the correct topic

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useCourseStore } from '@/store/course.store'
+import { useCourseStore, pickInitialTopic } from '@/store/course.store'
 import { useUIStore } from '@/store/ui.store'
 
 const GITHUB_URL_PATTERN = /^https?:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/
@@ -12,12 +12,20 @@ export function useCourse() {
   const navigate = useNavigate()
   const setCourse = useCourseStore((s) => s.setCourse)
   const hydrateProgress = useCourseStore((s) => s.hydrateProgress)
+  const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
 
   async function hydrateFromDisk(courseId: string) {
     const saved = await window.api.store.getProgress(courseId)
     if (saved) hydrateProgress(saved)
+  }
+
+  function selectInitialTopic() {
+    const { course: loaded, progress } = useCourseStore.getState()
+    if (!loaded) return
+    const topicId = pickInitialTopic(loaded.topics, progress)
+    if (topicId) setActiveTopic(topicId)
   }
 
   async function loadLocalCourse() {
@@ -34,6 +42,7 @@ export function useCourse() {
       if (result.success) {
         setCourse(result.course)
         await hydrateFromDisk(result.course.id)
+        selectInitialTopic()
         navigate('/course')
       } else {
         setError(result.error)
@@ -62,6 +71,7 @@ export function useCourse() {
       if (result.success) {
         setCourse(result.course)
         await hydrateFromDisk(result.course.id)
+        selectInitialTopic()
         navigate('/course')
       } else {
         setError(result.error)
@@ -90,6 +100,7 @@ export function useCourse() {
       if (result.success) {
         setCourse(result.course)
         await hydrateFromDisk(result.course.id)
+        selectInitialTopic()
         navigate('/course')
       } else {
         setError(result.error)

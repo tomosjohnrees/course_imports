@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useCourseStore } from '../course.store'
+import { useCourseStore, pickInitialTopic } from '../course.store'
 import type { Course } from '@/types/course.types'
 
 const mockCourse: Course = {
@@ -311,6 +311,64 @@ describe('course.store', () => {
       expect(state.course).toBeNull()
       expect(state.activeTopic).toBeNull()
       expect(state.progress).toEqual({})
+    })
+  })
+
+  describe('pickInitialTopic', () => {
+    it('returns null when there are no topics', () => {
+      expect(pickInitialTopic([], {})).toBeNull()
+    })
+
+    it('returns the first topic when there is no progress', () => {
+      expect(pickInitialTopic(mockCourse.topics, {})).toBe('topic-1')
+    })
+
+    it('returns the first incomplete topic when progress exists', () => {
+      const progress = {
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: false },
+      }
+      expect(pickInitialTopic(mockCourse.topics, progress)).toBe('topic-2')
+    })
+
+    it('returns the first topic when all topics are complete', () => {
+      const progress = {
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: true },
+      }
+      expect(pickInitialTopic(mockCourse.topics, progress)).toBe('topic-1')
+    })
+
+    it('returns the first untracked topic when progress has partial entries', () => {
+      const topics = courseWithQuizzes.topics
+      const progress = {
+        'topic-no-quiz': { viewed: true, complete: true },
+      }
+      // topic-with-quiz has no progress entry → not complete → should be picked
+      expect(pickInitialTopic(topics, progress)).toBe('topic-with-quiz')
+    })
+
+    it('integrates with setCourse + hydrateProgress to set activeTopic', () => {
+      useCourseStore.getState().setCourse(mockCourse)
+      useCourseStore.getState().hydrateProgress({
+        'topic-1': { viewed: true, complete: true },
+      })
+
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      if (topicId) useCourseStore.getState().setActiveTopic(topicId)
+
+      expect(useCourseStore.getState().activeTopic).toBe('topic-2')
+    })
+
+    it('selects first topic when hydrated progress is empty', () => {
+      useCourseStore.getState().setCourse(mockCourse)
+
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      if (topicId) useCourseStore.getState().setActiveTopic(topicId)
+
+      expect(useCourseStore.getState().activeTopic).toBe('topic-1')
     })
   })
 })

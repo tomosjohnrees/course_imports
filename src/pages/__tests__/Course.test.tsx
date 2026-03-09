@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useCourseStore } from '@/store/course.store'
+import { useCourseStore, pickInitialTopic } from '@/store/course.store'
 import Course from '../Course'
 import type { Course as CourseType } from '@/types/course.types'
 
@@ -98,5 +98,84 @@ describe('Course', () => {
     expect(text).not.toMatch(/\/home\//)
     expect(text).not.toMatch(/Error:/)
     expect(text).not.toMatch(/at\s+\w+\s+\(/)
+  })
+
+  describe('auto-selection', () => {
+    const courseWithContent: CourseType = {
+      ...baseCourse,
+      topics: [
+        {
+          id: 'topic-1',
+          title: 'Topic 1',
+          blocks: [{ type: 'text', content: 'First topic content' }],
+        },
+        {
+          id: 'topic-2',
+          title: 'Topic 2',
+          blocks: [{ type: 'text', content: 'Second topic content' }],
+        },
+        {
+          id: 'topic-3',
+          title: 'Topic 3',
+          blocks: [{ type: 'text', content: 'Third topic content' }],
+        },
+      ],
+    }
+
+    it('renders content immediately when setCourse + auto-select first topic (no progress)', () => {
+      useCourseStore.getState().setCourse(courseWithContent)
+      // Simulate what useCourse hook does after hydration
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      if (topicId) useCourseStore.getState().setActiveTopic(topicId)
+
+      render(<Course />)
+
+      expect(screen.getByText('First topic content')).toBeInTheDocument()
+    })
+
+    it('resumes at first incomplete topic when loading with saved progress', () => {
+      useCourseStore.getState().setCourse(courseWithContent)
+      useCourseStore.getState().hydrateProgress({
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: false },
+      })
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      if (topicId) useCourseStore.getState().setActiveTopic(topicId)
+
+      render(<Course />)
+
+      expect(useCourseStore.getState().activeTopic).toBe('topic-2')
+      expect(screen.getByText('Second topic content')).toBeInTheDocument()
+    })
+
+    it('selects first topic when all topics are complete', () => {
+      useCourseStore.getState().setCourse(courseWithContent)
+      useCourseStore.getState().hydrateProgress({
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: true },
+        'topic-3': { viewed: true, complete: true },
+      })
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      if (topicId) useCourseStore.getState().setActiveTopic(topicId)
+
+      render(<Course />)
+
+      expect(useCourseStore.getState().activeTopic).toBe('topic-1')
+      expect(screen.getByText('First topic content')).toBeInTheDocument()
+    })
+
+    it('still renders empty state when course has no topics', () => {
+      useCourseStore.getState().setCourse(baseCourse)
+      const { course, progress } = useCourseStore.getState()
+      const topicId = pickInitialTopic(course!.topics, progress)
+      expect(topicId).toBeNull()
+
+      render(<Course />)
+
+      expect(screen.getByText('No topics available')).toBeInTheDocument()
+    })
   })
 })
