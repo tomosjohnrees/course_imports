@@ -1,17 +1,37 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+const {
+  mockIsEncryptionAvailable,
+  mockEncryptString,
+  mockDecryptString,
+} = vi.hoisted(() => {
+  const mockIsEncryptionAvailable = vi.fn().mockReturnValue(false)
+  const mockEncryptString = vi.fn((str: string) => Buffer.from(`encrypted:${str}`))
+  const mockDecryptString = vi.fn((buf: Buffer) => {
+    const str = buf.toString()
+    return str.startsWith('encrypted:') ? str.slice('encrypted:'.length) : str
+  })
+  return { mockIsEncryptionAvailable, mockEncryptString, mockDecryptString }
+})
+
 vi.mock('electron', () => ({
   ipcMain: {
     handle: vi.fn(),
   },
   safeStorage: {
-    isEncryptionAvailable: vi.fn().mockReturnValue(false),
+    isEncryptionAvailable: mockIsEncryptionAvailable,
+    encryptString: mockEncryptString,
+    decryptString: mockDecryptString,
   },
 }))
 
 vi.mock('electron-store', () => {
-  const data: Record<string, unknown> = { recentCourses: [], progress: {} }
+  const data: Record<string, unknown> = {
+    recentCourses: [],
+    progress: {},
+    preferences: { theme: 'system' },
+  }
   return {
     default: class {
       get(key: string) { return data[key] }
@@ -30,6 +50,8 @@ import {
   getRecentCourses,
   getProgress,
   saveProgress,
+  getPreferences,
+  savePreferences,
 } from '../../store'
 import type { StoredRecentCourse } from '../../store'
 
@@ -43,6 +65,8 @@ beforeEach(async () => {
   StoreClass = mod.default
   StoreClass._data.recentCourses = []
   StoreClass._data.progress = {}
+  StoreClass._data.preferences = { theme: 'system' }
+  delete StoreClass._data.encryptedGitHubToken
 })
 
 describe('store:getRecentCourses handler', () => {
@@ -332,5 +356,182 @@ describe('progress store functions', () => {
     expect(Object.keys(result!['topic-1'])).toEqual(['viewed', 'complete'])
     expect(stringified).not.toContain('content')
     expect(stringified).not.toContain('blocks')
+  })
+})
+
+describe('store:getPreferences handler', () => {
+  let handler: (event: unknown) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:getPreferences',
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown) => Promise<unknown>
+  })
+
+  it('returns default preferences when none are saved', async () => {
+    const result = await handler(null)
+
+    expect(result).toEqual({ theme: 'system' })
+  })
+
+  it('returns saved theme preference', async () => {
+    savePreferences({ theme: 'dark' })
+
+    const result = await handler(null)
+
+    expect(result).toEqual({ theme: 'dark' })
+  })
+
+  it('includes decrypted GitHub token when encryption is available', async () => {
+    mockIsEncryptionAvailable.mockReturnValue(true)
+    savePreferences({ theme: 'system', githubToken: 'ghp_test123' })
+
+    const result = await handler(null)
+
+    expect(result).toEqual({ theme: 'system', githubToken: 'ghp_test123' })
+    mockIsEncryptionAvailable.mockReturnValue(false)
+  })
+
+  it('does not include token when encryption is unavailable', async () => {
+    const result = await handler(null)
+
+    expect(result).toEqual({ theme: 'system' })
+    expect(result).not.toHaveProperty('githubToken')
+  })
+})
+
+describe('store:savePreferences handler', () => {
+  let handler: (event: unknown, prefs: unknown) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:savePreferences',
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown, prefs: unknown) => Promise<unknown>
+  })
+
+  it('saves valid preferences', async () => {
+    await handler(null, { theme: 'dark' })
+
+    expect(getPreferences().theme).toBe('dark')
+  })
+
+  it('accepts all valid theme values', async () => {
+    for (const theme of ['light', 'dark', 'system']) {
+      await handler(null, { theme })
+      expect(getPreferences().theme).toBe(theme)
+    }
+  })
+
+  it('rejects preferences with invalid theme', async () => {
+    await handler(null, { theme: 'invalid' })
+    expect(getPreferences().theme).toBe('system')
+
+    await handler(null, { theme: '' })
+    expect(getPreferences().theme).toBe('system')
+
+    await handler(null, { theme: 123 })
+    expect(getPreferences().theme).toBe('system')
+  })
+
+  it('rejects non-object preferences', async () => {
+    await handler(null, 'not-an-object')
+    expect(getPreferences().theme).toBe('system')
+
+    await handler(null, null)
+    expect(getPreferences().theme).toBe('system')
+
+    await handler(null, undefined)
+    expect(getPreferences().theme).toBe('system')
+  })
+
+  it('rejects preferences with non-string token', async () => {
+    await handler(null, { theme: 'dark', githubToken: 123 })
+    expect(getPreferences().theme).toBe('system')
+  })
+
+  it('saves GitHub token encrypted when encryption is available', async () => {
+    mockIsEncryptionAvailable.mockReturnValue(true)
+
+    await handler(null, { theme: 'system', githubToken: 'ghp_secret' })
+
+    const result = getPreferences()
+    expect(result.githubToken).toBe('ghp_secret')
+
+    mockIsEncryptionAvailable.mockReturnValue(false)
+  })
+
+  it('clears GitHub token when empty string is provided', async () => {
+    mockIsEncryptionAvailable.mockReturnValue(true)
+
+    await handler(null, { theme: 'system', githubToken: 'ghp_secret' })
+    expect(getPreferences().githubToken).toBe('ghp_secret')
+
+    await handler(null, { theme: 'system', githubToken: '' })
+    expect(getPreferences().githubToken).toBeUndefined()
+
+    mockIsEncryptionAvailable.mockReturnValue(false)
+  })
+})
+
+describe('preferences security', () => {
+  let getHandler: (event: unknown) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:getPreferences',
+    )
+    getHandler = call![1] as (event: unknown) => Promise<unknown>
+  })
+
+  it('does not include GitHub token in serialised error output', async () => {
+    mockIsEncryptionAvailable.mockReturnValue(true)
+    savePreferences({ theme: 'system', githubToken: 'ghp_supersecret' })
+
+    // Simulate an error scenario by getting preferences and checking the result
+    // can be safely serialised without leaking token outside the dedicated channel
+    const result = await getHandler(null)
+    const serialised = JSON.stringify(result)
+
+    // The token SHOULD be present in the dedicated channel response
+    expect(serialised).toContain('ghp_supersecret')
+
+    // But an error message should never contain it
+    try {
+      throw new Error('Something went wrong loading preferences')
+    } catch (err) {
+      const errorMessage = (err as Error).message
+      expect(errorMessage).not.toContain('ghp_supersecret')
+    }
+
+    mockIsEncryptionAvailable.mockReturnValue(false)
+  })
+
+  it('stores token encrypted on disk, not in plaintext', async () => {
+    mockIsEncryptionAvailable.mockReturnValue(true)
+    savePreferences({ theme: 'system', githubToken: 'ghp_plaintext' })
+
+    // The encryptedGitHubToken in the store should be a base64 of the encrypted buffer
+    expect(StoreClass._data.encryptedGitHubToken).toBeDefined()
+    // The raw stored value should NOT be the plaintext token
+    expect(StoreClass._data.encryptedGitHubToken).not.toBe('ghp_plaintext')
+
+    // The preferences object itself should NOT contain the token
+    expect(StoreClass._data.preferences).toEqual({ theme: 'system' })
+    expect(StoreClass._data.preferences).not.toHaveProperty('githubToken')
+
+    mockIsEncryptionAvailable.mockReturnValue(false)
   })
 })

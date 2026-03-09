@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0028 | [Implement preferences persistence via IPC](0028-implement-preferences-persistence.md) | Milestone 5 — Preferences Persistence | todo |
 | 0029 | [Implement settings panel](0029-implement-settings-panel.md) | Milestone 5 — Settings Panel | todo |
 | 0030 | [Handle empty course and topic edge cases](0030-handle-empty-course-and-topic-edge-cases.md) | Milestone 6 — Edge Cases & Robustness | todo |
 | 0031 | [Handle malformed content and missing file references in renderer](0031-handle-malformed-content-and-missing-files-in-renderer.md) | Milestone 6 — Edge Cases & Robustness | todo |

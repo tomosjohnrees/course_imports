@@ -2,7 +2,11 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type { Preferences, RecentCourse } from '../src/types/course.types'
 import { IpcChannel } from './ipc/channels'
 
+// Load initial theme synchronously before first render to prevent flash
+const initialTheme = ipcRenderer.sendSync(IpcChannel.store.getInitialTheme) as string
+
 contextBridge.exposeInMainWorld('api', {
+  initialTheme,
   course: {
     loadFromFolder: (folderPath: string) => ipcRenderer.invoke(IpcChannel.course.loadFromFolder, folderPath),
     loadFromGitHub: (repoUrl: string) => ipcRenderer.invoke(IpcChannel.course.loadFromGitHub, repoUrl),

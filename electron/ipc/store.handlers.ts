@@ -4,6 +4,9 @@ import {
   getRecentCourses,
   getProgress,
   saveProgress,
+  getPreferences,
+  savePreferences,
+  isValidPreferences,
 } from '../store'
 import type { CourseProgress } from '../../src/types/course.types'
 
@@ -49,10 +52,13 @@ export function registerStoreHandlers(): void {
   )
 
   ipcMain.handle(IpcChannel.store.getPreferences, async () => {
-    return { success: false, error: 'Not implemented' }
+    return getPreferences()
   })
 
-  ipcMain.handle(IpcChannel.store.savePreferences, async (_event, _prefs: unknown) => {
-    return { success: false, error: 'Not implemented' }
+  ipcMain.handle(IpcChannel.store.savePreferences, async (_event, prefs: unknown) => {
+    if (!isValidPreferences(prefs)) {
+      return
+    }
+    savePreferences(prefs)
   })
 }

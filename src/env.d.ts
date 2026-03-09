@@ -9,6 +9,7 @@ import type {
 } from './types/course.types'
 
 interface WindowApi {
+  initialTheme: string
   course: {
     loadFromFolder: (folderPath: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>
     loadFromGitHub: (repoUrl: string) => Promise<{ success: true; course: Course } | { success: false; error: string }>

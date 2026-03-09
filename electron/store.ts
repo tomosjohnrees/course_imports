@@ -141,4 +141,39 @@ export function saveProgress(courseId: string, data: CourseProgress): void {
   store.set('progress', { ...allProgress, [courseId]: data })
 }
 
+const VALID_THEMES = ['light', 'dark', 'system'] as const
+
+export function getPreferences(): Preferences {
+  const prefs = store.get('preferences')
+  const token = getStoredGitHubToken()
+  return {
+    theme: prefs.theme,
+    ...(token ? { githubToken: token } : {}),
+  }
+}
+
+export function isValidPreferences(data: unknown): data is Preferences {
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) return false
+  const obj = data as Record<string, unknown>
+  if (!VALID_THEMES.includes(obj.theme as (typeof VALID_THEMES)[number])) return false
+  if (obj.githubToken !== undefined && typeof obj.githubToken !== 'string') return false
+  return true
+}
+
+export function savePreferences(prefs: Preferences): void {
+  store.set('preferences', { theme: prefs.theme })
+
+  if (prefs.githubToken !== undefined) {
+    if (prefs.githubToken === '') {
+      clearStoredGitHubToken()
+    } else {
+      setStoredGitHubToken(prefs.githubToken)
+    }
+  }
+}
+
+export function getStoredTheme(): string {
+  return store.get('preferences').theme
+}
+
 export default store

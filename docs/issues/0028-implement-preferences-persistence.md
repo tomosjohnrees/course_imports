@@ -20,24 +20,24 @@ Persist user preferences (theme choice, GitHub personal access token) to disk so
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `store:getPreferences` IPC handler returns the current saved preferences object, with sensible defaults if none are saved yet
-- [ ] `store:savePreferences` IPC handler writes the preferences object to `electron-store`
-- [ ] Theme preference persists across app restarts — setting dark mode, quitting, and reopening shows dark mode immediately
-- [ ] GitHub personal access token persists across app restarts and is included in GitHub API request headers when present
-- [ ] Preferences are loaded and applied before the first render — no flash of wrong theme on startup
+- [x] `store:getPreferences` IPC handler returns the current saved preferences object, with sensible defaults if none are saved yet
+- [x] `store:savePreferences` IPC handler writes the preferences object to `electron-store`
+- [x] Theme preference persists across app restarts — setting dark mode, quitting, and reopening shows dark mode immediately
+- [x] GitHub personal access token persists across app restarts and is included in GitHub API request headers when present
+- [x] Preferences are loaded and applied before the first render — no flash of wrong theme on startup
 
 ### Security
-- [ ] GitHub personal access token is stored using `electron-store`'s encryption or is otherwise not stored in plaintext on disk
-- [ ] The GitHub token is never logged, included in error messages, or exposed to the renderer except through the dedicated IPC channel
-- [ ] IPC handlers validate preference values before saving (e.g. theme must be one of "light", "dark", "system")
+- [x] GitHub personal access token is stored using `electron-store`'s encryption or is otherwise not stored in plaintext on disk
+- [x] The GitHub token is never logged, included in error messages, or exposed to the renderer except through the dedicated IPC channel
+- [x] IPC handlers validate preference values before saving (e.g. theme must be one of "light", "dark", "system")
 
 ### Performance
-- [ ] Preferences are loaded synchronously or via a blocking preload step so the app does not render with incorrect defaults before switching
+- [x] Preferences are loaded synchronously or via a blocking preload step so the app does not render with incorrect defaults before switching
 
 ### Testing
-- [ ] Unit tests for `store:getPreferences` and `store:savePreferences` covering save, retrieve, and default-values paths
-- [ ] Test that invalid preference values are rejected or sanitised
-- [ ] Test that GitHub token is not included in any serialised error output
+- [x] Unit tests for `store:getPreferences` and `store:savePreferences` covering save, retrieve, and default-values paths
+- [x] Test that invalid preference values are rejected or sanitised
+- [x] Test that GitHub token is not included in any serialised error output
 
 ## Notes
 

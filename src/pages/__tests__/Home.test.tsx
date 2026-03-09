@@ -31,6 +31,7 @@ function renderWithRouter() {
 
 beforeEach(() => {
   window.api = {
+    initialTheme: 'system',
     course: {
       selectFolder: vi.fn(),
       loadFromFolder: vi.fn(),

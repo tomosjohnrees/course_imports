@@ -1,7 +1,9 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import type { Course, ValidationResult } from '../src/types/course.types'
 import { registerIpcHandlers } from './ipc'
+import { getStoredTheme } from './store'
+import { IpcChannel } from './ipc/channels'
 
 export type { Course, ValidationResult }
 
@@ -40,6 +42,11 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
 }
+
+// Synchronous IPC handler for initial theme — called from preload before first render
+ipcMain.on(IpcChannel.store.getInitialTheme, (event) => {
+  event.returnValue = getStoredTheme()
+})
 
 app.whenReady().then(() => {
   registerIpcHandlers()

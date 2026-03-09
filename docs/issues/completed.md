@@ -146,3 +146,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0027 | [Implement progress persistence via IPC](0027-implement-progress-persistence.md) | Milestone 5 — Progress Persistence | complete |
+
+## Milestone 5 — Preferences Persistence
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0028 | [Implement preferences persistence via IPC](0028-implement-preferences-persistence.md) | Milestone 5 — Preferences Persistence | complete |

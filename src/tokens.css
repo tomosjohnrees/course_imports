@@ -65,8 +65,9 @@
   --shadow-focus: 0 0 0 3px var(--color-accent-subtle);
 }
 
+/* Dark mode via system preference — only when no explicit theme is set */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --color-bg: #141412;
     --color-surface: #1C1B19;
     --color-border: #2A2926;
@@ -85,4 +86,25 @@
     --color-destructive: #F87171;
     --color-destructive-subtle: #2D0F0F;
   }
+}
+
+/* Explicit dark mode — set via data-theme attribute */
+:root[data-theme="dark"] {
+  --color-bg: #141412;
+  --color-surface: #1C1B19;
+  --color-border: #2A2926;
+  --color-text-primary: #F0EEE9;
+  --color-text-secondary: #8C897F;
+  --color-text-muted: #5A5750;
+  --color-accent: #3B82F6;
+  --color-accent-hover: #60A5FA;
+  --color-accent-subtle: #172554;
+  --color-success: #22C55E;
+  --color-success-subtle: #052E16;
+  --color-warning: #FBBF24;
+  --color-warning-subtle: #2D1B00;
+  --color-tip: #22C55E;
+  --color-tip-subtle: #052E16;
+  --color-destructive: #F87171;
+  --color-destructive-subtle: #2D0F0F;
 }
