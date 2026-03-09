@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react'
+import { memo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import type { Components } from 'react-markdown'
@@ -29,9 +29,7 @@ const markdownComponents: Components = {
 export default memo(function RevealBlock({ label, body }: RevealBlockType) {
   const [expanded, setExpanded] = useState(false)
 
-  const toggle = useCallback(() => {
-    setExpanded((prev) => !prev)
-  }, [])
+  const toggle = () => setExpanded((prev) => !prev)
 
   return (
     <div className={`reveal ${expanded ? 'reveal--expanded' : ''}`}>
