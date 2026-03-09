@@ -21,22 +21,22 @@ The distributable builds for macOS, Windows, and Linux must be tested to confirm
 ## Acceptance criteria
 
 ### Functionality
-- [ ] macOS `.dmg` mounts, the app drags to Applications, and launches successfully
-- [ ] macOS universal binary works on both Apple Silicon and Intel machines
-- [ ] Windows NSIS installer completes installation and the app launches from Start Menu
-- [ ] Linux `.AppImage` launches without additional dependencies
-- [ ] Loading a local course folder works in each packaged build
-- [ ] The app icon displays correctly in the dock (macOS), taskbar (Windows), and launcher (Linux)
-- [ ] The app window title and About dialog show the correct app name and version
+- [x] macOS `.dmg` mounts, the app drags to Applications, and launches successfully
+- [x] macOS universal binary works on both Apple Silicon and Intel machines
+- [x] Windows NSIS installer completes installation and the app launches from Start Menu
+- [x] Linux `.AppImage` launches without additional dependencies
+- [x] Loading a local course folder works in each packaged build
+- [x] The app icon displays correctly in the dock (macOS), taskbar (Windows), and launcher (Linux)
+- [x] The app window title and About dialog show the correct app name and version
 
 ### Security
-- [ ] The packaged app does not include source maps, `.env` files, or development assets
-- [ ] macOS build is code-signed if a signing identity is available (or documented as a known limitation)
+- [x] The packaged app does not include source maps, `.env` files, or development assets
+- [x] macOS build is code-signed if a signing identity is available (or documented as a known limitation)
 
 ### Performance
-- [ ] App startup time in the packaged build is under 3 seconds on a modern machine
-- [ ] Installer file sizes are reasonable (under 150MB per platform)
+- [x] App startup time in the packaged build is under 3 seconds on a modern machine
+- [x] Installer file sizes are reasonable (under 150MB per platform)
 
 ### Testing
-- [ ] A manual test checklist is completed for each platform covering: install, launch, load course, navigate, answer quiz, close and reopen
-- [ ] Any platform-specific issues are documented as follow-up issues
+- [x] A manual test checklist is completed for each platform covering: install, launch, load course, navigate, answer quiz, close and reopen
+- [x] Any platform-specific issues are documented as follow-up issues
