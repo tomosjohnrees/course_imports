@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react'
+import { memo, useState } from 'react'
 import type {
   QuizBlock as QuizBlockType,
   QuizAnswer,
@@ -21,18 +21,15 @@ export default memo(function QuizBlock(props: QuizBlockProps) {
   const [textInput, setTextInput] = useState('')
   const isLocked = answered !== null
 
-  const handleOptionSelect = useCallback(
-    (optionIndex: number) => {
-      if (isLocked || props.variant !== 'multiple-choice') return
-      const correct = optionIndex === props.answer
-      const result: QuizAnswer = { selectedOption: optionIndex, correct }
-      setAnswered(result)
-      recordQuizAnswer(answerKey, result)
-    },
-    [isLocked, props, answerKey, recordQuizAnswer],
-  )
+  const handleOptionSelect = (optionIndex: number) => {
+    if (isLocked || props.variant !== 'multiple-choice') return
+    const correct = optionIndex === props.answer
+    const result: QuizAnswer = { selectedOption: optionIndex, correct }
+    setAnswered(result)
+    recordQuizAnswer(answerKey, result)
+  }
 
-  const handleFreeTextSubmit = useCallback(() => {
+  const handleFreeTextSubmit = () => {
     if (isLocked || props.variant !== 'free-text') return
     const trimmed = textInput.trim()
     if (!trimmed) return
@@ -42,10 +39,9 @@ export default memo(function QuizBlock(props: QuizBlockProps) {
     const result: QuizAnswer = { textAnswer: trimmed, correct }
     setAnswered(result)
     recordQuizAnswer(answerKey, result)
-  }, [isLocked, props, textInput, answerKey, recordQuizAnswer])
+  }
 
-  const explanation =
-    props.variant === 'multiple-choice' ? props.explanation : props.explanation
+  const { explanation } = props
 
   return (
     <div className="quiz-block">
