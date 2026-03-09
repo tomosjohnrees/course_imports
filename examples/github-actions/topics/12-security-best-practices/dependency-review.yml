@@ -1,0 +1,22 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - uses: actions/dependency-review-action@9129d7d40b8c12c1ed0f60f46db235c2c1c5a747 # v4.3.2
+        with:
+          # Fail on high and critical severity vulnerabilities
+          fail-on-severity: high
+          # Also check licence compatibility
+          deny-licences: GPL-3.0, AGPL-3.0

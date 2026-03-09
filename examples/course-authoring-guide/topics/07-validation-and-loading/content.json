@@ -1,0 +1,91 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "validation-checklist.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The validation checks run automatically every time you import a course. You do not need to run a separate validation step — just load the course and the app will tell you if anything is wrong."
+  },
+  {
+    "type": "quiz",
+    "question": "A multiple-choice quiz has 4 options. Which of the following is a valid value for the `answer` field?",
+    "options": [
+      "4",
+      "0",
+      "-1",
+      "\"B\""
+    ],
+    "answer": 1,
+    "explanation": "The answer field is a zero-based index. With 4 options, valid indices are 0, 1, 2, and 3. The value 4 would be out of bounds, -1 is invalid, and the field must be a number, not a string like \"B\"."
+  },
+  {
+    "type": "text",
+    "src": "common-mistakes.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "content": "// course.json — spot the bug\n{\n  \"id\": \"my-course\",\n  \"title\": \"My Course\",\n  \"description\": \"A sample course.\",\n  \"version\": \"1.0.0\",\n  \"author\": \"Alice\",\n  \"tags\": [\"example\"],\n  \"topicOrder\": [\n    \"01-introduction\",\n    \"02-variables\"\n  ]\n}\n\n// But the actual folders on disk are:\n//   topics/01-introduction/\n//   topics/02-variable/        <-- missing the \"s\"!\n//\n// Validation error: topicOrder entry \"02-variables\"\n// has no matching folder in topics/",
+    "label": "Mismatched topicOrder vs folder name"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "The `src` field in any block must be a simple filename or a relative path within the topic folder. Paths containing `../` are rejected. You cannot reference files from other topics or from outside the course folder. This is a security measure to prevent courses from reading arbitrary files on the user's system."
+  },
+  {
+    "type": "quiz",
+    "question": "A text block has `\"src\": \"../shared/intro.md\"`. What happens when the course is loaded?",
+    "options": [
+      "The app resolves the path and loads the file normally",
+      "The app ignores the block and skips it",
+      "Validation fails because `../` path traversal is not allowed",
+      "The app creates the missing file automatically"
+    ],
+    "answer": 2,
+    "explanation": "Paths containing `../` are explicitly disallowed. All src paths must point to files within the topic's own folder. This prevents a course from accessing files outside its directory."
+  },
+  {
+    "type": "text",
+    "src": "loading-courses.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Loading from GitHub is ideal for sharing courses. Push your course folder to a repository, share the URL, and anyone with the app can import it. For private repos, a fine-grained Personal Access Token with read-only \"Contents\" access is all that's needed."
+  },
+  {
+    "type": "quiz",
+    "question": "You try to import a course and get the error: \"topicOrder entry '03-functions' has no matching folder in topics/\". What should you do to fix this?",
+    "options": [
+      "Delete the 03-functions entry from topicOrder since it is not needed",
+      "Check the actual folder name in topics/ and fix the mismatch — either rename the folder or update the topicOrder entry",
+      "Create a new empty folder called 03-functions inside topics/",
+      "Change the id field in course.json to match the folder name"
+    ],
+    "answer": 1,
+    "explanation": "This error means the string in topicOrder does not exactly match any folder inside topics/. The fix is to make them match — either by renaming the folder or editing course.json."
+  },
+  {
+    "type": "text",
+    "src": "wrap-up.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is NOT checked during course validation?",
+    "options": [
+      "Every block in content.json has a type field",
+      "All src paths point to existing files with no ../ traversal",
+      "The course has at least three topics",
+      "Multiple-choice quizzes have an options array and a valid answer index"
+    ],
+    "answer": 2,
+    "explanation": "There is no minimum topic count. A course with a single topic is perfectly valid. All the other items listed are part of the validation checklist."
+  }
+]

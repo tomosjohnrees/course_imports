@@ -1,0 +1,22 @@
+name: Publish on Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get release info
+        run: |
+          echo "Tag: ${{ github.event.release.tag_name }}"
+          echo "Name: ${{ github.event.release.name }}"
+
+      - name: Build and publish
+        run: |
+          echo "Building release artifacts..."
+          # npm publish / docker push / etc.

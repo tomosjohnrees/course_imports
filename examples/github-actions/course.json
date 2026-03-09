@@ -1,0 +1,22 @@
+{
+  "id": "github-actions",
+  "title": "GitHub Actions",
+  "description": "A comprehensive course on GitHub Actions covering CI/CD workflows, automation, and best practices — from writing your first workflow to advanced deployment strategies and security.",
+  "version": "1.0.0",
+  "author": "Course Imports",
+  "tags": ["github", "ci-cd", "automation", "devops", "github-actions"],
+  "topicOrder": [
+    "01-introduction",
+    "02-your-first-workflow",
+    "03-triggers-and-events",
+    "04-jobs-and-runners",
+    "05-steps-and-actions",
+    "06-variables-and-secrets",
+    "07-expressions-and-conditionals",
+    "08-build-and-test",
+    "09-deployment",
+    "10-matrix-strategies",
+    "11-reusable-workflows",
+    "12-security-best-practices"
+  ]
+}

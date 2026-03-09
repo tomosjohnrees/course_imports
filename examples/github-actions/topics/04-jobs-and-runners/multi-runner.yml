@@ -1,0 +1,27 @@
+name: Cross-Platform Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests on Linux
+        run: ./run-tests.sh
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests on Windows
+        run: .\run-tests.ps1
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests on macOS
+        run: ./run-tests.sh

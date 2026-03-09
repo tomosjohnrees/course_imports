@@ -1,0 +1,25 @@
+name: CI with Conditional Steps
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload coverage report
+        if: github.event_name == 'pull_request'
+        run: npx coveralls
+
+      - name: Publish to npm
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,15 @@
+# VULNERABLE: Direct interpolation of user-controlled input
+name: Greet PR author (INSECURE)
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      # This is vulnerable to script injection!
+      - run: |
+          echo "Thanks for the PR: ${{ github.event.pull_request.title }}"
+          echo "Submitted by: ${{ github.event.pull_request.user.login }}"

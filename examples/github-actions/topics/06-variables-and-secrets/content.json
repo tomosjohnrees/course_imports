@@ -1,0 +1,183 @@
+[
+  {
+    "type": "text",
+    "src": "01-introduction.md"
+  },
+  {
+    "type": "text",
+    "src": "02-environment-variables.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "env-scopes.yml",
+    "label": ".github/workflows/env-scopes.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "When the same environment variable name is defined at multiple scopes, the narrowest scope wins: step overrides job, and job overrides workflow."
+  },
+  {
+    "type": "quiz",
+    "question": "A workflow defines `NODE_ENV: production` at the workflow level. A job within it defines `NODE_ENV: development`. A step within that job defines `NODE_ENV: test`. What value does `$NODE_ENV` have inside that step?",
+    "options": [
+      "production",
+      "development",
+      "test",
+      "The workflow will fail due to a conflict"
+    ],
+    "answer": 2,
+    "explanation": "Step-level environment variables override job-level variables, which in turn override workflow-level variables. The narrowest scope always wins."
+  },
+  {
+    "type": "text",
+    "src": "03-default-variables.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "default-vars-example.yml",
+    "label": ".github/workflows/default-vars.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "Which default environment variable contains the full Git reference (e.g., `refs/heads/main`) that triggered the workflow?",
+    "options": [
+      "GITHUB_SHA",
+      "GITHUB_REF",
+      "GITHUB_BRANCH",
+      "GITHUB_EVENT_NAME"
+    ],
+    "answer": 1,
+    "explanation": "`GITHUB_REF` contains the full ref like `refs/heads/main` or `refs/pull/42/merge`. For just the short name (e.g., `main`), use `GITHUB_REF_NAME`. `GITHUB_SHA` contains the commit hash, not the ref."
+  },
+  {
+    "type": "text",
+    "src": "04-contexts.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "contexts-example.yml",
+    "label": ".github/workflows/contexts-demo.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "`$GITHUB_SHA` and `${{ github.sha }}` both give you the commit SHA, but they are used in different places. Use the environment variable in `run` shell scripts. Use the context expression in YAML fields like `if`, `with`, and `env` value assignments."
+  },
+  {
+    "type": "quiz",
+    "question": "What is the key difference between accessing a value via an environment variable (e.g., `$GITHUB_SHA`) and via a context expression (e.g., `${{ github.sha }}`)?",
+    "options": [
+      "There is no difference; they are interchangeable in all contexts",
+      "Environment variables work only in `run` shell commands, while context expressions are evaluated by the workflow engine and work in any YAML field",
+      "Context expressions work only in `run` steps, while environment variables work everywhere in YAML",
+      "Environment variables are encrypted, while context expressions are plain text"
+    ],
+    "answer": 1,
+    "explanation": "Environment variables work in shell commands (`run` steps). Context expressions work in any YAML field and are evaluated by the workflow engine before execution."
+  },
+  {
+    "type": "text",
+    "src": "05-secrets.md"
+  },
+  {
+    "type": "text",
+    "src": "06-repository-variables.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "secrets-and-vars.yml",
+    "label": ".github/workflows/deploy.yml"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Secret names cannot start with `GITHUB_` -- that prefix is reserved by GitHub. Use descriptive names like `AWS_ACCESS_KEY_ID` or `DEPLOY_TOKEN` instead."
+  },
+  {
+    "type": "quiz",
+    "question": "Which context do you use to access a non-secret repository variable (e.g., a deployment region) configured in the GitHub UI?",
+    "options": [
+      "${{ secrets.DEPLOY_REGION }}",
+      "${{ env.DEPLOY_REGION }}",
+      "${{ vars.DEPLOY_REGION }}",
+      "${{ github.DEPLOY_REGION }}"
+    ],
+    "answer": 2,
+    "explanation": "The `vars` context is used for non-secret configuration variables set in the GitHub UI. The `secrets` context is for encrypted secrets. The `env` context is for environment variables defined in the workflow YAML. The `github` context contains workflow run metadata, not user-defined variables."
+  },
+  {
+    "type": "text",
+    "src": "07-using-secrets-safely.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Secrets are **not** passed to workflows triggered by pull requests from forks. This is a security feature -- it prevents untrusted code from accessing your credentials."
+  },
+  {
+    "type": "quiz",
+    "question": "What is the recommended way to pass a secret to a shell command in a `run` step?",
+    "options": [
+      "Interpolate it directly: `run: curl -H \"Bearer ${{ secrets.TOKEN }}\"`",
+      "Assign it to a step-level `env` variable and reference the env var in the script",
+      "Write it to a file and read it back",
+      "Use `echo` to print it and pipe it to the command"
+    ],
+    "answer": 1,
+    "explanation": "Assigning secrets to environment variables (via the step's `env` key) avoids them appearing in process arguments or shell history. Direct interpolation works but can expose the value in error messages or process listings."
+  },
+  {
+    "type": "text",
+    "src": "08-github-token.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "github-token.yml",
+    "label": ".github/workflows/pr-comment.yml"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "token-permissions.yml",
+    "label": ".github/workflows/scoped-permissions.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Always declare explicit `permissions` in your workflows. Start with the minimum access needed and add more only when required. This limits the damage if a step is compromised."
+  },
+  {
+    "type": "quiz",
+    "question": "What happens to the `GITHUB_TOKEN` after a workflow run completes?",
+    "options": [
+      "It remains valid for 24 hours",
+      "It is automatically revoked",
+      "It becomes read-only",
+      "It is stored in the repository secrets for reuse"
+    ],
+    "answer": 1,
+    "explanation": "GitHub generates a unique `GITHUB_TOKEN` for each workflow run and automatically revokes it when the run finishes. This limits the window of exposure if the token is leaked."
+  },
+  {
+    "type": "quiz",
+    "question": "Why should you explicitly set the `permissions` key in your workflow when using `GITHUB_TOKEN`, rather than relying on the defaults?",
+    "options": [
+      "The workflow will fail without an explicit `permissions` key",
+      "It follows the principle of least privilege, limiting the blast radius if a step is compromised",
+      "It makes the workflow run faster by skipping unnecessary permission checks",
+      "It is required for workflows that use third-party actions"
+    ],
+    "answer": 1,
+    "explanation": "Explicit permissions follow the principle of least privilege, reducing risk if a workflow step is compromised."
+  },
+  {
+    "type": "text",
+    "src": "09-summary.md"
+  }
+]

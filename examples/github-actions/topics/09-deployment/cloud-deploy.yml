@@ -1,0 +1,85 @@
+name: Build and Deploy to Cloud
+
+on:
+  push:
+    branches: [main]
+
+env:
+  IMAGE_NAME: my-app
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=ref,event=branch
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      # Authentication step -- replace with your provider's action:
+      #
+      # AWS (OIDC):
+      # - uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: arn:aws:iam::123456789:role/deploy-role
+      #     aws-region: eu-west-1
+      #
+      # Google Cloud (OIDC):
+      # - uses: google-github-actions/auth@v2
+      #   with:
+      #     workload_identity_provider: projects/123/locations/global/...
+      #     service_account: deploy@project.iam.gserviceaccount.com
+      #
+      # Azure:
+      # - uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to cloud provider
+        run: |
+          echo "Deploying image: ${{ needs.build-and-push.outputs.image-tag }}"
+          # Replace with your provider's deploy command, e.g.:
+          # aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
+          # gcloud run deploy my-service --image $IMAGE --region us-central1
+          # az webapp deploy --name my-app --resource-group my-rg
+
+      - name: Verify deployment
+        run: |
+          echo "Running post-deployment health check..."
+          # curl --fail https://example.com/health || exit 1

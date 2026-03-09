@@ -1,0 +1,91 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "required-fields.md"
+  },
+  {
+    "type": "text",
+    "src": "field-details.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `id` field must be **kebab-case** — lowercase letters, numbers, and hyphens only. For example, `\"intro-to-python\"` is valid, but `\"Intro to Python\"` and `\"intro_to_python\"` are not."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is a valid course id?",
+    "options": [
+      "My First Course",
+      "my_first_course",
+      "my-first-course",
+      "MyFirstCourse"
+    ],
+    "answer": 2,
+    "explanation": "Course ids must be kebab-case — lowercase letters, numbers, and hyphens only. \"my-first-course\" is the only option that follows this convention."
+  },
+  {
+    "type": "text",
+    "src": "topic-order.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Every entry in `topicOrder` must **exactly** match a folder name inside `topics/`. A mismatch — even a difference in capitalisation — will cause the app to reject the course on load. If you rename, add, or remove a topic folder, always update `topicOrder` to stay in sync."
+  },
+  {
+    "type": "quiz",
+    "question": "Your topics/ directory contains folders named 01-setup, 02-basics, and 03-advanced. Which topicOrder array is correct?",
+    "options": [
+      "[\"setup\", \"basics\", \"advanced\"]",
+      "[\"01-setup\", \"02-basics\", \"03-advanced\"]",
+      "[\"01_setup\", \"02_basics\", \"03_advanced\"]",
+      "[\"01-Setup\", \"02-Basics\", \"03-Advanced\"]"
+    ],
+    "answer": 1,
+    "explanation": "The entries in topicOrder must exactly match the folder names, including the numeric prefix and casing. Only the second option matches the folders 01-setup, 02-basics, and 03-advanced."
+  },
+  {
+    "type": "text",
+    "content": "## A Complete Example\n\nHere is a realistic `course.json` for a six-topic course on web accessibility. Notice how all seven fields are present, the `id` is kebab-case, the `version` follows semver, and every entry in `topicOrder` corresponds to a topic folder."
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "src": "example-course.json",
+    "label": "course.json"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Start your version at `\"1.0.0\"` for the initial release. Bump the **patch** number (1.0.1) for typo fixes, the **minor** number (1.1.0) for new content, and the **major** number (2.0.0) for large-scale restructuring."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of these fields is NOT required in course.json?",
+    "options": [
+      "title",
+      "tags",
+      "topicOrder",
+      "All of these are required"
+    ],
+    "answer": 3,
+    "explanation": "All seven fields — id, title, description, version, author, tags, and topicOrder — are required. The app will reject a course.json that is missing any of them."
+  },
+  {
+    "type": "quiz",
+    "question": "Why does the topicOrder array exist instead of the app just reading folder names and sorting them alphabetically?",
+    "options": [
+      "It allows the app to load topics faster by knowing the order in advance",
+      "It gives the author explicit control over topic ordering, decoupled from filesystem sorting and folder naming",
+      "It is required so the app can validate that all folders contain a content.json file",
+      "It exists only for backward compatibility and has no practical benefit"
+    ],
+    "answer": 1,
+    "explanation": "topicOrder exists to give authors explicit, unambiguous control over topic ordering. Relying on filesystem sorting would be fragile and would not allow reordering without renaming folders."
+  }
+]

@@ -1,0 +1,22 @@
+name: PR Comment with GITHUB_TOKEN
+
+on:
+  pull_request:
+    types: [opened]
+
+# Restrict the token to only the permissions we need
+permissions:
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post a welcome comment
+        # GITHUB_TOKEN is passed automatically via the github context
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --body "Thanks for the PR, @${{ github.actor }}! A maintainer will review it shortly."

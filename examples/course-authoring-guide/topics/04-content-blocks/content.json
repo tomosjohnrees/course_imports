@@ -1,0 +1,155 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "content.json — minimal example",
+    "content": "[\n  { \"type\": \"text\", \"src\": \"intro.md\" },\n  { \"type\": \"code\", \"language\": \"python\", \"src\": \"example.py\" },\n  { \"type\": \"callout\", \"style\": \"tip\", \"body\": \"Keep your content short and focused.\" }\n]"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `content.json` array is the backbone of every topic. Blocks are rendered in exact array order, so the sequence you define is the sequence the learner sees."
+  },
+  {
+    "type": "text",
+    "src": "text-blocks.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Text block with an external file",
+    "content": "{ \"type\": \"text\", \"src\": \"intro.md\" }"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Text block with inline content",
+    "content": "{ \"type\": \"text\", \"content\": \"Welcome to the course. This is **markdown**.\" }"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Prefer `src` over `content` for anything longer than two sentences. Writing long markdown inside a JSON string is hard to read, hard to edit, and you lose syntax highlighting in your editor."
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "You must provide exactly one of `src` or `content` on text and code blocks. Providing both will cause a validation error, and providing neither will too."
+  },
+  {
+    "type": "text",
+    "src": "code-blocks.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Code block with an external source file",
+    "content": "{\n  \"type\": \"code\",\n  \"language\": \"python\",\n  \"src\": \"hello.py\",\n  \"label\": \"hello.py\"\n}"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Code block with inline content",
+    "content": "{\n  \"type\": \"code\",\n  \"language\": \"javascript\",\n  \"content\": \"console.log('hello')\"\n}"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use the `label` field on code blocks to show the filename above the code. This helps learners understand where the code would live in a real project."
+  },
+  {
+    "type": "text",
+    "src": "callouts-and-images.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Callout block examples",
+    "content": "{ \"type\": \"callout\", \"style\": \"info\", \"body\": \"Python is case-sensitive.\" }\n\n{ \"type\": \"callout\", \"style\": \"warning\", \"body\": \"Do not use `eval()` in production.\" }\n\n{ \"type\": \"callout\", \"style\": \"tip\", \"body\": \"Use f-strings for readable formatting.\" }"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "Image block example",
+    "content": "{\n  \"type\": \"image\",\n  \"src\": \"diagram.png\",\n  \"alt\": \"Architecture diagram showing the block rendering pipeline\",\n  \"caption\": \"How blocks flow from JSON to the rendered topic view\"\n}"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Images must be under **10 MB**. The validator will reject any image exceeding this limit. Compress and resize large images before adding them to your course."
+  },
+  {
+    "type": "text",
+    "src": "putting-it-together.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "label": "A complete content.json using all block types",
+    "content": "[\n  { \"type\": \"text\", \"src\": \"welcome.md\" },\n  { \"type\": \"code\", \"language\": \"python\", \"src\": \"hello.py\", \"label\": \"hello.py\" },\n  { \"type\": \"callout\", \"style\": \"tip\", \"body\": \"Try running this in your terminal.\" },\n  {\n    \"type\": \"image\",\n    \"src\": \"screenshot.png\",\n    \"alt\": \"Terminal output showing Hello World\",\n    \"caption\": \"Expected output after running hello.py\"\n  },\n  {\n    \"type\": \"quiz\",\n    \"variant\": \"multiple-choice\",\n    \"question\": \"What does print() do?\",\n    \"options\": [\"Saves a file\", \"Outputs text\", \"Creates a variable\"],\n    \"answer\": 1\n  }\n]"
+  },
+  {
+    "type": "quiz",
+    "question": "Which field is required on every block, regardless of type?",
+    "options": [
+      "src",
+      "content",
+      "type",
+      "label"
+    ],
+    "answer": 2,
+    "explanation": "Every block must include a `type` field so Course Imports knows how to render it. Other fields depend on the specific block type."
+  },
+  {
+    "type": "quiz",
+    "question": "A text block has both `src` and `content` set. What happens?",
+    "options": [
+      "The `src` file takes priority and `content` is ignored",
+      "The `content` field takes priority and `src` is ignored",
+      "Both are rendered, one after the other",
+      "A validation error is raised"
+    ],
+    "answer": 3,
+    "explanation": "Text and code blocks must have exactly one of `src` or `content`. Providing both causes a validation error."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of these fields is required on a code block but NOT on a text block?",
+    "options": [
+      "src",
+      "content",
+      "language",
+      "label"
+    ],
+    "answer": 2,
+    "explanation": "Code blocks require a `language` field for syntax highlighting. Text blocks do not have this field. The `label` field is optional on code blocks."
+  },
+  {
+    "type": "quiz",
+    "question": "What are the valid values for a callout block's `style` field?",
+    "options": [
+      "info, warning, tip",
+      "info, error, success",
+      "note, caution, hint",
+      "primary, secondary, danger"
+    ],
+    "answer": 0,
+    "explanation": "Callout blocks support three styles: `info` for general information, `warning` for potential pitfalls, and `tip` for helpful advice."
+  },
+  {
+    "type": "quiz",
+    "question": "Which two fields (besides `type`) are required on an image block?",
+    "options": [
+      "`src` and `caption`",
+      "`src` and `alt`",
+      "`alt` and `caption`",
+      "`src` and `label`"
+    ],
+    "answer": 1,
+    "explanation": "Image blocks require `src` to locate the file and `alt` to provide accessible alt text. The optional `caption` field displays text below the image but is not required."
+  }
+]

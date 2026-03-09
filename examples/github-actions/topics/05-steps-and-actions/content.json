@@ -1,0 +1,125 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "run-steps.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "multiline-working-dir.yml",
+    "label": "multiline-working-dir.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use the pipe character (`|`) for multi-line `run` commands. Each line executes in the same shell session, so variables and `cd` commands carry over between lines."
+  },
+  {
+    "type": "quiz",
+    "question": "What is the difference between `run` and `uses` in a workflow step?",
+    "options": [
+      "`run` executes a shell command; `uses` references a reusable action",
+      "`run` is for Linux only; `uses` is for Windows only",
+      "`run` executes steps in parallel; `uses` executes them sequentially",
+      "`run` is deprecated; `uses` is the recommended approach"
+    ],
+    "answer": 0,
+    "explanation": "The `run` keyword executes shell commands directly on the runner, while `uses` references a pre-built, reusable action from a repository or the GitHub Marketplace."
+  },
+  {
+    "type": "text",
+    "src": "actions-overview.md"
+  },
+  {
+    "type": "text",
+    "src": "checkout-action.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Always pin actions to a specific version (e.g. `actions/checkout@v4`). Using `@main` means your workflow could break without warning if the action author introduces a breaking change."
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "setup-node-example.yml",
+    "label": "setup-node-example.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "Why do most workflows start with `actions/checkout@v4`?",
+    "options": [
+      "It installs the programming language runtime needed for the project",
+      "It clones the repository code onto the runner so subsequent steps can access it",
+      "It authenticates the runner with GitHub's API",
+      "It creates a new branch for the workflow run"
+    ],
+    "answer": 1,
+    "explanation": "When a job starts, the runner is a clean machine with no repository code. The checkout action clones your repository into the workspace so that later steps can work with your files."
+  },
+  {
+    "type": "text",
+    "src": "inputs-and-outputs.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "inputs-outputs-example.yml",
+    "label": "inputs-outputs-example.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "To set an output from a `run` step, write `name=value` pairs to the file at `$GITHUB_OUTPUT`. For example: `echo \"version=1.2.3\" >> \"$GITHUB_OUTPUT\"`. Other steps can then read it with `${{ steps.<id>.outputs.version }}`."
+  },
+  {
+    "type": "quiz",
+    "question": "How do you pass configuration values to an action?",
+    "options": [
+      "Using the `env` keyword",
+      "Using the `with` keyword",
+      "Using the `args` keyword",
+      "Using the `config` keyword"
+    ],
+    "answer": 1,
+    "explanation": "The `with` keyword passes input key-value pairs to an action. For example, `with: { node-version: '20' }` tells `actions/setup-node` which version to install."
+  },
+  {
+    "type": "text",
+    "src": "putting-it-together.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "full-ci-pipeline.yml",
+    "label": "full-ci-pipeline.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "A step has `id: my-step` and writes `build_number=42` to `$GITHUB_OUTPUT`. Which expression would a later step use to read that value?",
+    "options": [
+      "${{ env.build_number }}",
+      "${{ needs.my-step.outputs.build_number }}",
+      "${{ steps.my-step.outputs.build_number }}",
+      "${{ outputs.my-step.build_number }}"
+    ],
+    "answer": 2,
+    "explanation": "The `id` field gives a step a unique name. Combined with the `$GITHUB_OUTPUT` mechanism for `run` steps or built-in outputs for actions, it allows data to flow from one step to another using the `${{ steps.<id>.outputs.<name> }}` expression syntax."
+  },
+  {
+    "type": "quiz",
+    "question": "Which keyword changes the directory where a `run` command executes?",
+    "options": [
+      "`shell`",
+      "`working-directory`",
+      "`cwd`",
+      "`run-in`"
+    ],
+    "answer": 1,
+    "explanation": "The `working-directory` keyword sets the directory for a `run` step. You can also set a default working directory for all `run` steps in a job using `defaults.run.working-directory`."
+  }
+]

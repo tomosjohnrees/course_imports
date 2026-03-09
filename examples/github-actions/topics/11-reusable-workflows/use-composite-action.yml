@@ -1,0 +1,25 @@
+# .github/workflows/ci.yml
+# Using a composite action from the same repository.
+
+name: CI with Composite Action
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Use the composite action (relative path to the action directory)
+      - name: Setup project
+        uses: ./.github/actions/setup-node-project
+        with:
+          node-version: "20"
+
+      # Now Node.js is installed and dependencies are ready
+      - name: Run tests
+        run: npm test
+
+      - name: Run linter
+        run: npm run lint

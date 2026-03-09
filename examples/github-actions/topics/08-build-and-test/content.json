@@ -1,0 +1,172 @@
+[
+  {
+    "type": "text",
+    "src": "01-introduction.md"
+  },
+  {
+    "type": "text",
+    "src": "02-node-ci.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "node-ci.yml",
+    "label": ".github/workflows/node-ci.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use `npm ci` instead of `npm install` in CI pipelines. It is faster, stricter, and guarantees a clean install based on `package-lock.json`."
+  },
+  {
+    "type": "text",
+    "src": "03-python-ci.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "python-ci.yml",
+    "label": ".github/workflows/python-ci.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `actions/setup-python` and `actions/setup-node` actions support many language versions. Check their README files on GitHub for the full list of supported versions."
+  },
+  {
+    "type": "quiz",
+    "question": "In a Node.js CI workflow, why is `npm ci` preferred over `npm install`?",
+    "options": [
+      "It installs fewer packages",
+      "It uses the package-lock.json for a clean, reproducible install",
+      "It skips running tests",
+      "It automatically caches dependencies"
+    ],
+    "answer": 1,
+    "explanation": "`npm ci` deletes node_modules and installs exactly what is specified in package-lock.json, ensuring reproducible builds. `npm install` may update the lockfile."
+  },
+  {
+    "type": "text",
+    "src": "04-caching.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "cache-example.yml",
+    "label": ".github/workflows/cache-example.yml"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Cache keys are scoped to the branch. The default branch's caches are available to all branches, but a feature branch's caches are not available to other branches."
+  },
+  {
+    "type": "quiz",
+    "question": "What happens when the `actions/cache` action does not find an exact key match but finds a `restore-keys` prefix match?",
+    "options": [
+      "The step fails and the workflow stops",
+      "It skips the cache entirely and installs from scratch",
+      "It restores the most recent cache entry matching the prefix",
+      "It creates a new empty cache with the requested key"
+    ],
+    "answer": 2,
+    "explanation": "When no exact match is found, `restore-keys` provides fallback prefixes. The most recent cache entry whose key starts with a restore-key prefix is restored. This gives you a partial cache hit, which is usually faster than installing from scratch."
+  },
+  {
+    "type": "text",
+    "src": "05-artifacts.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "artifact-example.yml",
+    "label": ".github/workflows/artifact-example.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Set `retention-days` on your artifacts to avoid accumulating storage costs. Build artifacts you only need for deployment can often use a short retention period like 7 days."
+  },
+  {
+    "type": "quiz",
+    "question": "How does a downstream job access an artifact uploaded by an earlier job in the same workflow run?",
+    "options": [
+      "Artifacts are automatically available in every job's workspace",
+      "It uses `actions/download-artifact` and must declare a `needs` dependency on the uploading job",
+      "It reads the artifact from the repository's git history",
+      "It uses `actions/cache` to retrieve the artifact"
+    ],
+    "answer": 1,
+    "explanation": "Artifacts are not automatically shared between jobs. The downstream job must use `actions/download-artifact` to retrieve them and declare a `needs` dependency to ensure the upload completes first."
+  },
+  {
+    "type": "text",
+    "src": "06-test-reports.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "test-report-example.yml",
+    "label": ".github/workflows/test-report-example.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `if: always()` conditional ensures a step runs even when a previous step fails. This is essential for uploading test reports -- you want the report especially when tests fail."
+  },
+  {
+    "type": "quiz",
+    "question": "You want to upload a test report as an artifact even when the test step fails. What conditional expression would you add to the upload step to ensure it always runs?",
+    "options": [
+      "if: success()",
+      "if: failure()",
+      "if: always()",
+      "if: cancelled() == false"
+    ],
+    "answer": 2,
+    "explanation": "Adding `if: always()` to a step makes it run regardless of whether previous steps succeeded or failed. Without it, the step would be skipped when the test step fails."
+  },
+  {
+    "type": "text",
+    "src": "07-badges.md"
+  },
+  {
+    "type": "quiz",
+    "question": "What is the correct URL pattern for a GitHub Actions workflow status badge?",
+    "options": [
+      "https://github.com/{owner}/{repo}/badge/{workflow-file}.svg",
+      "https://github.com/{owner}/{repo}/actions/workflows/{workflow-file}/badge.svg",
+      "https://actions.github.com/{owner}/{repo}/{workflow-file}/status.png",
+      "https://github.com/{owner}/{repo}/workflows/badge?name={workflow-file}"
+    ],
+    "answer": 1,
+    "explanation": "GitHub generates badge images at `https://github.com/{owner}/{repo}/actions/workflows/{workflow-file}/badge.svg`. You can optionally add a `?branch=` query parameter to show the status of a specific branch."
+  },
+  {
+    "type": "text",
+    "src": "08-putting-it-together.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "full-ci-example.yml",
+    "label": ".github/workflows/full-ci.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "This workflow is a great starting template. In the next topics, you will learn how to extend it with **matrix strategies** to test across multiple runtime versions and **reusable workflows** to share CI logic across repositories."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following are benefits of caching dependencies in a CI workflow?",
+    "options": [
+      "It eliminates the need for a package-lock.json file",
+      "It speeds up workflows and reduces network bandwidth by avoiding repeated downloads from package registries",
+      "It automatically updates dependencies to the latest versions on each run",
+      "It allows workflows to run without an internet connection"
+    ],
+    "answer": 1,
+    "explanation": "The primary benefits are speed (subsequent runs restore the cache instead of reinstalling) and reduced network usage (fewer downloads from package registries). This becomes especially significant for large dependency trees or workflows that run frequently."
+  }
+]

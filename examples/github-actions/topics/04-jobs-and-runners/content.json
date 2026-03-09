@@ -1,0 +1,131 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "job-structure.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "basic-job.yml",
+    "label": "basic-job.yml — Two parallel jobs"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "In this example, `build` and `test` run **in parallel** because neither declares a `needs` dependency on the other. Each gets its own fresh runner."
+  },
+  {
+    "type": "text",
+    "src": "runners.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "multi-runner.yml",
+    "label": "multi-runner.yml — Testing across operating systems"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use `ubuntu-latest` as your default runner. It provisions fastest, costs the least per minute, and supports Docker natively. Only switch to `windows-latest` or `macos-latest` when your project targets those platforms."
+  },
+  {
+    "type": "quiz",
+    "question": "Which GitHub-hosted runner label should you use as the default for most CI workflows?",
+    "options": [
+      "windows-latest",
+      "macos-latest",
+      "ubuntu-latest",
+      "self-hosted"
+    ],
+    "answer": 2,
+    "explanation": "`ubuntu-latest` provisions the fastest, has the lowest per-minute cost, and supports Docker natively, making it the best default for most workflows."
+  },
+  {
+    "type": "text",
+    "src": "self-hosted.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is a reason to use a self-hosted runner instead of a GitHub-hosted runner?",
+    "options": [
+      "You want zero configuration and automatic updates",
+      "You need access to resources on a private network behind a firewall",
+      "You want each job to run on a completely fresh virtual machine",
+      "You prefer not to manage any infrastructure"
+    ],
+    "answer": 1,
+    "explanation": "Self-hosted runners can access private networks and internal resources that GitHub-hosted runners cannot reach. The other options describe advantages of GitHub-hosted runners."
+  },
+  {
+    "type": "text",
+    "src": "job-dependencies.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "needs-example.yml",
+    "label": "needs-example.yml — Fan-out / fan-in pattern"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "If any job in the dependency chain fails, all downstream jobs are **skipped** by default. You can override this with `if: always()` or `if: failure()` on the downstream job, but use this carefully."
+  },
+  {
+    "type": "text",
+    "src": "parallel-vs-sequential.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Given three jobs with no `needs` declarations, how will they execute?",
+    "options": [
+      "In the order they appear in the YAML file",
+      "All three run in parallel as soon as runners are available",
+      "Only the first job runs; the others are skipped",
+      "GitHub Actions picks a random order"
+    ],
+    "answer": 1,
+    "explanation": "Without `needs` declarations, all jobs start simultaneously. The order they appear in the YAML file has no effect on execution order."
+  },
+  {
+    "type": "text",
+    "src": "job-outputs.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "outputs-example.yml",
+    "label": "outputs-example.yml — Passing data between jobs"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "Job outputs are strings. To set an output, a step writes `key=value` to the `$GITHUB_OUTPUT` file. The job then maps step outputs to job-level outputs in its `outputs` map. Downstream jobs read them via `needs.<job_id>.outputs.<output_name>`."
+  },
+  {
+    "type": "quiz",
+    "question": "A step with `id: calc` writes `total=42` to `$GITHUB_OUTPUT`. The job exposes it as `outputs: result: ${{ steps.calc.outputs.total }}`. How would a downstream job that declares `needs: [compute]` reference this value in an expression?",
+    "options": [
+      "${{ steps.calc.outputs.total }}",
+      "${{ needs.compute.outputs.result }}",
+      "${{ jobs.compute.outputs.result }}",
+      "${{ outputs.compute.result }}"
+    ],
+    "answer": 1,
+    "explanation": "Downstream jobs access outputs from their dependencies using the `needs` context: `needs.<job_id>.outputs.<output_name>`. In this case, the job ID is `compute` and the output name is `result`."
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Job outputs are best for small values like version strings, flags, or URLs. For larger data such as compiled binaries or test reports, use `actions/upload-artifact` and `actions/download-artifact` instead."
+  },
+  {
+    "type": "text",
+    "src": "summary.md"
+  }
+]

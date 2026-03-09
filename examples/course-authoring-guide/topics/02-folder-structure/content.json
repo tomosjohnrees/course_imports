@@ -1,0 +1,89 @@
+[
+  {
+    "type": "text",
+    "src": "overview.md"
+  },
+  {
+    "type": "code",
+    "language": "text",
+    "content": "my-course/\n├── course.json\n└── topics/\n    ├── 01-introduction/\n    │   ├── content.json\n    │   ├── intro.md\n    │   └── hello.py\n    ├── 02-variables-and-types/\n    │   ├── content.json\n    │   ├── overview.md\n    │   ├── example.py\n    │   └── diagram.png\n    └── 03-functions/\n        ├── content.json\n        └── explanation.md",
+    "label": "Full course folder tree"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `course.json` file and the `topics/` directory must both live at the root of the course folder. The app will not search subdirectories for them."
+  },
+  {
+    "type": "text",
+    "src": "topic-folders.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Topic folder names must start with a numeric prefix followed by a hyphen (e.g. `01-`). Folders without a numeric prefix will not be recognised. The kebab-case portion after the prefix becomes the display title, so choose descriptive, readable names."
+  },
+  {
+    "type": "quiz",
+    "question": "Given a topic folder named `04-loops-and-iteration`, what display title will the app generate?",
+    "options": [
+      "04-loops-and-iteration",
+      "Loops And Iteration",
+      "04 Loops And Iteration",
+      "loops-and-iteration"
+    ],
+    "answer": 1,
+    "explanation": "The numeric prefix and its trailing hyphen are stripped, the remaining hyphens are replaced with spaces, and the result is title-cased. So `04-loops-and-iteration` becomes \"Loops And Iteration\"."
+  },
+  {
+    "type": "text",
+    "src": "topic-contents.md"
+  },
+  {
+    "type": "code",
+    "language": "text",
+    "content": "03-functions/\n├── content.json      (required — defines the block sequence)\n├── explanation.md    (referenced by a text block)\n├── examples.md       (referenced by another text block)\n├── factorial.py      (referenced by a code block)\n└── diagram.png       (referenced by an image block)",
+    "label": "Anatomy of a topic folder"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "All `src` paths in `content.json` are relative to the topic folder. You cannot use `../` to reference files outside the topic directory — the loader will reject path traversal for security reasons."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is the only required file inside a topic folder?",
+    "options": [
+      "README.md",
+      "topic.json",
+      "content.json",
+      "index.md"
+    ],
+    "answer": 2,
+    "explanation": "Every topic folder must contain a `content.json` file. This JSON array defines the ordered sequence of blocks for the topic. All other files (markdown, code, images) are optional and only needed if referenced by blocks."
+  },
+  {
+    "type": "quiz",
+    "question": "Where must the `topics/` directory be located?",
+    "options": [
+      "Anywhere inside the course folder",
+      "At the root of the course folder, alongside course.json",
+      "Inside a src/ directory",
+      "It is optional — topics can be placed directly in the root"
+    ],
+    "answer": 1,
+    "explanation": "The `topics/` directory must sit at the root of the course folder, right next to `course.json`. The loader looks for it in exactly that location."
+  },
+  {
+    "type": "quiz",
+    "question": "A course has three topics: an introduction to HTML, a topic on CSS selectors, and a topic on responsive design. Which set of folder names follows the naming convention?",
+    "options": [
+      "01-introduction-to-html, 02-css-selectors, 03-responsive-design",
+      "introduction-to-html, css-selectors, responsive-design",
+      "01_introduction_to_html, 02_css_selectors, 03_responsive_design",
+      "01-Introduction-To-HTML, 02-CSS-Selectors, 03-Responsive-Design"
+    ],
+    "answer": 0,
+    "explanation": "Each folder needs a numeric prefix for ordering (01, 02, 03) followed by a hyphen and a kebab-case description. The exact wording may vary, but the pattern should be consistent: number-hyphen-lowercase-words-separated-by-hyphens."
+  }
+]

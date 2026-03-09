@@ -1,0 +1,24 @@
+name: Deploy to AWS with OIDC
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write   # required to request the OIDC token
+  contents: read     # required to check out the code
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      # Authenticate using OIDC -- no stored AWS keys needed
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/github-actions-deploy
+          aws-region: eu-west-1
+
+      - run: aws s3 sync ./dist s3://my-app-bucket

@@ -1,0 +1,53 @@
+[
+  { "type": "text", "src": "intro.md" },
+  { "type": "text", "src": "reusable-workflow-basics.md" },
+  { "type": "code", "language": "yaml", "src": "reusable-workflow-called.yml", "label": "reusable-build-and-test.yml (called workflow)" },
+  { "type": "text", "src": "calling-workflows.md" },
+  { "type": "code", "language": "yaml", "src": "reusable-workflow-caller.yml", "label": "ci.yml (caller workflow)" },
+  { "type": "callout", "style": "tip", "body": "Use `secrets: inherit` to pass all of the caller's secrets to the called workflow without listing each one individually. This is convenient but less explicit — prefer listing secrets individually when clarity matters." },
+  {
+    "type": "quiz",
+    "question": "At what level do you reference a reusable workflow in the caller?",
+    "options": [
+      "Inside a step, using `uses`",
+      "At the job level, using `uses`",
+      "In the `on` trigger block",
+      "As a global `imports` entry at the top of the file"
+    ],
+    "answer": 1,
+    "explanation": "Reusable workflows are called at the job level using `uses`. Unlike actions, they cannot be used inside a `steps` block."
+  },
+  { "type": "code", "language": "yaml", "src": "reusable-workflow-outputs.yml", "label": "reusable-version.yml (workflow with outputs)" },
+  { "type": "callout", "style": "info", "body": "Reusable workflow outputs are mapped through two layers: the job defines `outputs` from step values, and the `workflow_call` block surfaces those job outputs as workflow-level outputs." },
+  { "type": "text", "src": "composite-actions.md" },
+  { "type": "code", "language": "yaml", "src": "action.yml", "label": "action.yml (composite action)" },
+  { "type": "code", "language": "yaml", "src": "use-composite-action.yml", "label": "Using the composite action" },
+  { "type": "callout", "style": "warning", "body": "Every `run` step inside a composite action **must** include an explicit `shell` field (e.g., `shell: bash`). Unlike regular workflows, composite actions do not inherit a default shell." },
+  {
+    "type": "quiz",
+    "question": "What is a key difference between a composite action and a reusable workflow?",
+    "options": [
+      "Composite actions can only be written in JavaScript",
+      "Reusable workflows run on the caller's runner, composite actions get their own runner",
+      "Composite actions run inside an existing job, reusable workflows run as separate jobs",
+      "Composite actions do not support inputs or outputs"
+    ],
+    "answer": 2,
+    "explanation": "Composite actions share the caller's runner and operate at the step level, while reusable workflows get their own runner and operate at the job level."
+  },
+  { "type": "text", "src": "sharing-across-repos.md" },
+  { "type": "text", "src": "versioning.md" },
+  {
+    "type": "quiz",
+    "question": "Your organisation has a Node.js build pipeline duplicated across 15 repositories. What is the best approach to consolidate it?",
+    "options": [
+      "Copy the workflow file into a shared directory and symlink it from each repository",
+      "Create a reusable workflow in a shared repository with a workflow_call trigger and reference it from each repository using `uses`",
+      "Write a shell script that generates the workflow YAML at build time",
+      "Use repository templates so that each new repository starts with the same workflow file"
+    ],
+    "answer": 1,
+    "explanation": "Either reusable workflows or composite actions can work, but reusable workflows are generally better suited for complete pipelines, while composite actions work better for smaller, reusable step sequences."
+  },
+  { "type": "text", "src": "summary.md" }
+]

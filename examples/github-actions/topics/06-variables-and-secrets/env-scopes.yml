@@ -1,0 +1,44 @@
+name: Environment Variable Scopes
+
+on: push
+
+# Workflow-level: available everywhere
+env:
+  APP_NAME: my-app
+  NODE_ENV: production
+  LOG_LEVEL: info
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Job-level: overrides workflow-level for this job
+    env:
+      NODE_ENV: development
+      BUILD_TARGET: es2022
+
+    steps:
+      - name: Show inherited variables
+        run: |
+          echo "APP_NAME: $APP_NAME"         # my-app (workflow)
+          echo "NODE_ENV: $NODE_ENV"         # development (job overrides workflow)
+          echo "LOG_LEVEL: $LOG_LEVEL"       # info (workflow)
+          echo "BUILD_TARGET: $BUILD_TARGET" # es2022 (job)
+
+      - name: Step with its own override
+        # Step-level: overrides both job and workflow
+        env:
+          NODE_ENV: test
+          COVERAGE: "true"
+        run: |
+          echo "NODE_ENV: $NODE_ENV"   # test (step overrides job)
+          echo "COVERAGE: $COVERAGE"   # true (step-only)
+          echo "APP_NAME: $APP_NAME"   # my-app (inherited from workflow)
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy uses workflow-level values
+        run: |
+          echo "NODE_ENV: $NODE_ENV"   # production (workflow-level, no job override)
+          echo "APP_NAME: $APP_NAME"   # my-app (workflow-level)

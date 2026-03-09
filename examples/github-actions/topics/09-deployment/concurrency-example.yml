@@ -1,0 +1,45 @@
+name: Deploy with Concurrency Control
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: echo "Building application..."
+
+  # Production deploys queue -- every deployment completes in order
+  deploy-production:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      - name: Deploy
+        run: echo "Deploying to production..."
+
+  # Preview deploys cancel -- only the latest commit matters
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: preview-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    environment:
+      name: preview
+      url: https://pr-${{ github.event.pull_request.number }}.preview.example.com
+    steps:
+      - name: Deploy preview
+        run: echo "Deploying preview for PR #${{ github.event.pull_request.number }}..."

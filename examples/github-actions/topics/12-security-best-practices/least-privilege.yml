@@ -1,0 +1,35 @@
+name: CI with least-privilege permissions
+
+on:
+  pull_request:
+    branches: [main]
+
+# Start with no permissions at the workflow level
+permissions: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Grant only what this job needs
+    permissions:
+      contents: read    # needed to check out the code
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - run: npm ci
+      - run: npm test
+
+  publish-results:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      checks: write    # needed to publish test results
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - run: npm ci && npm test -- --reporter junit --output results.xml
+      - uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5 # v1.9.1
+        if: always()
+        with:
+          name: Test Results
+          path: results.xml
+          reporter: jest-junit

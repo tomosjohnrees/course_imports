@@ -1,0 +1,44 @@
+# .github/workflows/reusable-version.yml
+# A reusable workflow that outputs computed values.
+
+name: Determine Version
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "The computed semantic version"
+        value: ${{ jobs.compute-version.outputs.version }}
+      is-prerelease:
+        description: "Whether this is a pre-release version"
+        value: ${{ jobs.compute-version.outputs.is-prerelease }}
+
+jobs:
+  compute-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is-prerelease: ${{ steps.version.outputs.is-prerelease }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute version from tags
+        id: version
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          VERSION="${LATEST_TAG#v}"
+
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"
+            echo "is-prerelease=false" >> "$GITHUB_OUTPUT"
+          else
+            VERSION="${VERSION}-dev.${{ github.run_number }}"
+            echo "is-prerelease=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Computed version: ${VERSION}"

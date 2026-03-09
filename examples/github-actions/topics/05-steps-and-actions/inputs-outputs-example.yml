@@ -1,0 +1,39 @@
+name: Build and Tag
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get package version
+        id: pkg-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Package version is $VERSION"
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Report summary
+        run: |
+          echo "## Build Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Node.js: ${{ steps.setup-node.outputs.node-version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Package version: ${{ steps.pkg-version.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"

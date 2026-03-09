@@ -1,0 +1,24 @@
+name: Default Variables Demo
+
+on: push
+
+jobs:
+  show-defaults:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print useful default variables
+        run: |
+          echo "Commit SHA:    $GITHUB_SHA"
+          echo "Branch/ref:    $GITHUB_REF_NAME"
+          echo "Repository:    $GITHUB_REPOSITORY"
+          echo "Triggered by:  $GITHUB_ACTOR"
+          echo "Event:         $GITHUB_EVENT_NAME"
+          echo "Run ID:        $GITHUB_RUN_ID"
+          echo "Run number:    $GITHUB_RUN_NUMBER"
+          echo "Runner OS:     $RUNNER_OS"
+          echo "Workspace:     $GITHUB_WORKSPACE"
+
+      - name: Tag a Docker image with the commit SHA
+        run: |
+          IMAGE="ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA"
+          echo "Would build and push: $IMAGE"

@@ -1,0 +1,44 @@
+name: Job Outputs Example
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      app-version: ${{ steps.get-version.outputs.version }}
+      should-deploy: ${{ steps.check-deploy.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine version
+        id: get-version
+        run: |
+          VERSION=$(cat package.json | jq -r '.version')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check if deployment is needed
+        id: check-deploy
+        run: |
+          echo "deploy=true" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with version
+        run: |
+          echo "Building version ${{ needs.version.outputs.app-version }}"
+          npm run build
+
+  deploy:
+    needs: [version, build]
+    if: needs.version.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy version
+        run: |
+          echo "Deploying ${{ needs.version.outputs.app-version }}"

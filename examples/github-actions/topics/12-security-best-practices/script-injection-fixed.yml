@@ -1,0 +1,18 @@
+# SAFE: User input assigned to environment variables
+name: Greet PR author (SECURE)
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      # Safe: expressions are assigned to env vars, not interpolated in shell
+      - run: |
+          echo "Thanks for the PR: $PR_TITLE"
+          echo "Submitted by: $PR_AUTHOR"
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}

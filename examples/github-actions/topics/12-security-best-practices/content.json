@@ -1,0 +1,209 @@
+[
+  {
+    "type": "text",
+    "src": "01-introduction.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "A compromised CI/CD pipeline can affect every user of your software. Supply chain attacks through CI systems have caused some of the most widespread security incidents in recent years."
+  },
+  {
+    "type": "text",
+    "src": "02-cicd-risks.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is a risk specific to CI/CD pipelines, rather than a general application security risk?",
+    "options": [
+      "SQL injection in a web form",
+      "A compromised third-party action exfiltrating repository secrets",
+      "Cross-site scripting in a browser",
+      "Weak user passwords"
+    ],
+    "answer": 1,
+    "explanation": "A compromised third-party action running inside your workflow has direct access to secrets, source code, and deployment credentials. The other options are general application or user security risks, not specific to CI/CD pipelines."
+  },
+  {
+    "type": "text",
+    "src": "03-pinning-actions.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "pinned-actions.yml",
+    "label": ".github/workflows/build.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Add a Dependabot configuration to automatically receive pull requests when new versions of your pinned actions are available. This keeps you secure without falling behind on updates."
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "dependabot-actions.yml",
+    "label": ".github/dependabot.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "Why should you pin actions to commit SHAs instead of version tags?",
+    "options": [
+      "SHA references download faster than tag references",
+      "Tags are mutable and can be moved to point to different code, while SHAs are immutable",
+      "GitHub requires SHA references for private repositories",
+      "Tags do not work with the `uses:` keyword"
+    ],
+    "answer": 1,
+    "explanation": "Git tags are mutable -- a repository owner (or attacker) can move a tag to point to a completely different commit. A commit SHA is a cryptographic hash that always refers to the exact same code, making it an immutable reference."
+  },
+  {
+    "type": "text",
+    "src": "04-permissions.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "least-privilege.yml",
+    "label": ".github/workflows/ci.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "Setting `permissions: {}` at the workflow level and then granting specific permissions per job is the recommended pattern. This ensures that if a new job is added without explicit permissions, it defaults to having no access."
+  },
+  {
+    "type": "quiz",
+    "question": "What does setting `permissions: {}` at the workflow level do?",
+    "options": [
+      "It grants all permissions to every job",
+      "It disables the GITHUB_TOKEN entirely",
+      "It grants the token no permissions by default, requiring each job to declare what it needs",
+      "It inherits permissions from the organisation settings"
+    ],
+    "answer": 2,
+    "explanation": "An empty permissions object (`{}`) means the GITHUB_TOKEN starts with no permissions. Each job must explicitly declare the permissions it needs using job-level `permissions`. This follows the principle of least privilege."
+  },
+  {
+    "type": "text",
+    "src": "05-script-injection.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "script-injection-bad.yml",
+    "label": "Vulnerable workflow (DO NOT USE)"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "script-injection-fixed.yml",
+    "label": "Fixed workflow (SAFE)"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "The key rule: never use `${{ }}` expressions inside `run:` blocks when the value comes from user input. Always assign user-controlled values to environment variables using the `env:` key, and reference them as `$ENV_VAR` in your shell script."
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following `run:` steps is vulnerable to script injection?",
+    "options": [
+      "`run: echo $PR_TITLE` with `env: PR_TITLE: ${{ github.event.pull_request.title }}`",
+      "`run: echo \"${{ github.event.pull_request.title }}\"`",
+      "`run: echo \"${{ github.sha }}\"`",
+      "`run: echo \"Hello, world!\"`"
+    ],
+    "answer": 1,
+    "explanation": "Option B directly interpolates the pull request title into the shell command. An attacker could craft a title containing shell metacharacters to execute arbitrary commands. Option A is safe because the expression is assigned to an environment variable. Options C and D use values that are not user-controlled."
+  },
+  {
+    "type": "text",
+    "src": "06-oidc.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "oidc-aws.yml",
+    "label": ".github/workflows/deploy.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "OIDC is supported by all major cloud providers: AWS (via `aws-actions/configure-aws-credentials`), Azure (via `azure/login`), and GCP (via `google-github-actions/auth`). The pattern is the same: request `id-token: write` permission and use the provider's login action."
+  },
+  {
+    "type": "quiz",
+    "question": "Why is OIDC more secure than storing cloud provider access keys as repository secrets?",
+    "options": [
+      "OIDC encrypts all workflow logs so credentials cannot be read",
+      "OIDC uses short-lived tokens scoped to the repository and branch, eliminating the need for stored long-lived credentials",
+      "OIDC prevents all third-party actions from accessing cloud resources",
+      "OIDC requires two-factor authentication for every workflow run"
+    ],
+    "answer": 1,
+    "explanation": "The core advantage is removing the need for persistent secrets. Short-lived tokens limit the blast radius of a compromise, and the claims-based trust model provides more granular access control than a shared secret."
+  },
+  {
+    "type": "text",
+    "src": "07-self-hosted-runners.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Never use self-hosted runners with public repositories. Any user who forks the repository and opens a pull request can potentially execute arbitrary code on your runner, gaining access to your network and any resources the runner can reach."
+  },
+  {
+    "type": "text",
+    "src": "08-supply-chain.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "dependency-review.yml",
+    "label": ".github/workflows/dependency-review.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "What is the primary benefit of using `npm ci` instead of `npm install` in CI workflows?",
+    "options": [
+      "It installs packages faster by skipping optional dependencies",
+      "It installs exactly what the lock file specifies and fails if the lock file is out of sync",
+      "It automatically updates all packages to the latest version",
+      "It only installs production dependencies"
+    ],
+    "answer": 1,
+    "explanation": "`npm ci` performs a clean install based strictly on the lock file. If the lock file does not match `package.json`, it fails rather than silently resolving different versions. This ensures reproducible builds and prevents unexpected package resolution that could introduce malicious packages."
+  },
+  {
+    "type": "text",
+    "src": "09-audit-logging.md"
+  },
+  {
+    "type": "text",
+    "src": "10-summary.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "hardened-workflow.yml",
+    "label": "Complete hardened workflow example"
+  },
+  {
+    "type": "quiz",
+    "question": "A colleague's workflow uses `actions/checkout@v4`, sets no `permissions` key, deploys to AWS using stored access keys, and uses `${{ github.event.pull_request.title }}` directly in a `run:` block. Which set of improvements correctly addresses all these issues?",
+    "options": [
+      "Update to `actions/checkout@v5`, add `permissions: read-all`, use AWS access keys in environment variables, and wrap the PR title in quotes",
+      "Pin checkout to a commit SHA, add `permissions: {}` at workflow level with per-job grants, replace stored keys with OIDC, and assign the PR title to an env variable instead of interpolating it in the run block",
+      "Switch to a self-hosted runner, remove the permissions key entirely, encrypt the AWS keys with GPG, and sanitise the PR title with sed",
+      "Add branch protection rules, store AWS keys in a vault, use `if: always()` on the deployment step, and escape the PR title with printf"
+    ],
+    "answer": 1,
+    "explanation": "Each of these changes addresses a specific attack vector: SHA pinning prevents supply chain attacks via mutable tags, least-privilege permissions limit blast radius, OIDC eliminates credential leaks, and environment variables prevent script injection."
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Security is an ongoing practice, not a one-time setup. Revisit your workflows regularly, keep actions and dependencies updated, and stay informed about new threats and mitigations in the GitHub Actions ecosystem."
+  }
+]

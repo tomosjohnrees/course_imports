@@ -1,0 +1,123 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "yaml-basics.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "You do not need to memorise every YAML rule. The key things to remember: use spaces (not tabs) for indentation, always put a space after colons, and use dashes for list items. Your editor's YAML extension will catch most mistakes."
+  },
+  {
+    "type": "quiz",
+    "question": "In YAML, how do you represent a list item?",
+    "options": [
+      "With a * followed by a space",
+      "With a - followed by a space",
+      "With square brackets around each item",
+      "With a tab character before the item"
+    ],
+    "answer": 1,
+    "explanation": "YAML list items are preceded by a dash and a space (- item). Square brackets can also be used for inline lists, but the dash syntax is the standard block form used in GitHub Actions workflows."
+  },
+  {
+    "type": "text",
+    "src": "workflow-directory.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `.github` directory (note the leading dot) is a special directory that GitHub recognises. It is also where you place issue templates, pull request templates, and other GitHub-specific configuration."
+  },
+  {
+    "type": "text",
+    "src": "anatomy.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which field in a workflow file specifies the virtual machine environment that a job runs on?",
+    "options": [
+      "env",
+      "runner",
+      "runs-on",
+      "machine"
+    ],
+    "answer": 2,
+    "explanation": "The `runs-on` field specifies the runner environment. Common values include `ubuntu-latest`, `windows-latest`, and `macos-latest`."
+  },
+  {
+    "type": "quiz",
+    "question": "What does the `on` field in a workflow file define?",
+    "options": [
+      "The name of the workflow",
+      "The operating system for the runner",
+      "The event that triggers the workflow to run",
+      "The list of steps to execute"
+    ],
+    "answer": 2,
+    "explanation": "The `on` field defines the trigger -- the event (such as `push`, `pull_request`, or `workflow_dispatch`) that causes the workflow to execute."
+  },
+  {
+    "type": "text",
+    "src": "walkthrough.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "hello.yml",
+    "label": ".github/workflows/hello.yml"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Indentation errors are the most common cause of workflow failures. If your workflow does not run or produces a syntax error, double-check that every level is indented with exactly two spaces and that you have not mixed tabs and spaces."
+  },
+  {
+    "type": "text",
+    "src": "viewing-results.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following correctly lists the five core components of a GitHub Actions workflow file?",
+    "options": [
+      "`name`, `on`, `jobs`, `runs-on`, `steps`",
+      "`trigger`, `runner`, `stages`, `actions`, `artifacts`",
+      "`name`, `on`, `env`, `runs-on`, `uses`",
+      "`pipeline`, `events`, `jobs`, `tasks`, `steps`"
+    ],
+    "answer": 0,
+    "explanation": "Every GitHub Actions workflow is built from these five components: name, on, jobs, runs-on, and steps. Understanding this structure is the foundation for writing any workflow."
+  },
+  {
+    "type": "quiz",
+    "question": "Where must workflow YAML files be placed for GitHub Actions to detect them?",
+    "options": [
+      "In the root of the repository",
+      "In the `.github/workflows/` directory",
+      "In a `workflows/` directory at the root",
+      "Anywhere in the repository, as long as the file ends in `.yml`"
+    ],
+    "answer": 1,
+    "explanation": "GitHub Actions only looks for workflow files in the `.github/workflows/` directory. Files placed anywhere else are ignored."
+  },
+  {
+    "type": "quiz",
+    "question": "What does the `workflow_dispatch` trigger allow you to do?",
+    "options": [
+      "Automatically run the workflow on every commit",
+      "Run the workflow on a timed schedule",
+      "Manually start the workflow from the GitHub Actions UI",
+      "Trigger the workflow when an issue is created"
+    ],
+    "answer": 2,
+    "explanation": "The `workflow_dispatch` trigger adds a 'Run workflow' button in the Actions tab, letting you start the workflow manually without needing to push a commit."
+  },
+  {
+    "type": "text",
+    "src": "whats-next.md"
+  }
+]

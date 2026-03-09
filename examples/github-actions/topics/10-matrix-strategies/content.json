@@ -1,0 +1,98 @@
+[
+  { "type": "text", "src": "intro.md" },
+
+  { "type": "text", "src": "basic-matrix.md" },
+  { "type": "code", "language": "yaml", "src": "basic-matrix.yml", "label": ".github/workflows/test.yml" },
+  { "type": "text", "src": "basic-matrix-explained.md" },
+
+  { "type": "callout", "style": "tip", "body": "You can name matrix variables anything you like. Common conventions include `node-version`, `os`, `python-version`, `database`, and `browser`. The name becomes the key you reference with `${{ matrix.<name> }}`." },
+
+  {
+    "type": "quiz",
+    "question": "Given a matrix with `node-version: [18, 20, 22]`, how many jobs does GitHub Actions create?",
+    "options": [
+      "1 job that tests all three versions sequentially",
+      "2 jobs (the first and last version)",
+      "3 jobs, one for each version",
+      "It depends on the `max-parallel` setting"
+    ],
+    "answer": 2,
+    "explanation": "GitHub Actions creates one job per value in the matrix variable. Three values means three separate, parallel jobs. The `max-parallel` setting controls concurrency but does not change the number of jobs created."
+  },
+
+  { "type": "text", "src": "multi-dimensional.md" },
+  { "type": "code", "language": "yaml", "src": "multi-dimensional.yml", "label": ".github/workflows/cross-platform-test.yml" },
+  { "type": "text", "src": "multi-dimensional-explained.md" },
+
+  {
+    "type": "quiz",
+    "question": "A matrix defines `os: [ubuntu-latest, windows-latest]` and `node-version: [18, 20, 22]`. How many jobs are generated?",
+    "options": [
+      "2 jobs",
+      "3 jobs",
+      "5 jobs",
+      "6 jobs"
+    ],
+    "answer": 3,
+    "explanation": "GitHub Actions generates the Cartesian product of all matrix variables: 2 operating systems x 3 Node.js versions = 6 jobs."
+  },
+
+  { "type": "text", "src": "include-exclude.md" },
+  { "type": "code", "language": "yaml", "src": "include-exclude.yml", "label": ".github/workflows/refined-matrix.yml" },
+  { "type": "text", "src": "include-exclude-explained.md" },
+
+  { "type": "callout", "style": "info", "body": "The `include` key is versatile. When an `include` entry matches an existing matrix combination, it adds extra variables to that combination. When it does not match any existing combination, it creates a brand-new job. This makes `include` useful for both augmenting and extending a matrix." },
+
+  { "type": "text", "src": "fail-fast-max-parallel.md" },
+  { "type": "code", "language": "yaml", "src": "fail-fast-max-parallel.yml", "label": ".github/workflows/controlled-matrix.yml" },
+  { "type": "text", "src": "fail-fast-max-parallel-explained.md" },
+
+  { "type": "callout", "style": "warning", "body": "Be mindful of runner minute costs when using large matrices. A 3x3 matrix with `fail-fast: false` always runs 9 jobs to completion, even if most of them fail. On private repositories, each job consumes billed runner minutes." },
+
+  {
+    "type": "quiz",
+    "question": "What is the default behaviour of `fail-fast` in a matrix strategy?",
+    "options": [
+      "false -- all jobs always run to completion",
+      "true -- if any job fails, remaining in-progress jobs are cancelled",
+      "true -- if any job fails, the entire workflow is cancelled",
+      "It must be explicitly set; there is no default"
+    ],
+    "answer": 1,
+    "explanation": "By default, `fail-fast` is `true`. When one matrix job fails, GitHub Actions cancels the other in-progress matrix jobs (but not jobs outside the matrix)."
+  },
+
+  { "type": "text", "src": "accessing-values.md" },
+
+  {
+    "type": "quiz",
+    "question": "Which conditional expression makes a step run only when the matrix OS is `ubuntu-latest` and the Node.js version is `22`?",
+    "options": [
+      "if: runner.os == 'ubuntu-latest' && node.version == 22",
+      "if: matrix.os == 'ubuntu' && matrix.node-version == '22'",
+      "if: matrix.os == 'ubuntu-latest' && matrix.node-version == 22",
+      "if: env.os == 'ubuntu-latest' && env.node-version == 22"
+    ],
+    "answer": 2,
+    "explanation": "Matrix values are accessed via the `matrix` context. You can combine conditions with `&&` (logical AND). Note that in an `if` expression, the `${{ }}` wrapper is optional."
+  },
+
+  { "type": "text", "src": "practical-example.md" },
+  { "type": "code", "language": "yaml", "src": "practical-example.yml", "label": ".github/workflows/ci.yml" },
+  { "type": "text", "src": "practical-example-explained.md" },
+
+  { "type": "text", "src": "summary.md" },
+
+  {
+    "type": "quiz",
+    "question": "What does the `include` key allow you to do in a matrix strategy?",
+    "options": [
+      "Include additional workflow files to run in parallel",
+      "Attach extra variables to specific matrix combinations or add entirely new combinations",
+      "Include environment variables from an external configuration file",
+      "Force specific matrix combinations to always succeed"
+    ],
+    "answer": 1,
+    "explanation": "The `include` key lets you attach extra variables to specific combinations without affecting other jobs in the matrix. This is a clean way to customise individual jobs without breaking the matrix pattern or duplicating the entire job definition."
+  }
+]

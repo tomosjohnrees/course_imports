@@ -1,0 +1,39 @@
+name: Status Check Functions
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        id: test
+        run: npm test
+
+      # Runs only if the test step above failed
+      - name: Upload failure logs
+        if: failure() && steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-logs
+          path: logs/
+
+      # Runs regardless of success or failure
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test-results/
+
+  notify:
+    needs: build
+    # Run even if 'build' fails, but not if it was cancelled
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report build result
+        run: |
+          echo "Build job status: ${{ needs.build.result }}"

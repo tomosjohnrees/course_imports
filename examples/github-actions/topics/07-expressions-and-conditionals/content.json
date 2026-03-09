@@ -1,0 +1,167 @@
+[
+  {
+    "type": "text",
+    "src": "01-intro.md"
+  },
+  {
+    "type": "text",
+    "src": "02-expression-syntax.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "You can use `toJSON()` to dump any context object during a workflow run. Adding a step like `run: echo '${{ toJSON(github) }}'` is the quickest way to explore what data is available."
+  },
+  {
+    "type": "text",
+    "src": "03-operators.md"
+  },
+  {
+    "type": "quiz",
+    "question": "What will the expression `github.ref == 'refs/heads/main' && github.event_name == 'push'` evaluate to if the event is a pull_request targeting main?",
+    "options": [
+      "true, because the ref matches main",
+      "false, because the event_name is not 'push'",
+      "An error, because you cannot use && in expressions",
+      "true, because pull requests target main"
+    ],
+    "answer": 1,
+    "explanation": "The && operator requires both sides to be true. Even though github.ref might match, github.event_name would be 'pull_request', not 'push', so the entire expression is false."
+  },
+  {
+    "type": "text",
+    "src": "04-conditionals.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "conditional-job.yml",
+    "label": "Conditional job: deploy only from main"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "conditional-steps.yml",
+    "label": "Conditional steps: different actions per event"
+  },
+  {
+    "type": "quiz",
+    "question": "If a job is skipped because its `if` condition is false, what happens to downstream jobs that depend on it via `needs`?",
+    "options": [
+      "They run normally, ignoring the skipped dependency",
+      "They are also skipped by default",
+      "They fail with a dependency error",
+      "They run but receive an empty context from the skipped job"
+    ],
+    "answer": 1,
+    "explanation": "When a job is skipped, all jobs that list it in their `needs` array are also skipped by default. To override this, use a status check function like `always()` in the dependent job's `if` condition."
+  },
+  {
+    "type": "text",
+    "src": "05-status-checks.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "status-checks.yml",
+    "label": "Status check functions in practice"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Be careful with `always()`. A step with `if: always()` will run even when the workflow is cancelled. If you want a step to run on success or failure but **not** on cancellation, use `if: always() && !cancelled()` instead."
+  },
+  {
+    "type": "quiz",
+    "question": "A step has `continue-on-error: true` and it fails. What are the values of `steps.<id>.outcome` and `steps.<id>.conclusion`?",
+    "options": [
+      "outcome: 'success', conclusion: 'failure'",
+      "outcome: 'failure', conclusion: 'failure'",
+      "outcome: 'failure', conclusion: 'success'",
+      "outcome: 'success', conclusion: 'success'"
+    ],
+    "answer": 2,
+    "explanation": "The `outcome` reflects the actual result of the step (failure), while `conclusion` is the final result after `continue-on-error` is applied, which converts it to success."
+  },
+  {
+    "type": "text",
+    "src": "06-type-casting.md"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "The string `'false'` is **truthy** in GitHub Actions expressions. Step outputs are always strings, so never write `if: steps.check.outputs.flag` when the output could be `'false'`. Always compare explicitly: `if: steps.check.outputs.flag == 'true'`."
+  },
+  {
+    "type": "quiz",
+    "question": "A step sets an output with `echo \"ready=false\" >> $GITHUB_OUTPUT`. A later step uses `if: steps.prev.outputs.ready`. Will the later step run?",
+    "options": [
+      "No, because the output is 'false'",
+      "Yes, because the string 'false' is truthy",
+      "It depends on the runner operating system",
+      "No, because GITHUB_OUTPUT converts strings to booleans"
+    ],
+    "answer": 1,
+    "explanation": "Step outputs are always strings. The string 'false' is a non-empty string, which is truthy. The step will run. To prevent this, compare explicitly: `if: steps.prev.outputs.ready == 'true'`."
+  },
+  {
+    "type": "text",
+    "src": "07-builtin-functions.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "functions-example.yml",
+    "label": "Built-in functions in a real workflow"
+  },
+  {
+    "type": "quiz",
+    "question": "Which function would you use to create a cache key that changes whenever your dependency lock file changes?",
+    "options": [
+      "toJSON('package-lock.json')",
+      "format('cache-{0}', 'package-lock.json')",
+      "hashFiles('package-lock.json')",
+      "contains('package-lock.json', 'dependencies')"
+    ],
+    "answer": 2,
+    "explanation": "hashFiles() computes a SHA-256 hash of the specified files. When the file contents change, the hash changes, which invalidates the cache and triggers a fresh install."
+  },
+  {
+    "type": "text",
+    "src": "08-practical-patterns.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "dynamic-matrix.yml",
+    "label": "Dynamic matrix with fromJSON"
+  },
+  {
+    "type": "quiz",
+    "question": "Which `if` conditional makes a step run only when the workflow was triggered by a push to any branch starting with 'release/'?",
+    "options": [
+      "if: github.ref == 'release/*'",
+      "if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/')",
+      "if: startsWith(github.branch, 'release/')",
+      "if: github.event_name == 'push' && github.ref == 'release'"
+    ],
+    "answer": 1,
+    "explanation": "You need to check both the event type (push) and the branch name. The startsWith() function matches the beginning of github.ref against the full ref path 'refs/heads/release/'."
+  },
+  {
+    "type": "quiz",
+    "question": "Why might you use `if: always() && !cancelled()` instead of just `if: always()` on a notification step?",
+    "options": [
+      "always() does not run on failure, so !cancelled() is needed to include failure cases",
+      "always() runs even when the workflow is cancelled, so adding !cancelled() prevents notifications on deliberate cancellations",
+      "always() ignores the result of previous steps, so !cancelled() re-enables dependency checking",
+      "There is no practical difference; they behave the same way"
+    ],
+    "answer": 1,
+    "explanation": "The always() function runs in all cases including cancellation. By adding !cancelled(), you exclude the cancellation case while still running on both success and failure."
+  },
+  {
+    "type": "text",
+    "src": "09-summary.md"
+  }
+]

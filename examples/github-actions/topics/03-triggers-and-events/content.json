@@ -1,0 +1,199 @@
+[
+  {
+    "type": "text",
+    "src": "01-introduction.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `on` keyword is **required** in every workflow file. Without it, GitHub has no way to know when to run your workflow."
+  },
+  {
+    "type": "text",
+    "src": "02-push-pull-request.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "push-filter-example.yml",
+    "label": "Push event with branch, path, and tag filters"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "pull-request-example.yml",
+    "label": "Pull request event with type and path filters"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "You cannot use `branches` and `branches-ignore` in the same event filter -- pick one or the other. The same applies to `paths` / `paths-ignore` and `tags` / `tags-ignore`."
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use `paths-ignore` with `'**/*.md'` to avoid running expensive CI on documentation-only changes. This can significantly reduce your Actions usage minutes."
+  },
+  {
+    "type": "quiz",
+    "question": "Which filter would you use to trigger a workflow only when files in the `src/` directory change?",
+    "options": [
+      "branches: ['src/**']",
+      "paths: ['src/**']",
+      "files: ['src/**']",
+      "include: ['src/**']"
+    ],
+    "answer": 1,
+    "explanation": "The `paths` filter restricts the trigger to fire only when changed files match the specified glob patterns. `branches` filters by branch name, not file paths."
+  },
+  {
+    "type": "quiz",
+    "question": "What does the `types` filter on a `pull_request` event control?",
+    "options": [
+      "The file types that must change to trigger the workflow",
+      "The specific pull request actions (opened, closed, labeled, etc.) that trigger the workflow",
+      "The type of runner to use for the workflow",
+      "Whether the pull request is a draft or not"
+    ],
+    "answer": 1,
+    "explanation": "The `types` filter lets you specify which pull request activity types (such as `opened`, `synchronize`, `closed`, `labeled`) will trigger the workflow. Without it, the default types are `opened`, `synchronize`, and `reopened`."
+  },
+  {
+    "type": "text",
+    "src": "03-schedule.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "schedule-example.yml",
+    "label": "Scheduled workflow with multiple cron entries"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "Scheduled workflows only run on the repository's **default branch**. If you add a schedule trigger on a feature branch, it will not execute until that branch is merged into `main` (or whatever your default branch is)."
+  },
+  {
+    "type": "quiz",
+    "question": "What does the cron expression `0 9 * * 1-5` mean?",
+    "options": [
+      "Every 9 minutes on weekdays",
+      "At 9:00 AM UTC, Monday through Friday",
+      "Every hour from 9 AM to 5 PM",
+      "On the 9th day of months 1 through 5"
+    ],
+    "answer": 1,
+    "explanation": "The five fields are: minute (0), hour (9), day of month (*), month (*), day of week (1-5 = Monday through Friday). So this runs at 09:00 UTC every weekday."
+  },
+  {
+    "type": "quiz",
+    "question": "Which cron expression runs a workflow every Sunday at 3:30 AM UTC?",
+    "options": [
+      "3 30 * * 0",
+      "30 3 * * 7",
+      "30 3 * * 0",
+      "0 3 30 * SUN"
+    ],
+    "answer": 2,
+    "explanation": "The expression `30 3 * * 0` means: minute 30, hour 3, any day of month, any month, day of week 0 (Sunday). Note that `30 3 * * 7` is also accepted by some cron implementations, but `0` is the standard value for Sunday in GitHub Actions."
+  },
+  {
+    "type": "text",
+    "src": "04-workflow-dispatch.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "workflow-dispatch-example.yml",
+    "label": "Manual deployment with workflow_dispatch inputs"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use `type: choice` for inputs where you want to limit the options (like environment names). Use `type: boolean` for feature flags like dry-run mode. This prevents errors from typos in free-text fields."
+  },
+  {
+    "type": "quiz",
+    "question": "How do you access a `workflow_dispatch` input called `environment` inside a workflow step?",
+    "options": [
+      "${{ env.environment }}",
+      "${{ inputs.environment }}",
+      "${{ parameters.environment }}",
+      "${{ workflow.environment }}"
+    ],
+    "answer": 1,
+    "explanation": "Workflow dispatch inputs are accessed through the `inputs` context. You can also use `github.event.inputs.environment`, but the `inputs` context is preferred because it preserves the declared type."
+  },
+  {
+    "type": "text",
+    "src": "05-other-events.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "release-example.yml",
+    "label": "Publishing artifacts when a release is created"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "issues-example.yml",
+    "label": "Auto-labeling new issues"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `workflow_call` event is special -- it does not respond to repository activity. Instead, it turns the workflow into a **reusable workflow** that other workflows can invoke like a function. You will explore this in depth in Topic 11: Reusable Workflows."
+  },
+  {
+    "type": "quiz",
+    "question": "Which event would you use to trigger a workflow when a new version is published on GitHub?",
+    "options": [
+      "push with a tag filter",
+      "release with type: published",
+      "deployment_status",
+      "version"
+    ],
+    "answer": 1,
+    "explanation": "The `release` event with `types: [published]` fires when a GitHub Release is published. While you could also use `push` with a tag filter to detect version tags, the `release` event is specifically designed for this purpose and gives you access to release metadata."
+  },
+  {
+    "type": "text",
+    "src": "06-combining-triggers.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "combined-triggers-example.yml",
+    "label": "Workflow with push, PR, schedule, and manual triggers"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Use `github.event_name` in conditional expressions to change behaviour based on which event triggered the run. For example, you might deploy only on `push` but skip deployment on `pull_request`."
+  },
+  {
+    "type": "quiz",
+    "question": "When a workflow lists multiple events under `on`, what is the relationship between them?",
+    "options": [
+      "AND -- all events must occur together to trigger the workflow",
+      "OR -- the workflow triggers when any one of the listed events occurs",
+      "SEQUENCE -- the events must occur in the listed order",
+      "PRIORITY -- only the first matching event triggers the workflow"
+    ],
+    "answer": 1,
+    "explanation": "Multiple events under `on` have an OR relationship. The workflow runs when any single listed event occurs. There is no built-in AND or sequencing logic for triggers."
+  },
+  {
+    "type": "quiz",
+    "question": "Which scenario best illustrates why you would combine `schedule` and `workflow_dispatch` triggers in the same workflow?",
+    "options": [
+      "To run a workflow on both Linux and macOS runners simultaneously",
+      "A nightly dependency vulnerability scan that can also be triggered manually when a critical vulnerability is announced",
+      "To allow different team members to trigger different jobs within the same workflow",
+      "To ensure the workflow runs twice: once on schedule and once manually, every day"
+    ],
+    "answer": 1,
+    "explanation": "Combining schedule with workflow_dispatch gives you the best of both worlds: automated regular execution plus the ability to run on demand when needed. This pattern is common for maintenance tasks, security scans, and report generation."
+  }
+]

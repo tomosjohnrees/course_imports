@@ -1,0 +1,74 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "multiple-choice.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "content": "{\n  \"type\": \"quiz\",\n  \"question\": \"Which keyword declares a constant in JavaScript?\",\n  \"options\": [\n    \"var\",\n    \"let\",\n    \"const\",\n    \"define\"\n  ],\n  \"answer\": 2,\n  \"explanation\": \"The const keyword declares a block-scoped constant whose value cannot be reassigned.\"\n}",
+    "label": "Example: quiz block"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "The `answer` field uses **zero-based indexing**. The first option is index `0`, the second is `1`, the third is `2`, and so on. A common mistake is to set `answer` to `3` when you mean the third option — that would actually point to the fourth option."
+  },
+  {
+    "type": "quiz",
+    "question": "In a quiz with four options, what value should the `answer` field have if the correct answer is the third option?",
+    "options": [
+      "3",
+      "2",
+      "1",
+      "\"third\""
+    ],
+    "answer": 1,
+    "explanation": "The answer field is zero-based: the first option is 0, the second is 1, and the third is 2."
+  },
+  {
+    "type": "text",
+    "src": "free-text.md"
+  },
+  {
+    "type": "text",
+    "src": "completion-rules.md"
+  },
+  {
+    "type": "text",
+    "src": "writing-tips.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "A good rule of thumb: after every major concept, add one quiz. Well-written distractors are key — they should sound plausible enough to test real understanding."
+  },
+  {
+    "type": "quiz",
+    "question": "How are topics with quizzes marked as complete, compared to topics without quizzes?",
+    "options": [
+      "Both are marked complete as soon as the learner views them",
+      "Topics without quizzes require a manual \"mark complete\" button; topics with quizzes complete automatically",
+      "Topics without quizzes are marked complete on view; topics with quizzes require all quizzes to be answered",
+      "Topics with quizzes are complete after answering any one quiz; topics without quizzes are never marked complete"
+    ],
+    "answer": 2,
+    "explanation": "This distinction matters when designing your course flow. Adding a single quiz to a topic changes it from view-to-complete to answer-all-to-complete."
+  },
+  {
+    "type": "quiz",
+    "question": "Which fields are required on a quiz block?",
+    "options": [
+      "`type`, `question`, `options`",
+      "`type`, `question`, `options`, `answer`",
+      "`type`, `question`, `answer`",
+      "`type`, `question`, `options`, `answer`, `explanation`"
+    ],
+    "answer": 1,
+    "explanation": "A quiz block requires `type`, `question`, `options`, and `answer`. The `explanation` field is optional."
+  }
+]

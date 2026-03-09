@@ -1,0 +1,18 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # Run at midnight UTC every day
+    - cron: '0 0 * * *'
+    # Also run at noon UTC on weekdays
+    - cron: '0 12 * * 1-5'
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Running nightly build at $(date -u)"
+      - run: npm ci
+      - run: npm run build
+      - run: npm test

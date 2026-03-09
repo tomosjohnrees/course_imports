@@ -1,0 +1,39 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      version:
+        description: 'Version to deploy (e.g., v1.2.3)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Perform a dry run without actually deploying'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show deployment details
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Version: ${{ inputs.version }}"
+          echo "Dry run: ${{ inputs.dry_run }}"
+
+      - name: Deploy
+        if: ${{ inputs.dry_run == false }}
+        run: |
+          echo "Deploying ${{ inputs.version }} to ${{ inputs.environment }}"
+          # ./deploy.sh --env ${{ inputs.environment }} --version ${{ inputs.version }}

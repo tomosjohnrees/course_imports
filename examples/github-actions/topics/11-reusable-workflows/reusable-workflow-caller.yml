@@ -1,0 +1,27 @@
+# .github/workflows/ci.yml
+# This is the CALLER workflow that uses the reusable workflow.
+
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Call a reusable workflow in the SAME repository
+  build-and-test:
+    uses: ./.github/workflows/reusable-build-and-test.yml
+    with:
+      node-version: "20"
+      working-directory: "."
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Call a reusable workflow from ANOTHER repository
+  security-scan:
+    uses: my-org/shared-workflows/.github/workflows/security-scan.yml@v2
+    with:
+      scan-level: "standard"
+    secrets: inherit  # Pass all caller secrets to the called workflow

@@ -1,0 +1,17 @@
+{
+  "id": "course-authoring-guide",
+  "title": "Course Authoring Guide",
+  "description": "Learn how to create, structure, and validate courses for Course Imports — from folder layout to content blocks to quizzes.",
+  "version": "1.0.0",
+  "author": "Course Imports Team",
+  "tags": ["course-imports", "authoring", "tutorial", "meta"],
+  "topicOrder": [
+    "01-introduction",
+    "02-folder-structure",
+    "03-course-metadata",
+    "04-content-blocks",
+    "05-writing-quizzes",
+    "06-building-a-course",
+    "07-validation-and-loading"
+  ]
+}

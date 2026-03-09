@@ -1,0 +1,16 @@
+{
+  "id": "web-accessibility-fundamentals",
+  "title": "Web Accessibility Fundamentals",
+  "description": "Learn the core principles of web accessibility and how to build inclusive websites that work for everyone.",
+  "version": "2.1.0",
+  "author": "Alex Rivera",
+  "tags": ["accessibility", "a11y", "html", "web", "intermediate"],
+  "topicOrder": [
+    "01-why-accessibility-matters",
+    "02-semantic-html",
+    "03-images-and-alt-text",
+    "04-keyboard-navigation",
+    "05-colour-and-contrast",
+    "06-testing-your-site"
+  ]
+}

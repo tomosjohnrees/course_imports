@@ -1,0 +1,36 @@
+name: Dynamic Matrix Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Determine build matrix
+        id: set-matrix
+        run: |
+          # In a real workflow, this might read from a config file
+          # or query an API to decide which versions to build
+          echo 'matrix={"node-version":["18","20","22"],"os":["ubuntu-latest","windows-latest"]}' >> $GITHUB_OUTPUT
+
+  build:
+    needs: prepare
+    strategy:
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: node --version
+      - run: npm ci
+      - run: npm test

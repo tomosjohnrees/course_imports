@@ -1,0 +1,9 @@
+# .github/dependabot.yml
+# Automatically proposes PRs when pinned actions have new versions
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

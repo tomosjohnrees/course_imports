@@ -1,0 +1,92 @@
+[
+  {
+    "type": "text",
+    "src": "intro.md"
+  },
+  {
+    "type": "text",
+    "src": "step-1-folder-structure.md"
+  },
+  {
+    "type": "code",
+    "language": "bash",
+    "content": "mkdir intro-to-git\nmkdir intro-to-git/topics\nmkdir intro-to-git/topics/01-what-is-git\nmkdir intro-to-git/topics/02-making-commits",
+    "label": "Create the folder structure"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Start simple. Create your folder structure and `course.json` first, then add one topic at a time. Get each topic loading in the app before moving on to the next. Iterating in small steps is much easier than debugging a large course all at once."
+  },
+  {
+    "type": "text",
+    "src": "step-2-course-json.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "content": "{\n  \"id\": \"intro-to-git\",\n  \"title\": \"Intro to Git\",\n  \"description\": \"Learn the basics of Git version control.\",\n  \"version\": \"1.0.0\",\n  \"author\": \"Your Name\",\n  \"tags\": [\"git\", \"version-control\", \"beginner\"],\n  \"topicOrder\": [\n    \"01-what-is-git\",\n    \"02-making-commits\"\n  ]\n}",
+    "label": "intro-to-git/course.json"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `id` field must be unique across all courses you load. Use kebab-case and keep it short. The `topicOrder` entries must match the folder names inside `topics/` exactly — including the numeric prefix."
+  },
+  {
+    "type": "text",
+    "src": "step-3-first-topic.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "content": "[\n  {\n    \"type\": \"text\",\n    \"src\": \"intro.md\"\n  },\n  {\n    \"type\": \"code\",\n    \"language\": \"bash\",\n    \"content\": \"git --version\",\n    \"label\": \"Check your Git version\"\n  },\n  {\n    \"type\": \"callout\",\n    \"style\": \"info\",\n    \"body\": \"If this command prints a version number, Git is installed. If not, visit https://git-scm.com to download it.\"\n  },\n  {\n    \"type\": \"quiz\",\n    \"variant\": \"multiple-choice\",\n    \"question\": \"What does Git track?\",\n    \"options\": [\n      \"CPU usage over time\",\n      \"Changes to files over time\",\n      \"Internet bandwidth\",\n      \"Battery life\"\n    ],\n    \"answer\": 1,\n    \"explanation\": \"Git is a version control system. Its core purpose is tracking changes to files so you can review history, revert mistakes, and collaborate with others.\"\n  }\n]",
+    "label": "intro-to-git/topics/01-what-is-git/content.json"
+  },
+  {
+    "type": "text",
+    "src": "step-4-markdown-and-code.md"
+  },
+  {
+    "type": "code",
+    "language": "markdown",
+    "src": "sample-intro.md",
+    "label": "intro-to-git/topics/01-what-is-git/intro.md"
+  },
+  {
+    "type": "text",
+    "src": "step-5-second-topic.md"
+  },
+  {
+    "type": "code",
+    "language": "json",
+    "content": "[\n  {\n    \"type\": \"text\",\n    \"content\": \"A **commit** is a snapshot of your project at a specific point in time. Every commit has a unique identifier, a message describing what changed, and a pointer to the previous commit.\\n\\nThe basic workflow is: make changes, **stage** the files you want to include, and then **commit** them with a message.\"\n  },\n  {\n    \"type\": \"code\",\n    \"language\": \"bash\",\n    \"content\": \"git add index.html\\ngit commit -m \\\"Add homepage\\\"\",\n    \"label\": \"Stage and commit a file\"\n  },\n  {\n    \"type\": \"callout\",\n    \"style\": \"tip\",\n    \"body\": \"Write commit messages in the imperative mood: \\\"Add homepage\\\" rather than \\\"Added homepage\\\". This matches the convention used by Git itself.\"\n  },\n  {\n    \"type\": \"quiz\",\n    \"variant\": \"multiple-choice\",\n    \"question\": \"Which command stages a file for the next commit?\",\n    \"options\": [\n      \"git commit\",\n      \"git push\",\n      \"git add\",\n      \"git status\"\n    ],\n    \"answer\": 2,\n    \"explanation\": \"git add moves changes into the staging area. git commit then records everything in the staging area as a new snapshot.\"\n  }\n]",
+    "label": "intro-to-git/topics/02-making-commits/content.json"
+  },
+  {
+    "type": "text",
+    "src": "complete-structure.md"
+  },
+  {
+    "type": "code",
+    "language": "text",
+    "content": "intro-to-git/\n├── course.json\n└── topics/\n    ├── 01-what-is-git/\n    │   ├── content.json\n    │   └── intro.md\n    └── 02-making-commits/\n        └── content.json",
+    "label": "Final folder structure"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is a valid folder name for a third topic about branching in git?",
+    "options": [
+      "branching",
+      "03_branching",
+      "03-branching",
+      "3-Branching"
+    ],
+    "answer": 2,
+    "explanation": "The folder name needs a numeric prefix for ordering (such as 03) followed by a hyphen and a kebab-case description. Examples like 03-branching, 03-git-branching, or 03-branches-and-merging would all be valid. The numeric prefix determines display order, and the rest becomes the display title."
+  },
+  {
+    "type": "text",
+    "src": "recap.md"
+  }
+]

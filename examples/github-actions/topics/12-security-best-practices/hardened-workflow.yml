@@ -1,0 +1,67 @@
+# A fully hardened production workflow combining all best practices
+name: Secure CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Default: no permissions
+permissions: {}
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Pinned to SHA with version comment
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 20
+          cache: npm
+
+      # Use ci, not install, for reproducible builds
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/dependency-review-action@9129d7d40b8c12c1ed0f60f46db235c2c1c5a747 # v4.3.2
+        with:
+          fail-on-severity: high
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write    # OIDC authentication
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      # OIDC: no stored credentials
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/github-actions-deploy
+          aws-region: eu-west-1
+
+      - run: npm ci
+      - run: npm run build
+
+      # Safe use of event data via environment variable
+      - run: echo "Deploying commit $COMMIT_SHA"
+        env:
+          COMMIT_SHA: ${{ github.sha }}

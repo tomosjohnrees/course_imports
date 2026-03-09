@@ -1,0 +1,95 @@
+[
+  {
+    "type": "text",
+    "src": "welcome.md"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "GitHub Actions is free for public repositories with unlimited minutes. Private repositories get a monthly allowance of free minutes depending on your GitHub plan."
+  },
+  {
+    "type": "text",
+    "src": "core-concepts.md"
+  },
+  {
+    "type": "text",
+    "src": "anatomy.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "minimal-workflow.yml",
+    "label": ".github/workflows/ci.yml"
+  },
+  {
+    "type": "text",
+    "src": "anatomy-breakdown.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "You do not need to memorise the YAML syntax right now. The next topic will walk you through creating a workflow step by step."
+  },
+  {
+    "type": "quiz",
+    "question": "Where do GitHub Actions workflow files live in a repository?",
+    "options": [
+      ".github/actions/",
+      ".github/workflows/",
+      ".workflows/",
+      "actions/"
+    ],
+    "answer": 1,
+    "explanation": "Workflow files must be placed in the `.github/workflows/` directory. GitHub automatically detects YAML files in this location and registers them as workflows."
+  },
+  {
+    "type": "text",
+    "src": "cicd-devops.md"
+  },
+  {
+    "type": "quiz",
+    "question": "Which of the following is NOT a core concept in GitHub Actions?",
+    "options": [
+      "Runner",
+      "Pipeline",
+      "Workflow",
+      "Step"
+    ],
+    "answer": 1,
+    "explanation": "The six core concepts are: workflows, events, jobs, steps, actions, and runners. \"Pipeline\" is a general CI/CD term but not a specific GitHub Actions concept."
+  },
+  {
+    "type": "quiz",
+    "question": "What is the relationship between jobs and steps?",
+    "options": [
+      "Steps contain jobs",
+      "Jobs and steps are the same thing",
+      "A job contains an ordered list of steps",
+      "Steps run across multiple jobs simultaneously"
+    ],
+    "answer": 2,
+    "explanation": "A job contains one or more steps that execute sequentially on the same runner. Steps within a job share the same machine and can pass files and state between each other."
+  },
+  {
+    "type": "quiz",
+    "question": "Which statement best describes the difference between an 'action' and a 'workflow' in GitHub Actions?",
+    "options": [
+      "An action is a YAML file that defines the entire automated process; a workflow is a single reusable step",
+      "A workflow and an action are interchangeable terms for the same concept",
+      "A workflow orchestrates the entire automation process, while an action is a reusable building block used inside a single step",
+      "An action can contain multiple workflows, but a workflow cannot contain actions"
+    ],
+    "answer": 2,
+    "explanation": "The key distinction is scope: a workflow orchestrates the entire automation process (events, jobs, steps), while an action is a reusable building block used inside a single step."
+  },
+  {
+    "type": "text",
+    "src": "course-overview.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "To get the most out of this course, have a GitHub account ready and create a test repository you can experiment with. You will start writing real workflows in the very next topic."
+  }
+]

@@ -1,0 +1,145 @@
+[
+  {
+    "type": "text",
+    "src": "01-introduction.md"
+  },
+  {
+    "type": "text",
+    "src": "02-github-environments.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Environment protection rules are only available on public repositories and on private repositories with a GitHub Pro, Team, or Enterprise plan."
+  },
+  {
+    "type": "text",
+    "src": "03-environment-approvals.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "deploy-staging-production.yml",
+    "label": "deploy-staging-production.yml"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "The `deploy-production` job uses `needs: deploy-staging` to enforce ordering, and the `environment: production` setting triggers the approval gate. The workflow will pause and wait for a reviewer before proceeding."
+  },
+  {
+    "type": "quiz",
+    "question": "A workflow job has `environment: production` configured, and the production environment requires one reviewer. What happens when the workflow reaches this job?",
+    "options": [
+      "The job fails immediately because no reviewer is present",
+      "The job is skipped and the workflow continues",
+      "The workflow pauses and waits for a reviewer to approve before the job runs",
+      "The job runs automatically and notifies the reviewer afterwards"
+    ],
+    "answer": 2,
+    "explanation": "When a job targets an environment with required reviewers, GitHub Actions pauses the workflow and creates a review request. The designated reviewers must approve before the job proceeds."
+  },
+  {
+    "type": "text",
+    "src": "04-deploying-to-github-pages.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "pages-deploy.yml",
+    "label": "pages-deploy.yml"
+  },
+  {
+    "type": "callout",
+    "style": "warning",
+    "body": "You must set the Pages source to **GitHub Actions** in your repository settings (Settings > Pages) before this workflow will work. The default source is \"Deploy from a branch\", which bypasses the Actions-based deployment."
+  },
+  {
+    "type": "quiz",
+    "question": "Which two permissions does a GitHub Pages deployment workflow require?",
+    "options": [
+      "`contents: write` and `deployments: write`",
+      "`pages: write` and `id-token: write`",
+      "`actions: write` and `pages: write`",
+      "`packages: write` and `contents: read`"
+    ],
+    "answer": 1,
+    "explanation": "Pages deployment uses OIDC for authentication, which requires `id-token: write`. The `pages: write` permission authorises the workflow to publish to the Pages infrastructure."
+  },
+  {
+    "type": "text",
+    "src": "05-cloud-deployment-patterns.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "cloud-deploy.yml",
+    "label": "cloud-deploy.yml"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "Prefer OIDC over static credentials whenever your cloud provider supports it. With OIDC, your workflow receives a short-lived token that expires after the job finishes -- no long-lived secrets to rotate or risk leaking."
+  },
+  {
+    "type": "quiz",
+    "question": "What are the three phases of a typical cloud deployment workflow in GitHub Actions?",
+    "options": [
+      "Lint, test, and merge",
+      "Clone, build, and cache",
+      "Authenticate with the cloud provider, build the deployable artefact, and deploy to the target environment",
+      "Create a release, upload assets, and notify stakeholders"
+    ],
+    "answer": 2,
+    "explanation": "Every cloud deployment follows the authenticate-build-deploy pattern. OIDC replaces static credentials with short-lived tokens that are automatically scoped and expired, reducing the risk of credential leaks."
+  },
+  {
+    "type": "text",
+    "src": "06-release-workflows.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "release.yml",
+    "label": "release.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "Which `on` trigger configuration will run a workflow only when a Git tag starting with `v` is pushed?",
+    "options": [
+      "`on: push: branches: ['v*']`",
+      "`on: push: tags: ['v*']`",
+      "`on: tag: pattern: 'v*'`",
+      "`on: release: types: [created]`"
+    ],
+    "answer": 1,
+    "explanation": "The `push` event supports a `tags` filter that matches tag names using glob patterns. `tags: ['v*']` matches any tag that starts with the letter v."
+  },
+  {
+    "type": "text",
+    "src": "07-concurrency-control.md"
+  },
+  {
+    "type": "code",
+    "language": "yaml",
+    "src": "concurrency-example.yml",
+    "label": "concurrency-example.yml"
+  },
+  {
+    "type": "quiz",
+    "question": "You have a production deployment workflow with `concurrency: { group: deploy-prod, cancel-in-progress: false }`. Two pushes happen in quick succession. What happens?",
+    "options": [
+      "Both deployments run at the same time",
+      "The second deployment cancels the first one",
+      "The second deployment queues and waits for the first to finish",
+      "The second deployment is dropped entirely"
+    ],
+    "answer": 2,
+    "explanation": "With `cancel-in-progress: false`, new runs in the same concurrency group are queued rather than cancelled. The second deployment waits until the first one completes before starting."
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "Use `cancel-in-progress: true` for preview environments where only the latest version matters, and `cancel-in-progress: false` for production deployments where every release should complete."
+  }
+]

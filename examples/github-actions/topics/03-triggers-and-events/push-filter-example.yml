@@ -1,0 +1,21 @@
+name: CI on push
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+    paths:
+      - 'src/**'
+      - 'tests/**'
+    paths-ignore:
+      - '**/*.md'
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Running CI for push event"

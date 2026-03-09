@@ -1,0 +1,42 @@
+[
+  {
+    "type": "text",
+    "src": "welcome.md"
+  },
+  {
+    "type": "text",
+    "src": "what-is-a-course.md"
+  },
+  {
+    "type": "callout",
+    "style": "tip",
+    "body": "You don't need any special tools to author a course — just a text editor and a file manager. Everything is plain JSON and markdown."
+  },
+  {
+    "type": "text",
+    "src": "what-you-will-build.md"
+  },
+  {
+    "type": "code",
+    "language": "text",
+    "content": "my-course/\n├── course.json\n└── topics/\n    ├── 01-first-topic/\n    │   ├── content.json\n    │   ├── intro.md\n    │   └── example.py\n    ├── 02-second-topic/\n    │   ├── content.json\n    │   └── overview.md\n    └── 03-third-topic/\n        ├── content.json\n        └── explanation.md",
+    "label": "High-level course folder structure"
+  },
+  {
+    "type": "callout",
+    "style": "info",
+    "body": "Every course follows this same pattern: a root `course.json` for metadata, and a `topics/` directory with numbered subfolders. Each subfolder contains a `content.json` that defines the blocks displayed to the learner."
+  },
+  {
+    "type": "quiz",
+    "question": "What is a course in Course Imports?",
+    "options": [
+      "A database of lessons stored in the cloud",
+      "A structured folder of JSON and markdown files on your filesystem",
+      "A proprietary binary file that only Course Imports can open",
+      "A zip archive uploaded to a web server"
+    ],
+    "answer": 1,
+    "explanation": "A course is a plain folder containing a course.json metadata file and a topics/ directory with content files. No special format or build step is required."
+  }
+]
