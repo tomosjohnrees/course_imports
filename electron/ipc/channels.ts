@@ -14,6 +14,7 @@ export const IpcChannel = {
     getPreferences: 'store:getPreferences',
     savePreferences: 'store:savePreferences',
     getInitialTheme: 'store:getInitialTheme',
-    clearAllProgress: 'store:clearAllProgress'
+    clearAllProgress: 'store:clearAllProgress',
+    removeRecentCourse: 'store:removeRecentCourse'
   }
 } as const

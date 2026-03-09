@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Inbox } from 'lucide-react'
+import { Inbox, X } from 'lucide-react'
 import { useCourse, isValidGitHubUrl } from '@/hooks/useCourse'
 import { useRecentCourses } from '@/hooks/useRecentCourses'
 import { useUIStore } from '@/store/ui.store'
@@ -200,6 +200,96 @@ const recentMetaStyle: React.CSSProperties = {
   textAlign: 'right' as const,
 }
 
+const removeButtonStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  padding: 'var(--space-1)',
+  cursor: 'default',
+  color: 'var(--color-text-muted)',
+  borderRadius: 'var(--radius-sm)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  marginLeft: 'var(--space-2)',
+}
+
+const confirmOverlayStyle: React.CSSProperties = {
+  position: 'fixed',
+  inset: 0,
+  background: 'rgba(0, 0, 0, 0.4)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 1000,
+}
+
+const confirmDialogStyle: React.CSSProperties = {
+  background: 'var(--color-surface)',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-6)',
+  maxWidth: '360px',
+  width: '100%',
+  fontFamily: 'var(--font-sans)',
+}
+
+const confirmHeadingStyle: React.CSSProperties = {
+  fontSize: 'var(--text-base)',
+  fontWeight: 600,
+  color: 'var(--color-text-primary)',
+  margin: '0 0 var(--space-2)',
+}
+
+const confirmMessageStyle: React.CSSProperties = {
+  fontSize: 'var(--text-sm)',
+  color: 'var(--color-text-secondary)',
+  margin: '0 0 var(--space-4)',
+  lineHeight: 'var(--leading-sm)',
+}
+
+const confirmActionsStyle: React.CSSProperties = {
+  display: 'flex',
+  gap: 'var(--space-2)',
+  justifyContent: 'flex-end',
+}
+
+const confirmCancelStyle: React.CSSProperties = {
+  background: 'transparent',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-4)',
+  fontSize: 'var(--text-sm)',
+  fontWeight: 500,
+  color: 'var(--color-text-primary)',
+  cursor: 'default',
+  fontFamily: 'var(--font-sans)',
+}
+
+const confirmRemoveStyle: React.CSSProperties = {
+  background: 'var(--color-destructive)',
+  border: 'none',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-4)',
+  fontSize: 'var(--text-sm)',
+  fontWeight: 500,
+  color: '#FFFFFF',
+  cursor: 'default',
+  fontFamily: 'var(--font-sans)',
+}
+
+const confirmKeepStyle: React.CSSProperties = {
+  background: 'var(--color-accent)',
+  border: 'none',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-4)',
+  fontSize: 'var(--text-sm)',
+  fontWeight: 500,
+  color: '#FFFFFF',
+  cursor: 'default',
+  fontFamily: 'var(--font-sans)',
+}
+
 function formatRelativeTime(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000)
   if (seconds < 60) return 'just now'
@@ -221,7 +311,9 @@ export default function Home() {
   const retryAction = useUIStore((s) => s.retryAction)
   const [githubUrl, setGithubUrl] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
-  const recentCourses = useRecentCourses()
+  const { recentCourses, removeRecentCourse } = useRecentCourses()
+  const [confirmRemove, setConfirmRemove] = useState<{ id: string; title: string } | null>(null)
+  const [hasProgress, setHasProgress] = useState(false)
 
   function handleRetry() {
     if (!retryAction) {
@@ -239,6 +331,25 @@ export default function Home() {
         loadLocalCourse(retryAction.folderPath)
         break
     }
+  }
+
+  async function handleRemoveClick(course: { id: string; title: string }) {
+    const progress = await window.api.store.getProgress(course.id)
+    const courseHasProgress = progress !== null && Object.keys(progress).length > 0
+    if (courseHasProgress) {
+      setHasProgress(true)
+      setConfirmRemove(course)
+    } else {
+      setHasProgress(false)
+      setConfirmRemove(course)
+    }
+  }
+
+  async function handleConfirmRemove(clearProgress: boolean) {
+    if (!confirmRemove) return
+    await removeRecentCourse(confirmRemove.id, clearProgress)
+    setConfirmRemove(null)
+    setHasProgress(false)
   }
 
   function handleLoadGitHub() {
@@ -326,7 +437,7 @@ export default function Home() {
         {recentCourses.length > 0 ? (
           <ul style={recentListStyle}>
             {recentCourses.map((course) => (
-              <li key={course.id}>
+              <li key={course.id} style={{ display: 'flex', alignItems: 'center' }}>
                 <button
                   type="button"
                   style={recentItemStyle}
@@ -346,6 +457,15 @@ export default function Home() {
                     </p>
                   </div>
                 </button>
+                <button
+                  type="button"
+                  style={removeButtonStyle}
+                  onClick={() => handleRemoveClick(course)}
+                  disabled={isLoading}
+                  aria-label={`Remove ${course.title}`}
+                >
+                  <X size={16} />
+                </button>
               </li>
             ))}
           </ul>
@@ -359,6 +479,66 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {confirmRemove && (
+        <div style={confirmOverlayStyle} role="dialog" aria-label="Confirm removal">
+          <div style={confirmDialogStyle}>
+            <h2 style={confirmHeadingStyle}>Remove course</h2>
+            {hasProgress ? (
+              <>
+                <p style={confirmMessageStyle}>
+                  &ldquo;{confirmRemove.title}&rdquo; has saved progress. Would you like to keep the progress data or remove it too?
+                </p>
+                <div style={confirmActionsStyle}>
+                  <button
+                    type="button"
+                    style={confirmCancelStyle}
+                    onClick={() => setConfirmRemove(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    style={confirmRemoveStyle}
+                    onClick={() => handleConfirmRemove(true)}
+                  >
+                    Remove with progress
+                  </button>
+                  <button
+                    type="button"
+                    style={confirmKeepStyle}
+                    onClick={() => handleConfirmRemove(false)}
+                  >
+                    Keep progress
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p style={confirmMessageStyle}>
+                  Remove &ldquo;{confirmRemove.title}&rdquo; from your recent courses?
+                </p>
+                <div style={confirmActionsStyle}>
+                  <button
+                    type="button"
+                    style={confirmCancelStyle}
+                    onClick={() => setConfirmRemove(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    style={confirmRemoveStyle}
+                    onClick={() => handleConfirmRemove(false)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

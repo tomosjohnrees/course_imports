@@ -132,6 +132,20 @@ export function getStoredRecentCourse(id: string): StoredRecentCourse | undefine
   return courses.find((c) => c.id === id)
 }
 
+export function removeRecentCourse(id: string): boolean {
+  const courses = store.get('recentCourses')
+  const filtered = courses.filter((c) => c.id !== id)
+  if (filtered.length === courses.length) return false
+  store.set('recentCourses', filtered)
+  return true
+}
+
+export function clearCourseProgress(courseId: string): void {
+  const allProgress = store.get('progress')
+  const { [courseId]: _, ...rest } = allProgress
+  store.set('progress', rest)
+}
+
 export function getProgress(courseId: string): CourseProgress | null {
   const allProgress = store.get('progress')
   return allProgress[courseId] ?? null

@@ -30,6 +30,7 @@ interface WindowApi {
     getPreferences: () => Promise<Preferences>
     savePreferences: (prefs: Preferences) => Promise<void>
     clearAllProgress: () => Promise<void>
+    removeRecentCourse: (courseId: string, clearProgress: boolean) => Promise<boolean>
   }
 }
 

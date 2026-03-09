@@ -48,6 +48,8 @@ import { registerStoreHandlers } from '../store.handlers'
 import {
   saveRecentCourse,
   getRecentCourses,
+  removeRecentCourse,
+  clearCourseProgress,
   getProgress,
   saveProgress,
   getPreferences,
@@ -480,6 +482,189 @@ describe('store:savePreferences handler', () => {
     expect(getPreferences().githubToken).toBeUndefined()
 
     mockIsEncryptionAvailable.mockReturnValue(false)
+  })
+})
+
+describe('store:removeRecentCourse handler', () => {
+  let handler: (event: unknown, courseId: unknown, clearProgress: unknown) => Promise<unknown>
+
+  beforeEach(() => {
+    mockHandle.mockReset()
+    registerStoreHandlers()
+
+    const call = mockHandle.mock.calls.find(
+      ([channel]) => channel === 'store:removeRecentCourse',
+    )
+    expect(call).toBeDefined()
+    handler = call![1] as (event: unknown, courseId: unknown, clearProgress: unknown) => Promise<unknown>
+  })
+
+  it('removes an existing course and returns true', async () => {
+    saveRecentCourse({
+      id: 'course-1',
+      title: 'Course One',
+      sourceType: 'local',
+      sourcePath: '/path/1',
+      lastLoaded: 1000,
+    })
+
+    const result = await handler(null, 'course-1', false)
+
+    expect(result).toBe(true)
+    expect(getRecentCourses()).toHaveLength(0)
+  })
+
+  it('returns false for a non-existent course ID', async () => {
+    const result = await handler(null, 'nonexistent', false)
+
+    expect(result).toBe(false)
+  })
+
+  it('returns false for empty course ID', async () => {
+    const result = await handler(null, '', false)
+
+    expect(result).toBe(false)
+  })
+
+  it('returns false for non-string course ID', async () => {
+    const result = await handler(null, 123, false)
+
+    expect(result).toBe(false)
+  })
+
+  it('does not remove other courses', async () => {
+    saveRecentCourse({
+      id: 'course-1',
+      title: 'Course One',
+      sourceType: 'local',
+      sourcePath: '/path/1',
+      lastLoaded: 1000,
+    })
+    saveRecentCourse({
+      id: 'course-2',
+      title: 'Course Two',
+      sourceType: 'github',
+      sourcePath: 'https://github.com/a/b',
+      lastLoaded: 2000,
+    })
+
+    await handler(null, 'course-1', false)
+
+    const remaining = getRecentCourses()
+    expect(remaining).toHaveLength(1)
+    expect(remaining[0].id).toBe('course-2')
+  })
+
+  it('clears progress when clearProgress is true', async () => {
+    saveRecentCourse({
+      id: 'course-1',
+      title: 'Course One',
+      sourceType: 'local',
+      sourcePath: '/path/1',
+      lastLoaded: 1000,
+    })
+    saveProgress('course-1', { 'topic-1': { viewed: true, complete: true } })
+
+    await handler(null, 'course-1', true)
+
+    expect(getProgress('course-1')).toBeNull()
+  })
+
+  it('keeps progress when clearProgress is false', async () => {
+    saveRecentCourse({
+      id: 'course-1',
+      title: 'Course One',
+      sourceType: 'local',
+      sourcePath: '/path/1',
+      lastLoaded: 1000,
+    })
+    const progress = { 'topic-1': { viewed: true, complete: true } }
+    saveProgress('course-1', progress)
+
+    await handler(null, 'course-1', false)
+
+    expect(getProgress('course-1')).toEqual(progress)
+  })
+
+  it('does not accept arbitrary keys that could delete unrelated store data', async () => {
+    saveRecentCourse({
+      id: 'course-1',
+      title: 'Course One',
+      sourceType: 'local',
+      sourcePath: '/path/1',
+      lastLoaded: 1000,
+    })
+
+    // Attempt to use a key that doesn't match any course
+    const result = await handler(null, 'preferences', false)
+
+    expect(result).toBe(false)
+    expect(getRecentCourses()).toHaveLength(1)
+  })
+})
+
+describe('removeRecentCourse store function', () => {
+  it('removes the specified course and returns true', () => {
+    saveRecentCourse({
+      id: 'c1',
+      title: 'C1',
+      sourceType: 'local',
+      sourcePath: '/path',
+      lastLoaded: 100,
+    })
+
+    const result = removeRecentCourse('c1')
+
+    expect(result).toBe(true)
+    expect(getRecentCourses()).toHaveLength(0)
+  })
+
+  it('returns false when course does not exist', () => {
+    const result = removeRecentCourse('nonexistent')
+
+    expect(result).toBe(false)
+  })
+
+  it('leaves other courses intact', () => {
+    saveRecentCourse({
+      id: 'c1',
+      title: 'C1',
+      sourceType: 'local',
+      sourcePath: '/p1',
+      lastLoaded: 100,
+    })
+    saveRecentCourse({
+      id: 'c2',
+      title: 'C2',
+      sourceType: 'github',
+      sourcePath: 'https://github.com/a/b',
+      lastLoaded: 200,
+    })
+
+    removeRecentCourse('c1')
+
+    const remaining = getRecentCourses()
+    expect(remaining).toHaveLength(1)
+    expect(remaining[0].id).toBe('c2')
+  })
+})
+
+describe('clearCourseProgress store function', () => {
+  it('clears progress for the specified course', () => {
+    saveProgress('c1', { 'topic-1': { viewed: true, complete: true } })
+    saveProgress('c2', { 'topic-2': { viewed: true, complete: false } })
+
+    clearCourseProgress('c1')
+
+    expect(getProgress('c1')).toBeNull()
+    expect(getProgress('c2')).toEqual({ 'topic-2': { viewed: true, complete: false } })
+  })
+
+  it('handles clearing progress for a course with no progress', () => {
+    clearCourseProgress('nonexistent')
+
+    // Should not throw
+    expect(getProgress('nonexistent')).toBeNull()
   })
 })
 

@@ -42,11 +42,12 @@ beforeEach(() => {
     store: {
       getRecentCourses: vi.fn().mockResolvedValue([]),
       saveRecentCourse: vi.fn(),
-      getProgress: vi.fn(),
+      getProgress: vi.fn().mockResolvedValue(null),
       saveProgress: vi.fn(),
       getPreferences: vi.fn().mockResolvedValue({ theme: 'system' }),
       savePreferences: vi.fn(),
       clearAllProgress: vi.fn(),
+      removeRecentCourse: vi.fn().mockResolvedValue(true),
     },
   }
 })
@@ -643,6 +644,165 @@ describe('Home', () => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
       })
       expect(screen.getByText("You're offline. Check your internet connection and try again.")).toBeInTheDocument()
+    })
+
+    it('shows a remove button for each recent course', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Remove Local Course' })).toBeInTheDocument()
+      })
+      expect(screen.getByRole('button', { name: 'Remove GitHub Course' })).toBeInTheDocument()
+    })
+
+    it('removes a course without confirmation when no progress exists', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue(null)
+      vi.mocked(window.api.store.removeRecentCourse).mockResolvedValue(true)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: 'Confirm removal' })).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+
+      await waitFor(() => {
+        expect(window.api.store.removeRecentCourse).toHaveBeenCalledWith('course-1', false)
+      })
+      expect(screen.queryByText('Local Course')).not.toBeInTheDocument()
+    })
+
+    it('shows confirmation prompt with progress options when course has progress', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue({
+        'topic-1': { viewed: true, complete: true },
+      })
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/has saved progress/)).toBeInTheDocument()
+      })
+      expect(screen.getByRole('button', { name: 'Remove with progress' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Keep progress' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
+    })
+
+    it('removes course and clears progress when "Remove with progress" is clicked', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue({
+        'topic-1': { viewed: true, complete: true },
+      })
+      vi.mocked(window.api.store.removeRecentCourse).mockResolvedValue(true)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/has saved progress/)).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove with progress' }))
+
+      await waitFor(() => {
+        expect(window.api.store.removeRecentCourse).toHaveBeenCalledWith('course-1', true)
+      })
+      expect(screen.queryByText('Local Course')).not.toBeInTheDocument()
+    })
+
+    it('removes course but keeps progress when "Keep progress" is clicked', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue({
+        'topic-1': { viewed: true, complete: true },
+      })
+      vi.mocked(window.api.store.removeRecentCourse).mockResolvedValue(true)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/has saved progress/)).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Keep progress' }))
+
+      await waitFor(() => {
+        expect(window.api.store.removeRecentCourse).toHaveBeenCalledWith('course-1', false)
+      })
+      expect(screen.queryByText('Local Course')).not.toBeInTheDocument()
+    })
+
+    it('dismisses confirmation dialog when Cancel is clicked', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue(null)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: 'Confirm removal' })).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      })
+      expect(screen.getByText('Local Course')).toBeInTheDocument()
+      expect(window.api.store.removeRecentCourse).not.toHaveBeenCalled()
+    })
+
+    it('updates the list after removal without full re-fetch', async () => {
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.store.getProgress).mockResolvedValue(null)
+      vi.mocked(window.api.store.removeRecentCourse).mockResolvedValue(true)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('Local Course')).toBeInTheDocument()
+        expect(screen.getByText('GitHub Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Local Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: 'Confirm removal' })).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Remove' }))
+
+      await waitFor(() => {
+        expect(screen.queryByText('Local Course')).not.toBeInTheDocument()
+      })
+      // Other course still present
+      expect(screen.getByText('GitHub Course')).toBeInTheDocument()
+      // getRecentCourses was only called once (initial load), not after removal
+      expect(window.api.store.getRecentCourses).toHaveBeenCalledTimes(1)
     })
 
     it('navigates to /course when a recent course loads successfully', async () => {

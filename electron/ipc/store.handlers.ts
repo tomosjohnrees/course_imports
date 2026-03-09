@@ -5,9 +5,12 @@ import {
   getProgress,
   saveProgress,
   clearAllProgress,
+  clearCourseProgress,
+  removeRecentCourse,
   getPreferences,
   savePreferences,
   isValidPreferences,
+  getStoredRecentCourse,
 } from '../store'
 import type { CourseProgress } from '../../src/types/course.types'
 
@@ -55,6 +58,24 @@ export function registerStoreHandlers(): void {
   ipcMain.handle(IpcChannel.store.clearAllProgress, async () => {
     clearAllProgress()
   })
+
+  ipcMain.handle(
+    IpcChannel.store.removeRecentCourse,
+    async (_event, courseId: unknown, clearProgress: unknown) => {
+      if (typeof courseId !== 'string' || courseId.length === 0) {
+        return false
+      }
+      // Validate the course exists in the store before removing
+      if (!getStoredRecentCourse(courseId)) {
+        return false
+      }
+      const removed = removeRecentCourse(courseId)
+      if (removed && clearProgress === true) {
+        clearCourseProgress(courseId)
+      }
+      return removed
+    },
+  )
 
   ipcMain.handle(IpcChannel.store.getPreferences, async () => {
     return getPreferences()

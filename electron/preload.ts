@@ -30,6 +30,8 @@ contextBridge.exposeInMainWorld('api', {
     getPreferences: () => ipcRenderer.invoke(IpcChannel.store.getPreferences),
     savePreferences: (prefs: Preferences) =>
       ipcRenderer.invoke(IpcChannel.store.savePreferences, prefs),
-    clearAllProgress: () => ipcRenderer.invoke(IpcChannel.store.clearAllProgress)
+    clearAllProgress: () => ipcRenderer.invoke(IpcChannel.store.clearAllProgress),
+    removeRecentCourse: (courseId: string, clearProgress: boolean) =>
+      ipcRenderer.invoke(IpcChannel.store.removeRecentCourse, courseId, clearProgress)
   }
 })
