@@ -203,3 +203,4 @@
 |---|-------|-------|--------|
 | 0043 | [Add contextual help to GitHub token setting](0043-add-contextual-help-to-github-token-setting.md) | UX audit — Sarah Chen | complete |
 | 0044 | [Add home navigation from course view](0044-add-home-navigation-from-course-view.md) | UX audit — Sarah Chen | complete |
+| 0045 | [Humanise rate limit error message](0045-humanise-rate-limit-error-message.md) | UX audit — Sarah Chen | complete |

@@ -91,7 +91,7 @@ async function githubApiFetch(
   if (response.status === 403) {
     const body = await response.text()
     if (body.includes('rate limit')) {
-      throw new Error('GitHub API rate limit exceeded. Try again later or provide a personal access token.')
+      throw new Error('Too many requests — rate limit reached. Please wait and try again.')
     }
     throw new Error(`GitHub API access forbidden (403) for ${path}`)
   }

@@ -10,7 +10,7 @@ const OFFLINE_ERROR = "You're offline. Check your internet connection and try ag
 
 function classifyGitHubError(message: string, repo: GitHubRepo): string {
   if (message.includes('rate limit')) {
-    return 'GitHub API rate limit exceeded. Try again later or add a personal access token in Settings.'
+    return 'This course has been accessed too many times in a short period. Please wait a while and try again. If this keeps happening, you can go to Settings and add a GitHub token (a free key from GitHub that allows more requests).'
   }
   if (message.includes('net::') || message.includes('ENOTFOUND') || message.includes('ECONNREFUSED')) {
     return 'The network connection was lost during the fetch. Check your connection and try again.'

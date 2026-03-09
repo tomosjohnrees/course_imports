@@ -361,7 +361,7 @@ describe('Home', () => {
     it('displays error for rate-limited response', async () => {
       vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
         success: false,
-        error: 'GitHub API rate limit exceeded. Try again later or add a personal access token.',
+        error: 'This course has been accessed too many times in a short period. Please wait a while and try again.',
       })
       renderWithRouter()
 
@@ -371,7 +371,7 @@ describe('Home', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
 
       await waitFor(() => {
-        expect(screen.getByText(/rate limit exceeded/)).toBeInTheDocument()
+        expect(screen.getByText(/too many times/)).toBeInTheDocument()
       })
     })
 

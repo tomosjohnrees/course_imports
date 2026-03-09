@@ -168,7 +168,7 @@ describe('fetchFile', () => {
       errorResponse(403, 'API rate limit exceeded')
     )
 
-    await expect(fetchFile(repo, 'file.md')).rejects.toThrow('rate limit')
+    await expect(fetchFile(repo, 'file.md')).rejects.toThrow('Too many requests')
   })
 
   it('throws on generic 403', async () => {

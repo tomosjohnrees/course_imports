@@ -163,7 +163,7 @@ describe('course:loadFromGitHub handler', () => {
 
     expect(result).toEqual({
       success: false,
-      error: expect.stringContaining('rate limit'),
+      error: expect.stringContaining('too many times'),
     })
   })
 

@@ -19,20 +19,20 @@ When GitHub's API rate limit is exceeded, the error message tells the user to "a
 ## Acceptance criteria
 
 ### Functionality
-- [ ] The rate limit error message avoids the terms "API rate limit" and "personal access token" in the primary message
-- [ ] The message explains in plain language that too many requests have been made and the user should try again later
-- [ ] If a token suggestion is included, it is presented as a secondary, optional tip with a brief explanation of what a token is
-- [ ] The error message remains accurate and does not promise a specific wait time unless one is known
+- [x] The rate limit error message avoids the terms "API rate limit" and "personal access token" in the primary message
+- [x] The message explains in plain language that too many requests have been made and the user should try again later
+- [x] If a token suggestion is included, it is presented as a secondary, optional tip with a brief explanation of what a token is
+- [x] The error message remains accurate and does not promise a specific wait time unless one is known
 
 ### Security
-- [ ] The rewritten message does not expose API response details, headers, or internal rate limit counters
+- [x] The rewritten message does not expose API response details, headers, or internal rate limit counters
 
 ### Performance
-- [ ] No additional API calls are made to check rate limit status — the message is derived from the existing error
+- [x] No additional API calls are made to check rate limit status — the message is derived from the existing error
 
 ### Testing
-- [ ] Unit tests verify the classified error message for rate-limit scenarios uses the updated plain-language wording
-- [ ] Component tests verify the error state renders the user-friendly message when a rate limit error is triggered
+- [x] Unit tests verify the classified error message for rate-limit scenarios uses the updated plain-language wording
+- [x] Component tests verify the error state renders the user-friendly message when a rate limit error is triggered
 
 ## Notes
 
