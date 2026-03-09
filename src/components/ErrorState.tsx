@@ -7,8 +7,8 @@ interface ErrorStateProps {
 }
 
 const containerStyle: React.CSSProperties = {
-  marginTop: '16px',
-  padding: '16px',
+  marginTop: 'var(--space-4)',
+  padding: 'var(--space-4)',
   background: 'var(--color-warning-subtle)',
   border: '1px solid var(--color-warning)',
   borderRadius: 'var(--radius-sm)',
@@ -18,7 +18,7 @@ const containerStyle: React.CSSProperties = {
 const headerStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '8px',
+  gap: 'var(--space-2)',
 }
 
 const headingStyle: React.CSSProperties = {
@@ -29,7 +29,7 @@ const headingStyle: React.CSSProperties = {
 }
 
 const messageStyle: React.CSSProperties = {
-  margin: '8px 0 0',
+  margin: 'var(--space-2) 0 0',
   fontSize: 'var(--text-sm)',
   color: 'var(--color-text-secondary)',
   lineHeight: 'var(--leading-sm)',
@@ -38,15 +38,15 @@ const messageStyle: React.CSSProperties = {
 const actionsStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-  marginTop: '12px',
+  gap: 'var(--space-3)',
+  marginTop: 'var(--space-3)',
 }
 
 const retryButtonStyle: React.CSSProperties = {
   background: 'none',
   border: '1px solid var(--color-border)',
   borderRadius: 'var(--radius-sm)',
-  padding: '4px 12px',
+  padding: 'var(--space-1) var(--space-3)',
   fontSize: 'var(--text-sm)',
   fontWeight: 500,
   color: 'var(--color-text-primary)',
@@ -57,7 +57,7 @@ const retryButtonStyle: React.CSSProperties = {
 const dismissButtonStyle: React.CSSProperties = {
   background: 'none',
   border: 'none',
-  padding: '4px 8px',
+  padding: 'var(--space-1) var(--space-2)',
   fontSize: 'var(--text-sm)',
   color: 'var(--color-text-muted)',
   cursor: 'default',

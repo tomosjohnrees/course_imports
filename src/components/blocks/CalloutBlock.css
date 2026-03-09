@@ -19,6 +19,9 @@
 
 .callout-body {
   min-width: 0;
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: var(--leading-md);
 }
 
 /* Variant: info (blue) */
@@ -67,8 +70,8 @@
 }
 
 .callout-inline-code {
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: var(--space-1) var(--space-1);
+  border-radius: var(--radius-sm);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);

@@ -11,23 +11,23 @@ const containerStyle: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: '100vh',
-  padding: '64px 24px',
-  fontFamily: '"Geist", system-ui, sans-serif',
+  padding: 'var(--space-16) var(--space-6)',
+  fontFamily: 'var(--font-sans)',
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: '30px',
+  fontSize: 'var(--text-2xl)',
   fontWeight: 700,
-  lineHeight: 1.2,
+  lineHeight: 'var(--leading-2xl)',
   margin: 0,
-  color: '#1A1916',
+  color: 'var(--color-text-primary)',
 }
 
 const subtitleStyle: React.CSSProperties = {
-  fontSize: '15px',
-  lineHeight: 1.6,
-  color: '#6B6860',
-  margin: '8px 0 40px',
+  fontSize: 'var(--text-base)',
+  lineHeight: 'var(--leading-base)',
+  color: 'var(--color-text-secondary)',
+  margin: 'var(--space-2) 0 var(--space-10)',
 }
 
 const sectionStyle: React.CSSProperties = {
@@ -37,74 +37,74 @@ const sectionStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: '13px',
+  fontSize: 'var(--text-sm)',
   fontWeight: 500,
-  color: '#6B6860',
-  marginBottom: '8px',
+  color: 'var(--color-text-secondary)',
+  marginBottom: 'var(--space-2)',
 }
 
 const inputRowStyle: React.CSSProperties = {
   display: 'flex',
-  gap: '8px',
+  gap: 'var(--space-2)',
 }
 
 const inputStyle: React.CSSProperties = {
   flex: 1,
-  background: '#F9F8F6',
-  border: '1px solid #E8E6E1',
-  borderRadius: '6px',
-  padding: '8px 12px',
-  fontSize: '15px',
-  color: '#1A1916',
-  fontFamily: '"Geist", system-ui, sans-serif',
+  background: 'var(--color-bg)',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-3)',
+  fontSize: 'var(--text-base)',
+  color: 'var(--color-text-primary)',
+  fontFamily: 'var(--font-sans)',
   outline: 'none',
 }
 
 const primaryButtonStyle: React.CSSProperties = {
-  background: '#2563EB',
+  background: 'var(--color-accent)',
   color: '#FFFFFF',
   border: 'none',
-  borderRadius: '6px',
-  padding: '8px 16px',
-  fontSize: '15px',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-4)',
+  fontSize: 'var(--text-base)',
   fontWeight: 500,
   cursor: 'default',
-  fontFamily: '"Geist", system-ui, sans-serif',
+  fontFamily: 'var(--font-sans)',
   whiteSpace: 'nowrap',
 }
 
 const dividerStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '16px',
-  margin: '32px 0',
-  color: '#A8A49D',
-  fontSize: '13px',
+  gap: 'var(--space-4)',
+  margin: 'var(--space-8) 0',
+  color: 'var(--color-text-muted)',
+  fontSize: 'var(--text-sm)',
 }
 
 const dividerLineStyle: React.CSSProperties = {
   flex: 1,
   height: '1px',
-  background: '#E8E6E1',
+  background: 'var(--color-border)',
 }
 
 const secondaryButtonStyle: React.CSSProperties = {
   width: '100%',
   background: 'transparent',
-  border: '1px solid #E8E6E1',
-  borderRadius: '6px',
-  padding: '8px 16px',
-  fontSize: '15px',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
+  padding: 'var(--space-2) var(--space-4)',
+  fontSize: 'var(--text-base)',
   fontWeight: 500,
-  color: '#1A1916',
+  color: 'var(--color-text-primary)',
   cursor: 'default',
-  fontFamily: '"Geist", system-ui, sans-serif',
+  fontFamily: 'var(--font-sans)',
 }
 
 const loadingStyle: React.CSSProperties = {
-  fontSize: '14px',
-  color: '#6B6860',
-  marginTop: '16px',
+  fontSize: 'var(--text-sm)',
+  color: 'var(--color-text-secondary)',
+  marginTop: 'var(--space-4)',
   textAlign: 'center',
 }
 
@@ -112,43 +112,43 @@ const recentEmptyStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '8px',
-  padding: '24px 16px',
-  color: '#A8A49D',
+  gap: 'var(--space-2)',
+  padding: 'var(--space-6) var(--space-4)',
+  color: 'var(--color-text-muted)',
   textAlign: 'center',
 }
 
 const recentEmptyHeadingStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: '14px',
+  fontSize: 'var(--text-sm)',
   fontWeight: 600,
-  color: '#6B6860',
+  color: 'var(--color-text-secondary)',
 }
 
 const recentEmptyMessageStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: '13px',
-  lineHeight: 1.5,
-  color: '#A8A49D',
+  fontSize: 'var(--text-sm)',
+  lineHeight: 'var(--leading-sm)',
+  color: 'var(--color-text-muted)',
 }
 
 const validationStyle: React.CSSProperties = {
-  fontSize: '13px',
-  color: '#991B1B',
-  margin: '6px 0 0',
+  fontSize: 'var(--text-sm)',
+  color: 'var(--color-destructive)',
+  margin: 'var(--space-2) 0 0',
 }
 
 const recentSectionStyle: React.CSSProperties = {
-  marginTop: '40px',
+  marginTop: 'var(--space-10)',
   width: '100%',
   maxWidth: '420px',
 }
 
 const recentHeadingStyle: React.CSSProperties = {
-  fontSize: '13px',
+  fontSize: 'var(--text-sm)',
   fontWeight: 500,
-  color: '#6B6860',
-  margin: '0 0 12px',
+  color: 'var(--color-text-secondary)',
+  margin: '0 0 var(--space-3)',
 }
 
 const recentListStyle: React.CSSProperties = {
@@ -157,26 +157,26 @@ const recentListStyle: React.CSSProperties = {
   padding: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: '4px',
+  gap: 'var(--space-1)',
 }
 
 const recentItemStyle: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '10px 12px',
-  background: '#F9F8F6',
-  border: '1px solid #E8E6E1',
-  borderRadius: '6px',
+  padding: 'var(--space-3)',
+  background: 'var(--color-bg)',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius-sm)',
   cursor: 'default',
-  fontFamily: '"Geist", system-ui, sans-serif',
+  fontFamily: 'var(--font-sans)',
   width: '100%',
 }
 
 const recentTitleStyle: React.CSSProperties = {
-  fontSize: '14px',
+  fontSize: 'var(--text-sm)',
   fontWeight: 500,
-  color: '#1A1916',
+  color: 'var(--color-text-primary)',
   margin: 0,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -194,8 +194,8 @@ const recentMetaWrapperStyle: React.CSSProperties = {
 }
 
 const recentMetaStyle: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#A8A49D',
+  fontSize: 'var(--text-xs)',
+  color: 'var(--color-text-muted)',
   margin: 0,
   textAlign: 'right' as const,
 }

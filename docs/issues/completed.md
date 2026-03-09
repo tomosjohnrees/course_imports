@@ -187,3 +187,4 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0038 | [Design and implement empty and error state screens](0038-design-empty-and-error-state-screens.md) | Milestone 6 — Visual Polish | complete |
+| 0039 | [Audit spacing and typography consistency](0039-audit-spacing-and-typography-consistency.md) | Milestone 6 — Visual Polish | complete |

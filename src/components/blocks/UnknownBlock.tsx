@@ -10,7 +10,7 @@ export default memo(function UnknownBlock({ type }: UnknownBlockProps) {
       role="note"
       style={{
         padding: 'var(--space-4)',
-        borderRadius: '6px',
+        borderRadius: 'var(--radius-sm)',
         border: '1px solid var(--color-border)',
         background: 'var(--color-surface)',
         fontFamily: 'var(--font-sans)',

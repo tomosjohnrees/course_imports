@@ -20,22 +20,22 @@ Every surface in the app should adhere to the 8pt spacing grid and the typograph
 ## Acceptance criteria
 
 ### Functionality
-- [ ] All spacing values (margins, padding, gaps) are multiples of 8px or use the defined spacing tokens
-- [ ] All reading content (text blocks, callout bodies, quiz text) uses Lora
-- [ ] All UI chrome (sidebar, buttons, labels, navigation) uses Geist
-- [ ] All code blocks and inline code use Geist Mono
-- [ ] Font sizes match the type scale defined in the design guide
-- [ ] Vertical rhythm between blocks is consistent and uses the defined block spacing token
+- [x] All spacing values (margins, padding, gaps) are multiples of 8px or use the defined spacing tokens
+- [x] All reading content (text blocks, callout bodies, quiz text) uses Lora
+- [x] All UI chrome (sidebar, buttons, labels, navigation) uses Geist
+- [x] All code blocks and inline code use Geist Mono
+- [x] Font sizes match the type scale defined in the design guide
+- [x] Vertical rhythm between blocks is consistent and uses the defined block spacing token
 
 ### Security
-- [ ] No external font loading from CDNs — all fonts are bundled locally
+- [x] No external font loading from CDNs — all fonts are bundled locally
 
 ### Performance
-- [ ] Fonts are loaded with `font-display: swap` to prevent invisible text during load
+- [x] Fonts are loaded with `font-display: swap` to prevent invisible text during load
 
 ### Testing
-- [ ] Visual snapshot tests capture the corrected spacing and typography for key screens
-- [ ] A manual review checklist confirms each screen matches the design guide
+- [x] Visual snapshot tests capture the corrected spacing and typography for key screens
+- [x] A manual review checklist confirms each screen matches the design guide
 
 ## Notes
 

@@ -13,7 +13,7 @@ export default memo(function ErrorBlock({ message, filePath }: ErrorBlockProps) 
         alignItems: 'flex-start',
         gap: 'var(--space-3)',
         padding: 'var(--space-4)',
-        borderRadius: '6px',
+        borderRadius: 'var(--radius-sm)',
         border: '1px solid var(--color-warning)',
         background: 'var(--color-warning-subtle)',
         fontFamily: 'var(--font-sans)',
