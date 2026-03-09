@@ -201,6 +201,97 @@ describe('SettingsPanel', () => {
     })
   })
 
+  // GitHub token contextual help tests
+  describe('GitHub token contextual help', () => {
+    it('shows the optional badge and updated description', async () => {
+      render(<SettingsPanel open={true} onClose={() => {}} />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Optional')).toBeInTheDocument()
+      })
+      expect(
+        screen.getByText(/safely skip this for public courses/),
+      ).toBeInTheDocument()
+    })
+
+    it('renders a "What\'s this?" help toggle button', async () => {
+      render(<SettingsPanel open={true} onClose={() => {}} />)
+
+      await waitFor(() => {
+        const toggle = screen.getByRole('button', { name: /what's this/i })
+        expect(toggle).toBeInTheDocument()
+        expect(toggle).toHaveAttribute('aria-expanded', 'false')
+      })
+    })
+
+    it('expands help text when toggle is clicked', async () => {
+      render(<SettingsPanel open={true} onClose={() => {}} />)
+      const user = userEvent.setup()
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: /what's this/i }),
+        ).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByRole('button', { name: /what's this/i }))
+
+      const helpRegion = screen.getByRole('region', {
+        name: /github token help/i,
+      })
+      expect(helpRegion).toBeInTheDocument()
+      expect(helpRegion).toHaveTextContent(/read-only/)
+      expect(helpRegion).toHaveTextContent(/public_repo/)
+
+      const toggle = screen.getByRole('button', { name: /hide help/i })
+      expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    it('includes a link to GitHub token creation page', async () => {
+      render(<SettingsPanel open={true} onClose={() => {}} />)
+      const user = userEvent.setup()
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: /what's this/i }),
+        ).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByRole('button', { name: /what's this/i }))
+
+      const link = screen.getByRole('link', {
+        name: /create a token on github/i,
+      })
+      expect(link).toHaveAttribute(
+        'href',
+        'https://github.com/settings/tokens/new',
+      )
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    })
+
+    it('collapses help text when toggle is clicked again', async () => {
+      render(<SettingsPanel open={true} onClose={() => {}} />)
+      const user = userEvent.setup()
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: /what's this/i }),
+        ).toBeInTheDocument()
+      })
+
+      await user.click(screen.getByRole('button', { name: /what's this/i }))
+      expect(
+        screen.getByRole('region', { name: /github token help/i }),
+      ).toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: /hide help/i }))
+      expect(
+        screen.queryByRole('region', { name: /github token help/i }),
+      ).not.toBeInTheDocument()
+    })
+  })
+
   // Clear progress tests
   describe('clear all progress', () => {
     it('shows confirmation before clearing', async () => {

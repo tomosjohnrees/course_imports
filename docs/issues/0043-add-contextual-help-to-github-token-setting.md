@@ -19,20 +19,20 @@ The Settings panel presents a "GitHub Token" section with a bare input field and
 ## Acceptance criteria
 
 ### Functionality
-- [ ] The token section description explicitly states the token is optional for public courses
-- [ ] An inline help element (e.g. "What's this?" link or info tooltip) explains what a personal access token is in plain language
-- [ ] The help text includes a link to GitHub's token creation page or clear step-by-step guidance
-- [ ] Users who don't need a token feel confident they can ignore this section
+- [x] The token section description explicitly states the token is optional for public courses
+- [x] An inline help element (e.g. "What's this?" link or info tooltip) explains what a personal access token is in plain language
+- [x] The help text includes a link to GitHub's token creation page or clear step-by-step guidance
+- [x] Users who don't need a token feel confident they can ignore this section
 
 ### Security
-- [ ] The help text does not encourage users to create tokens with excessive scopes — guidance should specify read-only / public_repo scope at most
+- [x] The help text does not encourage users to create tokens with excessive scopes — guidance should specify read-only / public_repo scope at most
 
 ### Performance
-- [ ] Help text is rendered inline with no additional network requests or lazy-loaded resources
+- [x] Help text is rendered inline with no additional network requests or lazy-loaded resources
 
 ### Testing
-- [ ] Component tests verify the optional label and help element render within the token section
-- [ ] Component tests verify the help text is accessible (e.g. via tooltip or expandable section with appropriate ARIA attributes)
+- [x] Component tests verify the optional label and help element render within the token section
+- [x] Component tests verify the help text is accessible (e.g. via tooltip or expandable section with appropriate ARIA attributes)
 
 ## Notes
 

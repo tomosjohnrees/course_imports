@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Eye, EyeOff, Sun, Moon, Monitor } from 'lucide-react'
+import { X, Eye, EyeOff, Sun, Moon, Monitor, HelpCircle } from 'lucide-react'
 import { useUIStore } from '@/store/ui.store'
 import { useCourseStore } from '@/store/course.store'
 import './SettingsPanel.css'
@@ -25,6 +25,7 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const [tokenLoaded, setTokenLoaded] = useState(false)
   const [tokenVisible, setTokenVisible] = useState(false)
   const [confirmingClear, setConfirmingClear] = useState(false)
+  const [tokenHelpOpen, setTokenHelpOpen] = useState(false)
 
   // Load preferences when panel opens
   useEffect(() => {
@@ -114,10 +115,50 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
 
           {/* GitHub Token */}
           <section className="settings-section">
-            <h3 className="settings-section-title">GitHub Token</h3>
+            <h3 className="settings-section-title">
+              GitHub Token
+              <span className="settings-optional-badge">Optional</span>
+            </h3>
             <p className="settings-section-desc">
-              Personal access token for loading private repositories.
+              Only needed if you want to load courses from private GitHub
+              repositories or avoid rate limits. You can safely skip this for
+              public courses.
             </p>
+            <button
+              className="settings-help-toggle"
+              onClick={() => setTokenHelpOpen((v) => !v)}
+              aria-expanded={tokenHelpOpen}
+              aria-controls="token-help"
+              type="button"
+            >
+              <HelpCircle size={14} strokeWidth={1.5} />
+              {tokenHelpOpen ? 'Hide help' : "What's this?"}
+            </button>
+            {tokenHelpOpen && (
+              <div
+                id="token-help"
+                className="settings-help-text"
+                role="region"
+                aria-label="GitHub token help"
+              >
+                <p>
+                  A personal access token is a password-like code from GitHub
+                  that lets this app read repositories on your behalf.
+                </p>
+                <p>
+                  If you need one, create a token with <strong>read-only</strong>{' '}
+                  access (the <code>public_repo</code> scope is enough for most
+                  cases).{' '}
+                  <a
+                    href="https://github.com/settings/tokens/new"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Create a token on GitHub
+                  </a>
+                </p>
+              </div>
+            )}
             <div className="settings-token-row">
               <div className="settings-token-input-wrap">
                 <input

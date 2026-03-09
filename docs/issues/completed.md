@@ -196,3 +196,9 @@
 |---|-------|-------|--------|
 | 0041 | [Configure electron-builder for distribution and create app icons](0041-configure-electron-builder-and-create-app-icons.md) | Milestone 6 — Packaging | complete |
 | 0042 | [Test and verify cross-platform builds](0042-test-and-verify-cross-platform-builds.md) | Milestone 6 — Packaging | complete |
+
+## UX Audit — Sarah Chen
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0043 | [Add contextual help to GitHub token setting](0043-add-contextual-help-to-github-token-setting.md) | UX audit — Sarah Chen | complete |
