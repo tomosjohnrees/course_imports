@@ -265,10 +265,6 @@ export function clearAllNotes(): void {
   store.set('notes', {})
 }
 
-function bookmarkKey(b: { topicId: string; blockIndex: number }): string {
-  return `${b.topicId}:${b.blockIndex}`
-}
-
 export function addBookmark(
   courseId: string,
   topicId: string,
