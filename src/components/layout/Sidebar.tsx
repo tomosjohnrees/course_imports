@@ -2,6 +2,25 @@ import { BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
 
+const emptyStateStyle: React.CSSProperties = {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 'var(--space-6)',
+  gap: 'var(--space-3)',
+  color: 'var(--color-text-muted)',
+  fontFamily: 'var(--font-sans)',
+  textAlign: 'center',
+}
+
+const emptyStateTextStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 'var(--text-sm)',
+  lineHeight: 'var(--leading-sm)',
+}
+
 interface SidebarProps {
   onOpenSettings: () => void
 }
@@ -92,110 +111,91 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
 
       {/* Topic list */}
       {course && topics.length === 0 ? (
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 'var(--space-6)',
-            gap: 'var(--space-3)',
-            color: 'var(--color-text-muted)',
-            fontFamily: 'var(--font-sans)',
-            textAlign: 'center',
-          }}
-        >
+        <div style={emptyStateStyle}>
           <BookOpen size={24} strokeWidth={1.5} />
-          <p
-            style={{
-              margin: 0,
-              fontSize: 'var(--text-sm)',
-              lineHeight: 'var(--leading-sm)',
-            }}
-          >
+          <p style={emptyStateTextStyle}>
             This course has no topics yet.
           </p>
         </div>
       ) : (
-      <ul
-        style={{
-          listStyle: 'none',
-          margin: 0,
-          padding: 0,
-          overflow: 'auto',
-          flex: 1,
-        }}
-      >
-        {topics.map((topic) => {
-          const isActive = topic.id === activeTopic
-          const entry = progress[topic.id]
-          const status: TopicStatus = entry
-            ? entry.complete
-              ? 'complete'
-              : 'viewed'
-            : 'not-started'
+        <ul
+          style={{
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+            overflow: 'auto',
+            flex: 1,
+          }}
+        >
+          {topics.map((topic) => {
+            const isActive = topic.id === activeTopic
+            const entry = progress[topic.id]
+            const status: TopicStatus = entry
+              ? entry.complete
+                ? 'complete'
+                : 'viewed'
+              : 'not-started'
 
-          return (
-            <li key={topic.id}>
-              <button
-                className="sidebar-topic-btn"
-                data-active={isActive ? '' : undefined}
-                onClick={() => setActiveTopic(topic.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--space-2)',
-                  width: '100%',
-                  height: '36px',
-                  padding: '0 var(--space-4)',
-                  border: 'none',
-                  borderLeft: isActive
-                    ? '3px solid var(--color-accent)'
-                    : '3px solid transparent',
-                  color: isActive
-                    ? 'var(--color-accent)'
-                    : 'var(--color-text-primary)',
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 500,
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'background 100ms',
-                  overflow: 'hidden',
-                }}
-              >
-                <span
+            return (
+              <li key={topic.id}>
+                <button
+                  className="sidebar-topic-btn"
+                  data-active={isActive ? '' : undefined}
+                  onClick={() => setActiveTopic(topic.id)}
                   style={{
-                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-2)',
+                    width: '100%',
+                    height: '36px',
+                    padding: '0 var(--space-4)',
+                    border: 'none',
+                    borderLeft: isActive
+                      ? '3px solid var(--color-accent)'
+                      : '3px solid transparent',
+                    color: isActive
+                      ? 'var(--color-accent)'
+                      : 'var(--color-text-primary)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 'var(--text-base)',
+                    fontWeight: 500,
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    transition: 'background 100ms',
                     overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
                   }}
                 >
-                  {topic.title}
-                </span>
-                {status === 'complete' && (
-                  <Check
-                    size={16}
-                    strokeWidth={1.5}
-                    color="var(--color-success)"
-                    aria-label="Complete"
-                  />
-                )}
-                {status === 'viewed' && (
-                  <Circle
-                    size={16}
-                    strokeWidth={1.5}
-                    color="var(--color-accent)"
-                    aria-label="In progress"
-                  />
-                )}
-              </button>
-            </li>
-          )
-        })}
-      </ul>
+                  <span
+                    style={{
+                      flex: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {topic.title}
+                  </span>
+                  {status === 'complete' && (
+                    <Check
+                      size={16}
+                      strokeWidth={1.5}
+                      color="var(--color-success)"
+                      aria-label="Complete"
+                    />
+                  )}
+                  {status === 'viewed' && (
+                    <Circle
+                      size={16}
+                      strokeWidth={1.5}
+                      color="var(--color-accent)"
+                      aria-label="In progress"
+                    />
+                  )}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
       )}
 
       {/* Settings trigger */}
