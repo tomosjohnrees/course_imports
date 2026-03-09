@@ -19,7 +19,7 @@ export function flushProgress(): void {
   if (course?.id) {
     Promise.resolve(
       window.api.store.saveProgress(course.id, progress),
-    ).catch((err) => {
+    ).catch((err: unknown) => {
       console.error('Failed to flush progress on cleanup:', err)
     })
   }
