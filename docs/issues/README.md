@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0033 | [Show progress indicator for large GitHub course fetches](0033-show-progress-for-large-github-course-fetches.md) | Milestone 6 — Edge Cases & Robustness | todo |
 | 0034 | [Handle offline state for GitHub courses](0034-handle-offline-state-for-github-courses.md) | Milestone 6 — Edge Cases & Robustness | todo |
 | 0035 | [Implement keyboard navigation and focus management](0035-implement-keyboard-navigation-and-focus-management.md) | Milestone 6 — Keyboard Navigation | todo |
 | 0036 | [Audit colour contrast and semantic HTML hierarchy](0036-audit-colour-contrast-and-semantic-html.md) | Milestone 6 — Accessibility | todo |

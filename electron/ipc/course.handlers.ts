@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, ipcMain } from 'electron'
 import { IpcChannel } from './channels'
 import { loadCourse } from '../course/loader'
 import { fetchCourse, parseGitHubUrl } from '../course/github'
-import type { GitHubFetchResult, GitHubRepo } from '../course/github'
+import type { GitHubFetchResult, GitHubRepo, FetchProgress } from '../course/github'
 import type { ParseResult } from '../course/parser'
 import { getStoredGitHubToken, saveRecentCourse, getStoredRecentCourse } from '../store'
 
@@ -77,9 +77,15 @@ export function registerCourseHandlers(): void {
 
     const token = getStoredGitHubToken()
 
+    function sendProgress(progress: FetchProgress) {
+      for (const win of BrowserWindow.getAllWindows()) {
+        win.webContents.send(IpcChannel.course.fetchProgress, progress)
+      }
+    }
+
     let result: GitHubFetchResult
     try {
-      result = await fetchCourse(repo, token ? { token } : undefined)
+      result = await fetchCourse(repo, { token: token || undefined, onProgress: sendProgress })
     } catch (err) {
       const message = (err as Error).message || 'An unexpected error occurred'
       return { success: false, error: classifyGitHubError(message, repo) }
@@ -134,9 +140,15 @@ export function registerCourseHandlers(): void {
 
     const token = getStoredGitHubToken()
 
+    function sendProgress(progress: FetchProgress) {
+      for (const win of BrowserWindow.getAllWindows()) {
+        win.webContents.send(IpcChannel.course.fetchProgress, progress)
+      }
+    }
+
     let result: GitHubFetchResult
     try {
-      result = await fetchCourse(repo, token ? { token } : undefined)
+      result = await fetchCourse(repo, { token: token || undefined, onProgress: sendProgress })
     } catch (err) {
       const message = (err as Error).message || 'An unexpected error occurred'
       return { success: false, error: classifyGitHubError(message, repo) }

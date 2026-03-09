@@ -3,7 +3,8 @@ export const IpcChannel = {
     selectFolder: 'course:selectFolder',
     loadFromFolder: 'course:loadFromFolder',
     loadFromGitHub: 'course:loadFromGitHub',
-    loadRecentCourse: 'course:loadRecentCourse'
+    loadRecentCourse: 'course:loadRecentCourse',
+    fetchProgress: 'course:fetchProgress'
   },
   store: {
     getRecentCourses: 'store:getRecentCourses',

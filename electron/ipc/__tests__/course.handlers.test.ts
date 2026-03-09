@@ -8,6 +8,7 @@ vi.mock('electron', () => ({
   },
   BrowserWindow: {
     getFocusedWindow: vi.fn(),
+    getAllWindows: vi.fn().mockReturnValue([]),
   },
   dialog: {
     showOpenDialog: vi.fn(),

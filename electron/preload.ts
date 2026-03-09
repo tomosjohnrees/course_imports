@@ -11,7 +11,13 @@ contextBridge.exposeInMainWorld('api', {
     loadFromFolder: (folderPath: string) => ipcRenderer.invoke(IpcChannel.course.loadFromFolder, folderPath),
     loadFromGitHub: (repoUrl: string) => ipcRenderer.invoke(IpcChannel.course.loadFromGitHub, repoUrl),
     selectFolder: () => ipcRenderer.invoke(IpcChannel.course.selectFolder),
-    loadRecentCourse: (courseId: string) => ipcRenderer.invoke(IpcChannel.course.loadRecentCourse, courseId)
+    loadRecentCourse: (courseId: string) => ipcRenderer.invoke(IpcChannel.course.loadRecentCourse, courseId),
+    onFetchProgress: (callback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void) => {
+      ipcRenderer.on(IpcChannel.course.fetchProgress, callback)
+    },
+    offFetchProgress: (callback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void) => {
+      ipcRenderer.removeListener(IpcChannel.course.fetchProgress, callback)
+    }
   },
   store: {
     getRecentCourses: () => ipcRenderer.invoke(IpcChannel.store.getRecentCourses),

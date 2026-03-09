@@ -49,6 +49,12 @@ export function useCourse() {
     setError(null)
     setLoading(true, 'Fetching course from GitHub…')
 
+    const onProgress = (_event: unknown, progress: { topicIndex: number; topicCount: number }) => {
+      setLoading(true, `Loading topic ${progress.topicIndex} of ${progress.topicCount}`)
+    }
+
+    window.api.course.onFetchProgress(onProgress)
+
     try {
       const sanitisedUrl = url.trim()
       const result = await window.api.course.loadFromGitHub(sanitisedUrl)
@@ -63,6 +69,7 @@ export function useCourse() {
     } catch {
       setError('An unexpected error occurred while fetching the course.')
     } finally {
+      window.api.course.offFetchProgress(onProgress)
       setLoading(false)
     }
   }
@@ -70,6 +77,12 @@ export function useCourse() {
   async function loadRecentCourse(courseId: string) {
     setError(null)
     setLoading(true, 'Loading course…')
+
+    const onProgress = (_event: unknown, progress: { topicIndex: number; topicCount: number }) => {
+      setLoading(true, `Loading topic ${progress.topicIndex} of ${progress.topicCount}`)
+    }
+
+    window.api.course.onFetchProgress(onProgress)
 
     try {
       const result = await window.api.course.loadRecentCourse(courseId)
@@ -84,6 +97,7 @@ export function useCourse() {
     } catch {
       setError('An unexpected error occurred while loading the course.')
     } finally {
+      window.api.course.offFetchProgress(onProgress)
       setLoading(false)
     }
   }

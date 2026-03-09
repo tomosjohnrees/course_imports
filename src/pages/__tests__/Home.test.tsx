@@ -37,6 +37,8 @@ beforeEach(() => {
       loadFromFolder: vi.fn(),
       loadFromGitHub: vi.fn(),
       loadRecentCourse: vi.fn(),
+      onFetchProgress: vi.fn(),
+      offFetchProgress: vi.fn(),
     },
     store: {
       getRecentCourses: vi.fn().mockResolvedValue([]),
@@ -276,6 +278,62 @@ describe('Home', () => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
       })
       expect(screen.getByText('Repository not found.')).toBeInTheDocument()
+    })
+
+    it('shows progress updates during GitHub fetch', async () => {
+      let resolveLoad: (value: { success: true; course: Course }) => void
+      vi.mocked(window.api.course.loadFromGitHub).mockImplementation(
+        () => new Promise((resolve) => { resolveLoad = resolve })
+      )
+
+      // Capture the progress callback
+      let progressCallback: (_event: unknown, progress: { topicIndex: number; topicCount: number }) => void
+      vi.mocked(window.api.course.onFetchProgress).mockImplementation((cb) => {
+        progressCallback = cb
+      })
+
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Fetching course from GitHub…')).toBeInTheDocument()
+      })
+
+      // Simulate progress event
+      progressCallback!(null, { topicIndex: 2, topicCount: 5 })
+
+      await waitFor(() => {
+        expect(screen.getByText('Loading topic 2 of 5')).toBeInTheDocument()
+      })
+
+      // Resolve the load to clean up
+      resolveLoad!({ success: true, course: { ...mockCourse, source: { type: 'github', path: 'https://github.com/owner/repo' } } })
+
+      await waitFor(() => {
+        expect(window.api.course.offFetchProgress).toHaveBeenCalled()
+      })
+    })
+
+    it('cleans up progress listener on fetch error', async () => {
+      vi.mocked(window.api.course.loadFromGitHub).mockResolvedValue({
+        success: false,
+        error: 'Some error',
+      })
+
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(window.api.course.offFetchProgress).toHaveBeenCalled()
+      })
     })
 
     it('displays error for rate-limited response', async () => {

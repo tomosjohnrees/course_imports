@@ -27,8 +27,14 @@ interface GitHubFileEntry {
   path: string
 }
 
+export interface FetchProgress {
+  topicIndex: number
+  topicCount: number
+}
+
 interface FetchOptions {
   token?: string
+  onProgress?: (progress: FetchProgress) => void
 }
 
 const GITHUB_API_BASE = 'https://api.github.com'
@@ -315,10 +321,14 @@ export async function fetchCourse(
   }
 
   const topics: Topic[] = []
+  const topicCount = topicOrder.length
 
-  for (const slug of topicOrder) {
+  for (let i = 0; i < topicOrder.length; i++) {
+    const slug = topicOrder[i]
     const topicPath = `topics/${slug}`
     const contentPath = `${topicPath}/content.json`
+
+    options?.onProgress?.({ topicIndex: i + 1, topicCount })
 
     // Fetch content.json for this topic
     let contentData: unknown

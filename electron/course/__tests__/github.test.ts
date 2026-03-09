@@ -458,6 +458,55 @@ describe('fetchCourse', () => {
     }
   })
 
+  it('emits progress events for each topic', async () => {
+    // course.json with 3 topics
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify({ ...COURSE_META, topicOrder: ['01-intro', '02-basics', '03-advanced'] })
+        ),
+      })
+    )
+
+    // content.json for each topic
+    for (let i = 0; i < 3; i++) {
+      mockFetch.mockResolvedValueOnce(
+        jsonResponse({
+          content: base64Encode(JSON.stringify([{ type: 'text', content: `Topic ${i + 1}` }])),
+        })
+      )
+    }
+
+    const onProgress = vi.fn()
+    const result = await fetchCourse(repo, { onProgress })
+
+    expect(result.success).toBe(true)
+    expect(onProgress).toHaveBeenCalledTimes(3)
+    expect(onProgress).toHaveBeenNthCalledWith(1, { topicIndex: 1, topicCount: 3 })
+    expect(onProgress).toHaveBeenNthCalledWith(2, { topicIndex: 2, topicCount: 3 })
+    expect(onProgress).toHaveBeenNthCalledWith(3, { topicIndex: 3, topicCount: 3 })
+  })
+
+  it('does not fail when onProgress is not provided', async () => {
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify({ ...COURSE_META, topicOrder: ['01-intro'] })
+        ),
+      })
+    )
+
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(JSON.stringify([{ type: 'text', content: 'hi' }])),
+      })
+    )
+
+    const result = await fetchCourse(repo)
+
+    expect(result.success).toBe(true)
+  })
+
   it('handles quiz blocks correctly in fetched courses', async () => {
     mockFetch.mockResolvedValueOnce(
       jsonResponse({

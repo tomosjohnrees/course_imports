@@ -19,18 +19,18 @@ Loading a large course from GitHub (many topics, many files) can take a noticeab
 ## Acceptance criteria
 
 ### Functionality
-- [ ] The loading UI shows which topic is currently being fetched and the total count (e.g. "Loading topic 3 of 12")
-- [ ] Progress updates appear in real time as each topic completes fetching
-- [ ] The loading state falls back to a generic "Fetching course from GitHub…" if progress events are unavailable
-- [ ] Cancelling or navigating away during a fetch does not cause errors
+- [x] The loading UI shows which topic is currently being fetched and the total count (e.g. "Loading topic 3 of 12")
+- [x] Progress updates appear in real time as each topic completes fetching
+- [x] The loading state falls back to a generic "Fetching course from GitHub…" if progress events are unavailable
+- [x] Cancelling or navigating away during a fetch does not cause errors
 
 ### Security
-- [ ] Progress messages do not expose GitHub API tokens or internal API URLs
+- [x] Progress messages do not expose GitHub API tokens or internal API URLs
 
 ### Performance
-- [ ] Progress IPC messages are lightweight (topic index and total only, no payload data)
-- [ ] File fetches within a topic remain parallelised — progress reporting does not serialise requests
+- [x] Progress IPC messages are lightweight (topic index and total only, no payload data)
+- [x] File fetches within a topic remain parallelised — progress reporting does not serialise requests
 
 ### Testing
-- [ ] Unit tests verify the GitHub client emits progress events at the correct points
-- [ ] Component tests verify the loading UI updates in response to progress events
+- [x] Unit tests verify the GitHub client emits progress events at the correct points
+- [x] Component tests verify the loading UI updates in response to progress events

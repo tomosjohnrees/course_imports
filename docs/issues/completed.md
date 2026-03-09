@@ -166,3 +166,4 @@
 | 0030 | [Handle empty course and topic edge cases](0030-handle-empty-course-and-topic-edge-cases.md) | Milestone 6 — Edge Cases & Robustness | complete |
 | 0031 | [Handle malformed content and missing file references in renderer](0031-handle-malformed-content-and-missing-files-in-renderer.md) | Milestone 6 — Edge Cases & Robustness | complete |
 | 0032 | [Handle long course and topic titles without layout breakage](0032-handle-long-titles-without-layout-breakage.md) | Milestone 6 — Edge Cases & Robustness | complete |
+| 0033 | [Show progress indicator for large GitHub course fetches](0033-show-progress-for-large-github-course-fetches.md) | Milestone 6 — Edge Cases & Robustness | complete |
