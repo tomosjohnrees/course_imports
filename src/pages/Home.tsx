@@ -290,13 +290,13 @@ export default function Home() {
         </button>
 
         {isLoading && (
-          <p style={loadingStyle} role="status" aria-live="polite">
+          <p style={loadingStyle} role="status">
             {loadingMessage ?? 'Loading\u2026'}
           </p>
         )}
 
         {error && !isLoading && (
-          <div style={errorContainerStyle} role="alert" aria-live="polite">
+          <div style={errorContainerStyle} role="alert">
             <p style={errorTextStyle}>{error}</p>
             <button
               type="button"

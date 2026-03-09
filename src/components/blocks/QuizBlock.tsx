@@ -65,7 +65,7 @@ export default memo(function QuizBlock(props: QuizBlockProps) {
         />
       )}
 
-      <div aria-live="assertive">
+      <div aria-live="polite">
         {isLocked && (
           <>
             <div

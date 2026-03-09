@@ -154,7 +154,7 @@ describe('QuizBlock — multiple choice', () => {
     const user = userEvent.setup()
     const { container } = render(<QuizBlock {...mcProps} />)
 
-    const liveRegion = container.querySelector('[aria-live="assertive"]')
+    const liveRegion = container.querySelector('[aria-live="polite"]')
     expect(liveRegion).toBeInTheDocument()
     expect(liveRegion).toHaveTextContent('')
 

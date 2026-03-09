@@ -1,5 +1,4 @@
 import 'vitest'
-import type { AxeResults } from 'axe-core'
 
 interface AxeMatchers {
   toHaveNoViolations(): void
