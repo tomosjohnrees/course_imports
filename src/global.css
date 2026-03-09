@@ -118,8 +118,3 @@ select:focus-visible {
 .sidebar-topic-btn:not([data-active]):hover {
   background: var(--color-bg);
 }
-
-.sidebar-topic-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
-}

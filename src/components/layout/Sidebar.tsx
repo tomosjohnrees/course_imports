@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useRef } from 'react'
 import { BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
@@ -34,24 +34,21 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
 
   const listRef = useRef<HTMLUListElement>(null)
 
-  const handleTopicKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLUListElement>) => {
-      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
-      e.preventDefault()
-      const list = listRef.current
-      if (!list) return
-      const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>('button'))
-      const currentIndex = buttons.findIndex((btn) => btn === document.activeElement)
-      let nextIndex: number
-      if (e.key === 'ArrowDown') {
-        nextIndex = currentIndex < buttons.length - 1 ? currentIndex + 1 : 0
-      } else {
-        nextIndex = currentIndex > 0 ? currentIndex - 1 : buttons.length - 1
-      }
-      buttons[nextIndex]?.focus()
-    },
-    [],
-  )
+  const handleTopicKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
+    e.preventDefault()
+    const list = listRef.current
+    if (!list) return
+    const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>('button'))
+    const currentIndex = buttons.findIndex((btn) => btn === document.activeElement)
+    let nextIndex: number
+    if (e.key === 'ArrowDown') {
+      nextIndex = currentIndex < buttons.length - 1 ? currentIndex + 1 : 0
+    } else {
+      nextIndex = currentIndex > 0 ? currentIndex - 1 : buttons.length - 1
+    }
+    buttons[nextIndex]?.focus()
+  }
 
   const topics = course?.topics ?? []
   const completedCount = topics.filter(
