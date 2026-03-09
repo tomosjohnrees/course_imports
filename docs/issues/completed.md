@@ -134,3 +134,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0025 | [Implement image block](0025-implement-image-block.md) | Milestone 4 — Image Block | complete |
+
+## Milestone 5 — Progress Tracking
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0026 | [Implement in-session progress tracking](0026-implement-in-session-progress-tracking.md) | Milestone 5 — Progress Tracking | complete |

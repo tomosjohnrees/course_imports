@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, beforeEach } from 'vitest'
 import Sidebar from '../Sidebar'
@@ -112,5 +112,61 @@ describe('Sidebar', () => {
 
     expect(screen.queryAllByRole('button')).toHaveLength(0)
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
+  })
+
+  it('shows "In progress" indicator for viewed but incomplete topics', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      progress: {
+        'topic-2': { viewed: true, complete: false },
+      },
+    })
+    render(<Sidebar />)
+
+    expect(screen.getByLabelText('In progress')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
+  })
+
+  it('shows all three states simultaneously', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      progress: {
+        'topic-1': { viewed: true, complete: true },
+        'topic-2': { viewed: true, complete: false },
+        // topic-3 has no progress entry → not started
+      },
+    })
+    render(<Sidebar />)
+
+    expect(screen.getByLabelText('Complete')).toBeInTheDocument()
+    expect(screen.getByLabelText('In progress')).toBeInTheDocument()
+    // not-started topics have no icon
+    const buttons = screen.getAllByRole('button')
+    expect(buttons[2].querySelector('[aria-label]')).toBeNull()
+  })
+
+  it('updates indicators when progress state changes', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      progress: {},
+    })
+    const { rerender } = render(<Sidebar />)
+
+    expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('In progress')).not.toBeInTheDocument()
+
+    act(() => {
+      useCourseStore.setState({
+        progress: {
+          'topic-1': { viewed: true, complete: true },
+          'topic-2': { viewed: true, complete: false },
+        },
+      })
+    })
+    rerender(<Sidebar />)
+
+    expect(screen.getByLabelText('Complete')).toBeInTheDocument()
+    expect(screen.getByLabelText('In progress')).toBeInTheDocument()
+    expect(screen.getByText('1 of 3 topics complete')).toBeInTheDocument()
   })
 })

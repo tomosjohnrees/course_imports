@@ -21,24 +21,24 @@ Add progress tracking logic to the course store so the app knows which topics ha
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Navigating to a topic for the first time marks it as "viewed" in the store
-- [ ] A topic with quiz blocks is marked "complete" only when every quiz block in that topic has been answered
-- [ ] A topic with no quiz blocks is marked "complete" as soon as it is viewed
-- [ ] Overall course completion percentage is correctly derived (completed topics / total topics)
-- [ ] Sidebar topic indicators update in real time to reflect "not started", "viewed", and "complete" states
-- [ ] Progress bar at the top of the sidebar updates in real time as topics are completed
-- [ ] Progress state survives in-session navigation (going back to a completed topic still shows it as complete)
+- [x] Navigating to a topic for the first time marks it as "viewed" in the store
+- [x] A topic with quiz blocks is marked "complete" only when every quiz block in that topic has been answered
+- [x] A topic with no quiz blocks is marked "complete" as soon as it is viewed
+- [x] Overall course completion percentage is correctly derived (completed topics / total topics)
+- [x] Sidebar topic indicators update in real time to reflect "not started", "viewed", and "complete" states
+- [x] Progress bar at the top of the sidebar updates in real time as topics are completed
+- [x] Progress state survives in-session navigation (going back to a completed topic still shows it as complete)
 
 ### Security
-- [ ] Progress state is scoped to the currently loaded course — no leakage between courses if the user loads a different course in the same session
+- [x] Progress state is scoped to the currently loaded course — no leakage between courses if the user loads a different course in the same session
 
 ### Performance
-- [ ] Completion percentage derivation does not trigger unnecessary re-renders — use selectors or derived state to avoid recomputing on unrelated store changes
+- [x] Completion percentage derivation does not trigger unnecessary re-renders — use selectors or derived state to avoid recomputing on unrelated store changes
 
 ### Testing
-- [ ] Unit tests cover topic viewed/complete state transitions for topics with and without quiz blocks
-- [ ] Unit tests verify correct completion percentage calculation for edge cases (0 topics, all complete, none complete, mixed)
-- [ ] Integration test verifies sidebar indicators update when progress state changes
+- [x] Unit tests cover topic viewed/complete state transitions for topics with and without quiz blocks
+- [x] Unit tests verify correct completion percentage calculation for edge cases (0 topics, all complete, none complete, mixed)
+- [x] Integration test verifies sidebar indicators update when progress state changes
 
 ## Notes
 

@@ -39,7 +39,29 @@ export const useCourseStore = create<CourseStore>()(
         ),
 
       setActiveTopic: (topicId) =>
-        set({ activeTopic: topicId }, false, 'setActiveTopic'),
+        set(
+          (state) => {
+            const alreadyTracked = Boolean(state.progress[topicId])
+            if (alreadyTracked) return { activeTopic: topicId }
+
+            const topic = state.course?.topics.find((t) => t.id === topicId)
+            const hasQuizBlocks =
+              topic?.blocks.some((b) => b.type === 'quiz') ?? false
+
+            return {
+              activeTopic: topicId,
+              progress: {
+                ...state.progress,
+                [topicId]: {
+                  viewed: true,
+                  complete: !hasQuizBlocks,
+                },
+              },
+            }
+          },
+          false,
+          'setActiveTopic',
+        ),
 
       markTopicComplete: (topicId) =>
         set(
@@ -55,12 +77,30 @@ export const useCourseStore = create<CourseStore>()(
 
       recordQuizAnswer: (key, answer) =>
         set(
-          (state) => ({
-            quizAnswers: {
-              ...state.quizAnswers,
-              [key]: answer,
-            },
-          }),
+          (state) => {
+            const newQuizAnswers = { ...state.quizAnswers, [key]: answer }
+
+            const separatorIndex = key.lastIndexOf(':')
+            const topicId = key.substring(0, separatorIndex)
+            const topic = state.course?.topics.find((t) => t.id === topicId)
+
+            if (!topic) return { quizAnswers: newQuizAnswers }
+
+            const allQuizzesAnswered = topic.blocks.every(
+              (block, i) =>
+                block.type !== 'quiz' || newQuizAnswers[`${topicId}:${i}`],
+            )
+
+            if (!allQuizzesAnswered) return { quizAnswers: newQuizAnswers }
+
+            return {
+              quizAnswers: newQuizAnswers,
+              progress: {
+                ...state.progress,
+                [topicId]: { viewed: true, complete: true },
+              },
+            }
+          },
           false,
           'recordQuizAnswer',
         ),

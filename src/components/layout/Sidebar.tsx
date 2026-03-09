@@ -1,5 +1,6 @@
-import { Check } from 'lucide-react'
+import { Check, Circle } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
+import type { TopicStatus } from '@/hooks/useProgress'
 
 export default function Sidebar() {
   const course = useCourseStore((s) => s.course)
@@ -94,7 +95,12 @@ export default function Sidebar() {
       >
         {topics.map((topic) => {
           const isActive = topic.id === activeTopic
-          const isComplete = progress[topic.id]?.complete
+          const entry = progress[topic.id]
+          const status: TopicStatus = entry
+            ? entry.complete
+              ? 'complete'
+              : 'viewed'
+            : 'not-started'
 
           return (
             <li key={topic.id}>
@@ -135,12 +141,20 @@ export default function Sidebar() {
                 >
                   {topic.title}
                 </span>
-                {isComplete && (
+                {status === 'complete' && (
                   <Check
                     size={16}
                     strokeWidth={1.5}
                     color="var(--color-success)"
                     aria-label="Complete"
+                  />
+                )}
+                {status === 'viewed' && (
+                  <Circle
+                    size={16}
+                    strokeWidth={1.5}
+                    color="var(--color-accent)"
+                    aria-label="In progress"
                   />
                 )}
               </button>
