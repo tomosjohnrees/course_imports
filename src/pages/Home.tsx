@@ -218,9 +218,28 @@ export default function Home() {
   const loadingMessage = useUIStore((s) => s.loadingMessage)
   const error = useUIStore((s) => s.error)
   const setError = useUIStore((s) => s.setError)
+  const retryAction = useUIStore((s) => s.retryAction)
   const [githubUrl, setGithubUrl] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
   const recentCourses = useRecentCourses()
+
+  function handleRetry() {
+    if (!retryAction) {
+      setError(null)
+      return
+    }
+    switch (retryAction.type) {
+      case 'github':
+        loadGitHubCourse(retryAction.url)
+        break
+      case 'recent':
+        loadRecentCourse(retryAction.courseId)
+        break
+      case 'local':
+        loadLocalCourse(retryAction.folderPath)
+        break
+    }
+  }
 
   function handleLoadGitHub() {
     if (!githubUrl.trim()) {
@@ -281,7 +300,7 @@ export default function Home() {
         <button
           type="button"
           style={secondaryButtonStyle}
-          onClick={loadLocalCourse}
+          onClick={() => loadLocalCourse()}
           disabled={isLoading}
         >
           Open local folder
@@ -296,7 +315,7 @@ export default function Home() {
         {error && !isLoading && (
           <ErrorState
             message={error}
-            onRetry={() => setError(null)}
+            onRetry={handleRetry}
             onDismiss={() => setError(null)}
           />
         )}

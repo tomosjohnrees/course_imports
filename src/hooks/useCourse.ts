@@ -15,6 +15,7 @@ export function useCourse() {
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
+  const setRetryAction = useUIStore((s) => s.setRetryAction)
 
   async function hydrateFromDisk(courseId: string) {
     const saved = await window.api.store.getProgress(courseId)
@@ -28,10 +29,11 @@ export function useCourse() {
     if (topicId) setActiveTopic(topicId)
   }
 
-  async function loadLocalCourse() {
+  async function loadLocalCourse(retryPath?: string) {
     setError(null)
+    setRetryAction(null)
 
-    const folderPath = await window.api.course.selectFolder()
+    const folderPath = retryPath ?? await window.api.course.selectFolder()
     if (!folderPath) return
 
     setLoading(true, 'Loading course…')
@@ -45,9 +47,11 @@ export function useCourse() {
         selectInitialTopic()
         navigate('/course')
       } else {
+        setRetryAction({ type: 'local', folderPath })
         setError(result.error)
       }
     } catch {
+      setRetryAction({ type: 'local', folderPath })
       setError('An unexpected error occurred while loading the course.')
     } finally {
       setLoading(false)
@@ -56,6 +60,7 @@ export function useCourse() {
 
   async function loadGitHubCourse(url: string) {
     setError(null)
+    setRetryAction(null)
     setLoading(true, 'Fetching course from GitHub…')
 
     const onProgress = (progress: { topicIndex: number; topicCount: number }) => {
@@ -74,9 +79,11 @@ export function useCourse() {
         selectInitialTopic()
         navigate('/course')
       } else {
+        setRetryAction({ type: 'github', url: sanitisedUrl })
         setError(result.error)
       }
     } catch {
+      setRetryAction({ type: 'github', url: url.trim() })
       setError('An unexpected error occurred while fetching the course.')
     } finally {
       offProgress()
@@ -86,6 +93,7 @@ export function useCourse() {
 
   async function loadRecentCourse(courseId: string) {
     setError(null)
+    setRetryAction(null)
     setLoading(true, 'Loading course…')
 
     const onProgress = (progress: { topicIndex: number; topicCount: number }) => {
@@ -103,9 +111,11 @@ export function useCourse() {
         selectInitialTopic()
         navigate('/course')
       } else {
+        setRetryAction({ type: 'recent', courseId })
         setError(result.error)
       }
     } catch {
+      setRetryAction({ type: 'recent', courseId })
       setError('An unexpected error occurred while loading the course.')
     } finally {
       offProgress()

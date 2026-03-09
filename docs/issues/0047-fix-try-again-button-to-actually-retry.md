@@ -19,19 +19,19 @@ When a course fails to load and the error state appears on the home screen, the 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Clicking "Try again" after a failed GitHub URL load retries the fetch with the same URL
-- [ ] Clicking "Try again" after a failed recent course load retries loading that recent course
-- [ ] Clicking "Try again" after a failed local folder load either retries from the same path or reopens the folder picker
-- [ ] During retry, the loading state is shown with the same progress indicators as the original attempt
-- [ ] If the retry also fails, the error state reappears with the new error message
+- [x] Clicking "Try again" after a failed GitHub URL load retries the fetch with the same URL
+- [x] Clicking "Try again" after a failed recent course load retries loading that recent course
+- [x] Clicking "Try again" after a failed local folder load either retries from the same path or reopens the folder picker
+- [x] During retry, the loading state is shown with the same progress indicators as the original attempt
+- [x] If the retry also fails, the error state reappears with the new error message
 
 ### Security
-- [ ] Retry does not bypass token refresh or re-validation — it follows the same code path as the original load
+- [x] Retry does not bypass token refresh or re-validation — it follows the same code path as the original load
 
 ### Performance
-- [ ] Retry triggers immediately on click — no additional debouncing or delay
+- [x] Retry triggers immediately on click — no additional debouncing or delay
 
 ### Testing
-- [ ] Component tests verify that "Try again" triggers a load function (not just error clearing)
-- [ ] Component tests verify the loading state appears during retry
-- [ ] Component tests verify that a second failure re-renders the error state
+- [x] Component tests verify that "Try again" triggers a load function (not just error clearing)
+- [x] Component tests verify the loading state appears during retry
+- [x] Component tests verify that a second failure re-renders the error state

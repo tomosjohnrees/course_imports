@@ -54,6 +54,7 @@ beforeEach(() => {
 afterEach(() => {
   useUIStore.getState().setError(null)
   useUIStore.getState().setLoading(false)
+  useUIStore.getState().setRetryAction(null)
   useCourseStore.getState().clearCourse()
 })
 
@@ -409,6 +410,128 @@ describe('Home', () => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
       })
       expect(screen.getByText(/network connection was lost/)).toBeInTheDocument()
+    })
+  })
+
+  describe('Try again retry', () => {
+    it('retries the GitHub load when Try again is clicked after a GitHub failure', async () => {
+      vi.mocked(window.api.course.loadFromGitHub)
+        .mockResolvedValueOnce({ success: false, error: 'Repository not found.' })
+        .mockImplementation(() => new Promise(() => {}))
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+
+      await waitFor(() => {
+        expect(window.api.course.loadFromGitHub).toHaveBeenCalledTimes(2)
+      })
+      expect(window.api.course.loadFromGitHub).toHaveBeenLastCalledWith('https://github.com/owner/repo')
+    })
+
+    it('shows loading state during retry', async () => {
+      vi.mocked(window.api.course.loadFromGitHub)
+        .mockResolvedValueOnce({ success: false, error: 'Repository not found.' })
+        .mockImplementation(() => new Promise(() => {}))
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('status')).toBeInTheDocument()
+      })
+      expect(screen.getByText('Fetching course from GitHub…')).toBeInTheDocument()
+    })
+
+    it('re-renders error state when retry also fails', async () => {
+      vi.mocked(window.api.course.loadFromGitHub)
+        .mockResolvedValueOnce({ success: false, error: 'Repository not found.' })
+        .mockResolvedValueOnce({ success: false, error: 'Rate limited.' })
+      renderWithRouter()
+
+      fireEvent.change(screen.getByLabelText('Load from GitHub'), {
+        target: { value: 'https://github.com/owner/repo' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Load course' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Repository not found.')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+
+      await waitFor(() => {
+        expect(screen.getByText('Rate limited.')).toBeInTheDocument()
+      })
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+    })
+
+    it('retries loading a recent course when Try again is clicked', async () => {
+      const mockRecentCourses: RecentCourse[] = [
+        { id: 'course-1', title: 'My Course', sourceType: 'github', lastLoaded: Date.now() },
+      ]
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
+      vi.mocked(window.api.course.loadRecentCourse)
+        .mockResolvedValueOnce({ success: false, error: 'Network error.' })
+        .mockImplementation(() => new Promise(() => {}))
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText('My Course')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Load My Course' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+
+      await waitFor(() => {
+        expect(window.api.course.loadRecentCourse).toHaveBeenCalledTimes(2)
+      })
+      expect(window.api.course.loadRecentCourse).toHaveBeenLastCalledWith('course-1')
+    })
+
+    it('retries loading a local folder from the same path when Try again is clicked', async () => {
+      vi.mocked(window.api.course.selectFolder).mockResolvedValue('/test/folder')
+      vi.mocked(window.api.course.loadFromFolder)
+        .mockResolvedValueOnce({ success: false, error: 'Missing course.json' })
+        .mockImplementation(() => new Promise(() => {}))
+      renderWithRouter()
+
+      fireEvent.click(screen.getByRole('button', { name: 'Open local folder' }))
+
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+
+      await waitFor(() => {
+        expect(window.api.course.loadFromFolder).toHaveBeenCalledTimes(2)
+      })
+      // Should retry with same path, not reopen folder picker
+      expect(window.api.course.selectFolder).toHaveBeenCalledTimes(1)
+      expect(window.api.course.loadFromFolder).toHaveBeenLastCalledWith('/test/folder')
     })
   })
 
