@@ -106,7 +106,7 @@ describe('loadCourse', () => {
     expect(result.error).toContain('topics/ folder does not exist')
   })
 
-  it('returns parser errors as failure result', async () => {
+  it('produces error blocks for missing src files instead of failing', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     await createTopic(tempDir, '01-intro', [
       { type: 'text', src: 'nonexistent.md' },
@@ -114,9 +114,11 @@ describe('loadCourse', () => {
 
     const result = await loadCourse(tempDir)
 
-    expect(result.success).toBe(false)
-    if (result.success) return
-    expect(result.error).toMatch(/nonexistent\.md/)
-    expect(result.error).toMatch(/does not exist/)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.filePath).toBe('nonexistent.md')
   })
 })

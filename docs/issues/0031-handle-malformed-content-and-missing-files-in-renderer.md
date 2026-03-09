@@ -20,19 +20,19 @@ When a topic's `content.json` is malformed or a `src` file referenced by a block
 ## Acceptance criteria
 
 ### Functionality
-- [ ] A block with a missing `src` file renders an inline error message identifying the missing file path
-- [ ] A block with missing required fields (e.g. a quiz block with no `options`) renders an error block instead of crashing
-- [ ] A React error boundary around the block list catches render errors and shows a recovery message
-- [ ] Other valid blocks in the same topic continue to render normally when one block errors
-- [ ] The error block visually distinguishes itself from content blocks (e.g. warning styling)
+- [x] A block with a missing `src` file renders an inline error message identifying the missing file path
+- [x] A block with missing required fields (e.g. a quiz block with no `options`) renders an error block instead of crashing
+- [x] A React error boundary around the block list catches render errors and shows a recovery message
+- [x] Other valid blocks in the same topic continue to render normally when one block errors
+- [x] The error block visually distinguishes itself from content blocks (e.g. warning styling)
 
 ### Security
-- [ ] Error messages display the relative file path only, never absolute system paths
-- [ ] No raw JavaScript error messages or stack traces are shown to the user
+- [x] Error messages display the relative file path only, never absolute system paths
+- [x] No raw JavaScript error messages or stack traces are shown to the user
 
 ### Performance
-- [ ] Error boundaries do not add measurable overhead when no errors are present
+- [x] Error boundaries do not add measurable overhead when no errors are present
 
 ### Testing
-- [ ] Component tests verify error block renders for missing `src`, missing fields, and thrown render errors
-- [ ] Component tests verify sibling blocks render normally alongside an error block
+- [x] Component tests verify error block renders for missing `src`, missing fields, and thrown render errors
+- [x] Component tests verify sibling blocks render normally alongside an error block

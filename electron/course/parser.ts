@@ -10,6 +10,7 @@ import type {
   CalloutBlock,
   MultipleChoiceQuizBlock,
   FreeTextQuizBlock,
+  ErrorBlock,
 } from '../../src/types/course.types'
 
 export type ParseResult =
@@ -64,15 +65,19 @@ async function resolveBlock(
       if (rawBlock.src) {
         const src = rawBlock.src as string
         const error = validateSrcPath(src, topicPath, courseRoot)
-        if (error) throw new Error(`topics/${topicSlug} block ${blockIndex}: ${error}`)
+        if (error) {
+          return { type: 'error', message: error } satisfies ErrorBlock
+        }
         const filePath = resolve(topicPath, src)
         try {
           const content = await readFile(filePath, 'utf-8')
           return { type: 'text', content } satisfies TextBlock
         } catch {
-          throw new Error(
-            `topics/${topicSlug} block ${blockIndex}: file "${src}" does not exist`
-          )
+          return {
+            type: 'error',
+            message: `Referenced file not found`,
+            filePath: src,
+          } satisfies ErrorBlock
         }
       }
       return { type: 'text', content: rawBlock.content as string } satisfies TextBlock
@@ -82,7 +87,9 @@ async function resolveBlock(
       if (rawBlock.src) {
         const src = rawBlock.src as string
         const error = validateSrcPath(src, topicPath, courseRoot)
-        if (error) throw new Error(`topics/${topicSlug} block ${blockIndex}: ${error}`)
+        if (error) {
+          return { type: 'error', message: error } satisfies ErrorBlock
+        }
         const filePath = resolve(topicPath, src)
         try {
           const content = await readFile(filePath, 'utf-8')
@@ -94,9 +101,11 @@ async function resolveBlock(
           if (rawBlock.label) block.label = rawBlock.label as string
           return block
         } catch {
-          throw new Error(
-            `topics/${topicSlug} block ${blockIndex}: file "${src}" does not exist`
-          )
+          return {
+            type: 'error',
+            message: `Referenced file not found`,
+            filePath: src,
+          } satisfies ErrorBlock
         }
       }
       const block: CodeBlock = {
@@ -111,22 +120,28 @@ async function resolveBlock(
     case 'image': {
       const src = rawBlock.src as string
       const error = validateSrcPath(src, topicPath, courseRoot)
-      if (error) throw new Error(`topics/${topicSlug} block ${blockIndex}: ${error}`)
+      if (error) {
+        return { type: 'error', message: error } satisfies ErrorBlock
+      }
       const filePath = resolve(topicPath, src)
 
       let fileStat: Awaited<ReturnType<typeof stat>>
       try {
         fileStat = await stat(filePath)
       } catch {
-        throw new Error(
-          `topics/${topicSlug} block ${blockIndex}: file "${src}" does not exist`
-        )
+        return {
+          type: 'error',
+          message: `Referenced file not found`,
+          filePath: src,
+        } satisfies ErrorBlock
       }
 
       if (fileStat.size > MAX_IMAGE_SIZE) {
-        throw new Error(
-          `topics/${topicSlug} block ${blockIndex}: image "${src}" exceeds maximum size of 10 MB`
-        )
+        return {
+          type: 'error',
+          message: `Image exceeds maximum size of 10 MB`,
+          filePath: src,
+        } satisfies ErrorBlock
       }
 
       const buffer = await readFile(filePath)
@@ -174,9 +189,10 @@ async function resolveBlock(
     }
 
     default:
-      throw new Error(
-        `topics/${topicSlug} block ${blockIndex}: unknown block type "${type}"`
-      )
+      return {
+        type: 'error',
+        message: `Unknown block type "${type}"`,
+      } satisfies ErrorBlock
   }
 }
 

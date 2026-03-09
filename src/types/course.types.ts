@@ -28,6 +28,7 @@ export type Block =
   | QuizBlock
   | CalloutBlock
   | ImageBlock
+  | ErrorBlock
 
 export interface TextBlock {
   type: 'text'
@@ -71,6 +72,12 @@ export interface ImageBlock {
   src: string
   alt: string
   caption?: string
+}
+
+export interface ErrorBlock {
+  type: 'error'
+  message: string
+  filePath?: string
 }
 
 export interface CourseProgress {

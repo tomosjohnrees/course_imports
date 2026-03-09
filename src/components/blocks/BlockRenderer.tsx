@@ -5,9 +5,10 @@ import CodeBlock from './CodeBlock'
 import QuizBlock from './QuizBlock'
 import CalloutBlock from './CalloutBlock'
 import ImageBlock from './ImageBlock'
+import ErrorBlock from './ErrorBlock'
 import UnknownBlock from './UnknownBlock'
 
-class BlockErrorBoundary extends Component<
+export class BlockErrorBoundary extends Component<
   { children: ReactNode },
   { hasError: boolean }
 > {
@@ -19,22 +20,7 @@ class BlockErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div
-          role="alert"
-          style={{
-            padding: 'var(--space-4)',
-            borderRadius: '6px',
-            border: '1px solid var(--color-border)',
-            background: 'var(--color-surface)',
-            fontFamily: 'var(--font-sans)',
-            fontSize: 'var(--text-sm)',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          This block failed to render.
-        </div>
-      )
+      return <ErrorBlock message="This block failed to render." />
     }
     return this.props.children
   }
@@ -44,6 +30,37 @@ interface BlockRendererProps {
   blocks: Block[]
 }
 
+function validateBlock(block: Block): string | null {
+  if (!block || typeof block !== 'object' || !block.type) {
+    return 'Block is missing a type field.'
+  }
+  switch (block.type) {
+    case 'text':
+      if (typeof block.content !== 'string') return 'Text block is missing content.'
+      break
+    case 'code':
+      if (typeof block.content !== 'string') return 'Code block is missing content.'
+      break
+    case 'quiz':
+      if (typeof block.question !== 'string') return 'Quiz block is missing a question.'
+      if (block.variant === 'multiple-choice' && !Array.isArray(block.options)) {
+        return 'Multiple-choice quiz block is missing options.'
+      }
+      break
+    case 'callout':
+      if (typeof block.body !== 'string') return 'Callout block is missing body text.'
+      break
+    case 'image':
+      if (typeof block.src !== 'string') return 'Image block is missing a src attribute.'
+      break
+    case 'error':
+      break
+    default:
+      break
+  }
+  return null
+}
+
 const BlockComponent = memo(function BlockComponent({
   block,
   index,
@@ -51,6 +68,11 @@ const BlockComponent = memo(function BlockComponent({
   block: Block
   index: number
 }) {
+  const validationError = validateBlock(block)
+  if (validationError) {
+    return <ErrorBlock message={validationError} />
+  }
+
   switch (block.type) {
     case 'text':
       return <TextBlock {...block} />
@@ -62,6 +84,8 @@ const BlockComponent = memo(function BlockComponent({
       return <CalloutBlock {...block} />
     case 'image':
       return <ImageBlock {...block} />
+    case 'error':
+      return <ErrorBlock message={block.message} filePath={block.filePath} />
     default:
       return <UnknownBlock type={(block as { type: string }).type} />
   }

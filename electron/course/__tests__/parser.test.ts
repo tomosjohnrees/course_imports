@@ -190,16 +190,19 @@ describe('parseCourse', () => {
     })
   })
 
-  it('returns an error when a src file does not exist', async () => {
+  it('produces an error block when a src file does not exist', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     await createTopic(tempDir, '01-intro', [{ type: 'text', src: 'missing.md' }])
 
     const result = await parseCourse(tempDir)
 
-    expect(result.success).toBe(false)
-    if (result.success) return
-    expect(result.error).toMatch(/missing\.md/)
-    expect(result.error).toMatch(/does not exist/)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.message).toMatch(/not found/)
+    expect(block.filePath).toBe('missing.md')
   })
 
   it('returns an error when content.json contains malformed JSON', async () => {
@@ -215,29 +218,35 @@ describe('parseCourse', () => {
     expect(result.error).toMatch(/malformed JSON/)
   })
 
-  it('rejects src paths containing path traversal', async () => {
+  it('produces an error block for src paths containing path traversal', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     await createTopic(tempDir, '01-intro', [{ type: 'text', src: '../../etc/passwd' }])
 
     const result = await parseCourse(tempDir)
 
-    expect(result.success).toBe(false)
-    if (result.success) return
-    expect(result.error).toMatch(/path traversal/)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.message).toMatch(/path traversal/)
   })
 
-  it('rejects absolute src paths', async () => {
+  it('produces an error block for absolute src paths', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     await createTopic(tempDir, '01-intro', [{ type: 'text', src: '/etc/passwd' }])
 
     const result = await parseCourse(tempDir)
 
-    expect(result.success).toBe(false)
-    if (result.success) return
-    expect(result.error).toMatch(/absolute path/)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.message).toMatch(/absolute path/)
   })
 
-  it('rejects image files exceeding the size limit', async () => {
+  it('produces an error block for image files exceeding the size limit', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     const topicDir = await createTopic(tempDir, '01-intro', [
       { type: 'image', src: 'huge.png', alt: 'Huge image' },
@@ -248,9 +257,13 @@ describe('parseCourse', () => {
 
     const result = await parseCourse(tempDir)
 
-    expect(result.success).toBe(false)
-    if (result.success) return
-    expect(result.error).toMatch(/exceeds maximum size/)
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.message).toMatch(/exceeds maximum size/)
+    expect(block.filePath).toBe('huge.png')
   })
 
   it('preserves topic ordering from topicOrder array', async () => {
@@ -280,6 +293,41 @@ describe('parseCourse', () => {
       type: 'text',
       content: 'Inline text content',
     })
+  })
+
+  it('produces an error block for unknown block types', async () => {
+    await createCourseJson(tempDir, ['01-intro'])
+    await createTopic(tempDir, '01-intro', [
+      { type: 'video', url: 'test.mp4' },
+    ])
+
+    const result = await parseCourse(tempDir)
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const block = result.course.topics[0].blocks[0]
+    expect(block.type).toBe('error')
+    if (block.type !== 'error') return
+    expect(block.message).toMatch(/Unknown block type "video"/)
+  })
+
+  it('other blocks still parse when one block has a missing src', async () => {
+    await createCourseJson(tempDir, ['01-intro'])
+    await createTopic(tempDir, '01-intro', [
+      { type: 'text', content: 'Valid block' },
+      { type: 'text', src: 'missing.md' },
+      { type: 'callout', style: 'info', body: 'Also valid' },
+    ])
+
+    const result = await parseCourse(tempDir)
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    const blocks = result.course.topics[0].blocks
+    expect(blocks).toHaveLength(3)
+    expect(blocks[0]).toEqual({ type: 'text', content: 'Valid block' })
+    expect(blocks[1].type).toBe('error')
+    expect(blocks[2]).toEqual({ type: 'callout', style: 'info', body: 'Also valid' })
   })
 
   it('handles code blocks with inline content (no src)', async () => {

@@ -1,6 +1,7 @@
+import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
-import BlockRenderer from '../BlockRenderer'
+import { describe, it, expect, vi } from 'vitest'
+import BlockRenderer, { BlockErrorBoundary } from '../BlockRenderer'
 import type { Block } from '@/types/course.types'
 
 describe('BlockRenderer', () => {
@@ -64,7 +65,7 @@ describe('BlockRenderer', () => {
 
   it('delegates image blocks to the ImageBlock component', () => {
     const blocks: Block[] = [
-      { type: 'image', src: 'test.png', alt: 'Test image' },
+      { type: 'image', src: 'https://example.com/test.png', alt: 'Test image' },
     ]
     render(<BlockRenderer blocks={blocks} />)
     expect(screen.getByAltText('Test image')).toBeInTheDocument()
@@ -101,7 +102,7 @@ describe('BlockRenderer', () => {
         question: 'Explain this',
       },
       { type: 'callout', style: 'tip', body: 'Pro tip here' },
-      { type: 'image', src: 'photo.jpg', alt: 'A photo' },
+      { type: 'image', src: 'https://example.com/photo.jpg', alt: 'A photo' },
     ]
     render(<BlockRenderer blocks={blocks} />)
 
@@ -110,5 +111,134 @@ describe('BlockRenderer', () => {
     expect(screen.getByText(/Explain this/)).toBeInTheDocument()
     expect(screen.getByText('Pro tip here')).toBeInTheDocument()
     expect(screen.getByAltText('A photo')).toBeInTheDocument()
+  })
+
+  it('renders an error block with a missing src file path', () => {
+    const blocks: Block[] = [
+      { type: 'error', message: 'Referenced file not found', filePath: 'notes.md' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent('Referenced file not found')
+    expect(alert).toHaveTextContent('notes.md')
+  })
+
+  it('renders an error block for a quiz with missing options', () => {
+    const blocks = [
+      {
+        type: 'quiz',
+        variant: 'multiple-choice',
+        question: 'What is 2+2?',
+        // options intentionally omitted
+        answer: 1,
+      },
+    ] as unknown as Block[]
+    render(<BlockRenderer blocks={blocks} />)
+
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent('missing options')
+  })
+
+  it('renders an error block for a text block with missing content', () => {
+    const blocks = [
+      { type: 'text' },
+    ] as unknown as Block[]
+    render(<BlockRenderer blocks={blocks} />)
+
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent('missing content')
+  })
+
+  it('renders sibling blocks normally when one block is an error', () => {
+    const blocks: Block[] = [
+      { type: 'text', content: 'Before error' },
+      { type: 'error', message: 'Something broke' },
+      { type: 'text', content: 'After error' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+
+    expect(screen.getByText('Before error')).toBeInTheDocument()
+    expect(screen.getByText('After error')).toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent('Something broke')
+  })
+
+  it('catches a thrown render error via the error boundary', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    function ThrowingChild(): React.ReactElement {
+      throw new Error('render crash')
+    }
+
+    render(
+      <BlockErrorBoundary>
+        <ThrowingChild />
+      </BlockErrorBoundary>,
+    )
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'This block failed to render.',
+    )
+
+    spy.mockRestore()
+  })
+
+  it('error boundary isolates crash so sibling blocks still render', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    function ThrowingChild(): React.ReactElement {
+      throw new Error('crash')
+    }
+
+    render(
+      <div>
+        <BlockErrorBoundary>
+          <p>Safe sibling before</p>
+        </BlockErrorBoundary>
+        <BlockErrorBoundary>
+          <ThrowingChild />
+        </BlockErrorBoundary>
+        <BlockErrorBoundary>
+          <p>Safe sibling after</p>
+        </BlockErrorBoundary>
+      </div>,
+    )
+
+    expect(screen.getByText('Safe sibling before')).toBeInTheDocument()
+    expect(screen.getByText('Safe sibling after')).toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'This block failed to render.',
+    )
+
+    spy.mockRestore()
+  })
+
+  it('does not show raw error messages or stack traces in error boundary', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    // The error boundary shows a generic message, not the raw error
+    const blocks: Block[] = [
+      { type: 'error', message: 'Referenced file not found', filePath: 'data.json' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+
+    const alert = screen.getByRole('alert')
+    // Should show the user-friendly message, not a stack trace
+    expect(alert).toHaveTextContent('Referenced file not found')
+    expect(alert.textContent).not.toMatch(/Error:|at |\.js:/)
+
+    spy.mockRestore()
+  })
+
+  it('error block only shows relative file paths, not absolute paths', () => {
+    const blocks: Block[] = [
+      { type: 'error', message: 'Referenced file not found', filePath: 'assets/image.png' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent('assets/image.png')
+    // Relative path should not start with /
+    expect(alert.textContent).not.toMatch(/\/Users\/|\/home\/|C:\\/)
   })
 })

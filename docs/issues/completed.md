@@ -164,3 +164,4 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0030 | [Handle empty course and topic edge cases](0030-handle-empty-course-and-topic-edge-cases.md) | Milestone 6 — Edge Cases & Robustness | complete |
+| 0031 | [Handle malformed content and missing file references in renderer](0031-handle-malformed-content-and-missing-files-in-renderer.md) | Milestone 6 — Edge Cases & Robustness | complete |
