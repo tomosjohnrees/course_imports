@@ -345,4 +345,39 @@ describe('Sidebar', () => {
     const indicator = screen.getByText('Progress saved')
     expect(indicator.style.opacity).toBe('0')
   })
+
+  it('shows notes indicator for topics that have notes', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      notes: {
+        'topic-2': { text: 'Some notes here', lastModified: Date.now() },
+      },
+    })
+    renderSidebar()
+
+    const indicators = screen.getAllByLabelText('Has notes')
+    expect(indicators).toHaveLength(1)
+  })
+
+  it('does not show notes indicator for topics without notes', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      notes: {},
+    })
+    renderSidebar()
+
+    expect(screen.queryByLabelText('Has notes')).not.toBeInTheDocument()
+  })
+
+  it('does not show notes indicator for topics with empty note text', () => {
+    useCourseStore.setState({
+      course: mockCourse,
+      notes: {
+        'topic-1': { text: '', lastModified: Date.now() },
+      },
+    })
+    renderSidebar()
+
+    expect(screen.queryByLabelText('Has notes')).not.toBeInTheDocument()
+  })
 })

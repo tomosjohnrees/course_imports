@@ -21,22 +21,22 @@ Add a notes panel to the course view where users can write and edit freeform not
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Users can open a notes area for the current topic
-- [ ] Users can type freeform text that is saved automatically
-- [ ] Switching topics loads the correct note for the newly active topic
-- [ ] The notes area clearly indicates when it is empty vs. has saved content
-- [ ] Topics with notes show a subtle indicator in the sidebar (e.g. a small icon)
-- [ ] Notes support basic text — no rich formatting required (plain textarea is sufficient)
+- [x] Users can open a notes area for the current topic
+- [x] Users can type freeform text that is saved automatically
+- [x] Switching topics loads the correct note for the newly active topic
+- [x] The notes area clearly indicates when it is empty vs. has saved content
+- [x] Topics with notes show a subtle indicator in the sidebar (e.g. a small icon)
+- [x] Notes support basic text — no rich formatting required (plain textarea is sufficient)
 
 ### Security
-- [ ] Note content is rendered as plain text in the textarea — no HTML or markdown is interpreted in the editing view to prevent self-XSS
+- [x] Note content is rendered as plain text in the textarea — no HTML or markdown is interpreted in the editing view to prevent self-XSS
 
 ### Performance
-- [ ] Typing in the notes area does not cause lag or jank — saves are debounced, not on every keystroke
-- [ ] Loading a note when switching topics does not block or delay the topic content render
+- [x] Typing in the notes area does not cause lag or jank — saves are debounced, not on every keystroke
+- [x] Loading a note when switching topics does not block or delay the topic content render
 
 ### Testing
-- [ ] Component tests cover: rendering empty state, displaying an existing note, typing and triggering save, switching topics loads correct note, sidebar indicator appears for topics with notes
+- [x] Component tests cover: rendering empty state, displaying an existing note, typing and triggering save, switching topics loads correct note, sidebar indicator appears for topics with notes
 
 ## Notes
 

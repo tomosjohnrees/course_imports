@@ -231,3 +231,4 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0052 | [Implement per-topic notes persistence](0052-implement-per-topic-notes-persistence.md) | Backlog (Post-v1) | complete |
+| 0053 | [Implement per-topic notes UI](0053-implement-per-topic-notes-ui.md) | Backlog (Post-v1) | complete |

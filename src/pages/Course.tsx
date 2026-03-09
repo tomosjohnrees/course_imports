@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BookOpen, FileText } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
+import NotesPanel from '@/components/NotesPanel'
 import EmptyState from '@/components/EmptyState'
 
 export default function Course() {
@@ -48,6 +49,7 @@ export default function Course() {
       }}
     >
       <BlockRenderer blocks={topic.blocks} />
+      <NotesPanel />
     </div>
   )
 }

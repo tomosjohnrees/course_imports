@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, BookOpen, Check, Circle, Settings } from 'lucide-react'
+import { ArrowLeft, BookOpen, Check, Circle, PenLine, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import { flushProgress } from '@/hooks/useProgressPersistence'
 import { useSaveIndicator } from '@/hooks/useSaveIndicator'
@@ -16,6 +16,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const course = useCourseStore((s) => s.course)
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const progress = useCourseStore((s) => s.progress)
+  const notes = useCourseStore((s) => s.notes)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const saveIndicatorVisible = useSaveIndicator()
 
@@ -198,6 +199,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
             const isActive = topic.id === activeTopic
             const isTabbable = isActive || (!activeTopic && index === 0)
             const entry = progress[topic.id]
+            const hasNotes = Boolean(notes[topic.id]?.text)
             const status: TopicStatus = entry
               ? entry.complete
                 ? 'complete'
@@ -246,6 +248,14 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
                   >
                     {topic.title}
                   </span>
+                  {hasNotes && (
+                    <PenLine
+                      size={14}
+                      strokeWidth={1.5}
+                      color="var(--color-text-muted)"
+                      aria-label="Has notes"
+                    />
+                  )}
                   {status === 'complete' && (
                     <Check
                       size={16}

@@ -1,11 +1,5 @@
 # Issues
 
-## Backlog (Post-v1) — Notes
-
-| # | Title | Phase | Status |
-|---|-------|-------|--------|
-| 0053 | [Implement per-topic notes UI](0053-implement-per-topic-notes-ui.md) | Backlog (Post-v1) | todo |
-
 ## Backlog (Post-v1) — Bookmarks
 
 | # | Title | Phase | Status |
