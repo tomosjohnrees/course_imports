@@ -29,10 +29,9 @@ interface CourseStore {
   checkpointCompletions: Record<string, boolean>
   notes: CourseNotes
   bookmarks: CourseBookmarks
-  setCourse: (course: Course) => void
+  setCourse: (course: Course, persisted?: { progress?: CourseProgress; notes?: CourseNotes; bookmarks?: CourseBookmarks }) => void
   hydrateProgress: (progress: CourseProgress) => void
   hydrateNotes: (notes: CourseNotes) => void
-  hydrateBookmarks: (bookmarks: CourseBookmarks) => void
   addBookmark: (topicId: string, blockIndex: number, label?: string) => void
   removeBookmark: (topicId: string, blockIndex: number) => void
   setActiveTopic: (topicId: string) => void
@@ -71,16 +70,16 @@ export const useCourseStore = create<CourseStore>()(
     (set) => ({
       ...initialState,
 
-      setCourse: (course) =>
+      setCourse: (course, persisted) =>
         set(
           {
             course,
             activeTopic: null,
-            progress: {},
+            progress: persisted?.progress ?? {},
             quizAnswers: {},
             checkpointCompletions: {},
-            notes: {},
-            bookmarks: [],
+            notes: persisted?.notes ?? {},
+            bookmarks: persisted?.bookmarks ?? [],
           },
           false,
           'setCourse',
@@ -91,9 +90,6 @@ export const useCourseStore = create<CourseStore>()(
 
       hydrateNotes: (notes) =>
         set({ notes }, false, 'hydrateNotes'),
-
-      hydrateBookmarks: (bookmarks) =>
-        set({ bookmarks }, false, 'hydrateBookmarks'),
 
       addBookmark: (topicId, blockIndex, label) =>
         set(

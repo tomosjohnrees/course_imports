@@ -295,6 +295,50 @@ describe('fetchCourse', () => {
     ])
   })
 
+  it('generates a stable fallback course id when course.json id is blank', async () => {
+    // first fetchCourse(repo): course.json then topic content
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify({ ...COURSE_META, id: ' ', topicOrder: ['01-intro'] })
+        ),
+      })
+    )
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify([{ type: 'text', content: 'hello' }])
+        ),
+      })
+    )
+
+    // second fetchCourse(repo): same responses for stability check
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify({ ...COURSE_META, id: ' ', topicOrder: ['01-intro'] })
+        ),
+      })
+    )
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        content: base64Encode(
+          JSON.stringify([{ type: 'text', content: 'hello' }])
+        ),
+      })
+    )
+
+    const resultA = await fetchCourse(repo)
+    const resultB = await fetchCourse(repo)
+
+    expect(resultA.success).toBe(true)
+    expect(resultB.success).toBe(true)
+    if (!resultA.success || !resultB.success) return
+
+    expect(resultA.course.id).toMatch(/^auto-github-[a-f0-9]{16}$/)
+    expect(resultB.course.id).toBe(resultA.course.id)
+  })
+
   it('fetches src-referenced files for text and code blocks', async () => {
     // course.json
     mockFetch.mockResolvedValueOnce(

@@ -1,5 +1,6 @@
 import { net } from 'electron'
 import { extname } from 'path'
+import { resolveCourseId } from './course-id'
 import type {
   Course,
   Topic,
@@ -365,7 +366,7 @@ export async function fetchCourse(
   }
 
   const course: Course = {
-    id: courseData.id as string,
+    id: resolveCourseId(courseData.id, 'github', `${repo.owner.toLowerCase()}/${repo.repo.toLowerCase()}`),
     title: courseData.title as string,
     description: courseData.description as string,
     version: courseData.version as string,

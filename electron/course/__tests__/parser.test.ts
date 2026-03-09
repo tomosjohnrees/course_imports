@@ -55,6 +55,24 @@ describe('parseCourse', () => {
     expect(result.course.source).toEqual({ type: 'local', path: tempDir })
   })
 
+  it('generates a stable fallback course id when course.json id is blank', async () => {
+    await writeFile(
+      join(tempDir, 'course.json'),
+      JSON.stringify({ ...COURSE_META, id: '   ', topicOrder: ['01-intro'] }),
+    )
+    await createTopic(tempDir, '01-intro', [{ type: 'text', content: 'Hello' }])
+
+    const first = await parseCourse(tempDir)
+    const second = await parseCourse(tempDir)
+
+    expect(first.success).toBe(true)
+    expect(second.success).toBe(true)
+    if (!first.success || !second.success) return
+
+    expect(first.course.id).toMatch(/^auto-local-[a-f0-9]{16}$/)
+    expect(second.course.id).toBe(first.course.id)
+  })
+
   it('sets topic.id from folder name and derives title', async () => {
     await createCourseJson(tempDir, ['01-introduction', '02-core-concepts'])
     await createTopic(tempDir, '01-introduction', [])

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Bookmark, BookOpen, Check, Circle, PenLine, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import { flushProgress } from '@/hooks/useProgressPersistence'
+import { flushBookmarks } from '@/hooks/useBookmarksPersistence'
+import { flushNotes } from '@/hooks/useNotesPersistence'
 import { useSaveIndicator } from '@/hooks/useSaveIndicator'
 import type { TopicStatus } from '@/hooks/useProgress'
 import EmptyState from '@/components/EmptyState'
@@ -23,8 +25,10 @@ export default function Sidebar({ onOpenSettings, onOpenBookmarks }: SidebarProp
 
   const listRef = useRef<HTMLUListElement>(null)
 
-  const handleNavigateHome = () => {
+  const handleNavigateHome = async () => {
     flushProgress()
+    await flushNotes()
+    await flushBookmarks()
     navigate('/')
   }
 

@@ -1,5 +1,6 @@
 import { readFile, stat } from 'fs/promises'
 import { resolve, relative, isAbsolute, extname } from 'path'
+import { resolveCourseId } from './course-id'
 import type {
   Course,
   Topic,
@@ -279,7 +280,7 @@ export async function parseCourse(folderPath: string): Promise<ParseResult> {
   }
 
   const course: Course = {
-    id: courseData.id as string,
+    id: resolveCourseId(courseData.id, 'local', root),
     title: courseData.title as string,
     description: courseData.description as string,
     version: courseData.version as string,

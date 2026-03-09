@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useCourseStore, pickInitialTopic } from '@/store/course.store'
 import { useUIStore } from '@/store/ui.store'
+import { flushBookmarks } from '@/hooks/useBookmarksPersistence'
+import { flushNotes } from '@/hooks/useNotesPersistence'
+import { withResolvedCourseId } from '@/lib/courseId'
 
 const GITHUB_URL_PATTERN = /^https?:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/
 
@@ -11,23 +14,22 @@ export function isValidGitHubUrl(url: string): boolean {
 export function useCourse() {
   const navigate = useNavigate()
   const setCourse = useCourseStore((s) => s.setCourse)
-  const hydrateProgress = useCourseStore((s) => s.hydrateProgress)
-  const hydrateNotes = useCourseStore((s) => s.hydrateNotes)
-  const hydrateBookmarks = useCourseStore((s) => s.hydrateBookmarks)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
   const setRetryAction = useUIStore((s) => s.setRetryAction)
 
-  async function hydrateFromDisk(courseId: string) {
-    const [saved, savedNotes, savedBookmarks] = await Promise.all([
+  async function loadPersistedData(courseId: string) {
+    const [progress, notes, bookmarks] = await Promise.all([
       window.api.store.getProgress(courseId),
       window.api.notes.getAll(courseId),
       window.api.bookmarks.getAll(courseId),
     ])
-    if (saved) hydrateProgress(saved)
-    if (savedNotes) hydrateNotes(savedNotes)
-    if (savedBookmarks.length > 0) hydrateBookmarks(savedBookmarks)
+    return {
+      progress: progress ?? undefined,
+      notes: notes ?? undefined,
+      bookmarks: bookmarks.length > 0 ? bookmarks : undefined,
+    }
   }
 
   function selectInitialTopic() {
@@ -44,14 +46,17 @@ export function useCourse() {
     const folderPath = retryPath ?? await window.api.course.selectFolder()
     if (!folderPath) return
 
+    await flushNotes()
+    await flushBookmarks()
     setLoading(true, 'Loading course…')
 
     try {
       const result = await window.api.course.loadFromFolder(folderPath)
 
       if (result.success) {
-        setCourse(result.course)
-        await hydrateFromDisk(result.course.id)
+        const course = withResolvedCourseId(result.course)
+        const persisted = await loadPersistedData(course.id)
+        setCourse(course, persisted)
         selectInitialTopic()
         navigate('/course')
       } else {
@@ -69,6 +74,8 @@ export function useCourse() {
   async function loadGitHubCourse(url: string) {
     setError(null)
     setRetryAction(null)
+    await flushNotes()
+    await flushBookmarks()
     setLoading(true, 'Fetching course from GitHub…')
 
     const onProgress = (progress: { topicIndex: number; topicCount: number }) => {
@@ -82,8 +89,9 @@ export function useCourse() {
       const result = await window.api.course.loadFromGitHub(sanitisedUrl)
 
       if (result.success) {
-        setCourse(result.course)
-        await hydrateFromDisk(result.course.id)
+        const course = withResolvedCourseId(result.course)
+        const persisted = await loadPersistedData(course.id)
+        setCourse(course, persisted)
         selectInitialTopic()
         navigate('/course')
       } else {
@@ -102,6 +110,8 @@ export function useCourse() {
   async function loadRecentCourse(courseId: string) {
     setError(null)
     setRetryAction(null)
+    await flushNotes()
+    await flushBookmarks()
     setLoading(true, 'Loading course…')
 
     const onProgress = (progress: { topicIndex: number; topicCount: number }) => {
@@ -114,8 +124,9 @@ export function useCourse() {
       const result = await window.api.course.loadRecentCourse(courseId)
 
       if (result.success) {
-        setCourse(result.course)
-        await hydrateFromDisk(result.course.id)
+        const course = withResolvedCourseId(result.course)
+        const persisted = await loadPersistedData(course.id)
+        setCourse(course, persisted)
         selectInitialTopic()
         navigate('/course')
       } else {

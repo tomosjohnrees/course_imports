@@ -286,7 +286,10 @@ export function addBookmark(
     createdAt: Date.now(),
   }
 
-  store.set(`bookmarks.${courseId}`, [...courseBookmarks, bookmark])
+  store.set('bookmarks', {
+    ...allBookmarks,
+    [courseId]: [...courseBookmarks, bookmark],
+  })
 }
 
 export function removeBookmark(
@@ -302,7 +305,10 @@ export function removeBookmark(
     (b) => !(b.topicId === topicId && b.blockIndex === blockIndex),
   )
 
-  store.set(`bookmarks.${courseId}`, filtered)
+  store.set('bookmarks', {
+    ...allBookmarks,
+    [courseId]: filtered,
+  })
 }
 
 export function getAllBookmarks(courseId: string): CourseBookmarks {
