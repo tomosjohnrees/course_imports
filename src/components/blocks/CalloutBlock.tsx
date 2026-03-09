@@ -12,7 +12,7 @@ const inlineComponents: Components = {
   // Render paragraphs as spans to keep content inline within the callout
   p: ({ children }) => <span>{children}</span>,
 
-  code({ children, ...props }) {
+  code({ children, node: _node, ...props }) {
     return (
       <code className="callout-inline-code" {...props}>
         {children}
