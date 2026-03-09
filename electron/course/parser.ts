@@ -10,6 +10,7 @@ import type {
   CalloutBlock,
   RevealBlock,
   QuizBlock,
+  CheckpointBlock,
   ErrorBlock,
 } from '../../src/types/course.types'
 
@@ -183,6 +184,14 @@ async function resolveBlock(
         answer: rawBlock.answer as number,
       }
       if (rawBlock.explanation) block.explanation = rawBlock.explanation as string
+      return block
+    }
+
+    case 'checkpoint': {
+      const block: CheckpointBlock = {
+        type: 'checkpoint',
+      }
+      if (rawBlock.label) block.label = rawBlock.label as string
       return block
     }
 

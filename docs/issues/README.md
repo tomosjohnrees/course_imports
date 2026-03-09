@@ -1,11 +1,5 @@
 # Issues
 
-## Backlog (Post-v1) — Checkpoint Blocks
-
-| # | Title | Phase | Status |
-|---|-------|-------|--------|
-| 0051 | [Add checkpoint block type with mark-as-complete button](0051-add-checkpoint-block-type.md) | Backlog (Post-v1) | todo |
-
 ## Backlog (Post-v1) — Notes
 
 | # | Title | Phase | Status |

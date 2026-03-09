@@ -6,6 +6,7 @@ import QuizBlock from './QuizBlock'
 import CalloutBlock from './CalloutBlock'
 import ImageBlock from './ImageBlock'
 import RevealBlock from './RevealBlock'
+import CheckpointBlock from './CheckpointBlock'
 import ErrorBlock from './ErrorBlock'
 import UnknownBlock from './UnknownBlock'
 
@@ -52,6 +53,8 @@ function validateBlock(block: Block): string | null {
     case 'reveal':
       if (typeof block.body !== 'string') return 'Reveal block is missing body text.'
       break
+    case 'checkpoint':
+      break
     case 'image':
       if (typeof block.src !== 'string') return 'Image block is missing a src attribute.'
       break
@@ -88,6 +91,8 @@ const BlockComponent = memo(function BlockComponent({
       return <ImageBlock {...block} />
     case 'reveal':
       return <RevealBlock {...block} />
+    case 'checkpoint':
+      return <CheckpointBlock {...block} blockIndex={index} />
     case 'error':
       return <ErrorBlock message={block.message} filePath={block.filePath} />
     default:

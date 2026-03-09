@@ -29,6 +29,7 @@ export type Block =
   | CalloutBlock
   | ImageBlock
   | RevealBlock
+  | CheckpointBlock
   | ErrorBlock
 
 export interface TextBlock {
@@ -68,6 +69,11 @@ export interface RevealBlock {
   type: 'reveal'
   label?: string
   body: string
+}
+
+export interface CheckpointBlock {
+  type: 'checkpoint'
+  label?: string
 }
 
 export interface ErrorBlock {

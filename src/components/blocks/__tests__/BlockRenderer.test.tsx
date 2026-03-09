@@ -70,6 +70,22 @@ describe('BlockRenderer', () => {
     expect(screen.getByAltText('Test image')).toBeInTheDocument()
   })
 
+  it('delegates checkpoint blocks to the CheckpointBlock component', () => {
+    const blocks: Block[] = [
+      { type: 'checkpoint' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+    expect(screen.getByRole('button', { name: 'Mark as complete' })).toBeInTheDocument()
+  })
+
+  it('delegates checkpoint blocks with custom label', () => {
+    const blocks: Block[] = [
+      { type: 'checkpoint', label: 'Got it' },
+    ]
+    render(<BlockRenderer blocks={blocks} />)
+    expect(screen.getByRole('button', { name: 'Got it' })).toBeInTheDocument()
+  })
+
   it('renders UnknownBlock for unrecognised block types', () => {
     const blocks = [{ type: 'video', url: 'test.mp4' }] as unknown as Block[]
     render(<BlockRenderer blocks={blocks} />)

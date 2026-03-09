@@ -26,12 +26,27 @@ interface CourseStore {
   activeTopic: string | null
   progress: CourseProgress
   quizAnswers: Record<string, QuizAnswer>
+  checkpointCompletions: Record<string, boolean>
   setCourse: (course: Course) => void
   hydrateProgress: (progress: CourseProgress) => void
   setActiveTopic: (topicId: string) => void
   markTopicComplete: (topicId: string) => void
   recordQuizAnswer: (key: string, answer: QuizAnswer) => void
+  recordCheckpointCompletion: (key: string) => void
   clearCourse: () => void
+}
+
+function isTopicFullyComplete(
+  topic: Topic,
+  topicId: string,
+  quizAnswers: Record<string, QuizAnswer>,
+  checkpointCompletions: Record<string, boolean>,
+): boolean {
+  return topic.blocks.every((block, i) => {
+    if (block.type === 'quiz') return Boolean(quizAnswers[`${topicId}:${i}`])
+    if (block.type === 'checkpoint') return Boolean(checkpointCompletions[`${topicId}:${i}`])
+    return true
+  })
 }
 
 const initialState = {
@@ -39,6 +54,7 @@ const initialState = {
   activeTopic: null as string | null,
   progress: {} as CourseProgress,
   quizAnswers: {} as Record<string, QuizAnswer>,
+  checkpointCompletions: {} as Record<string, boolean>,
 }
 
 export const useCourseStore = create<CourseStore>()(
@@ -53,6 +69,7 @@ export const useCourseStore = create<CourseStore>()(
             activeTopic: null,
             progress: {},
             quizAnswers: {},
+            checkpointCompletions: {},
           },
           false,
           'setCourse',
@@ -68,8 +85,8 @@ export const useCourseStore = create<CourseStore>()(
             if (alreadyTracked) return { activeTopic: topicId }
 
             const topic = state.course?.topics.find((t) => t.id === topicId)
-            const hasQuizBlocks =
-              topic?.blocks.some((b) => b.type === 'quiz') ?? false
+            const hasGatedBlocks =
+              topic?.blocks.some((b) => b.type === 'quiz' || b.type === 'checkpoint') ?? false
 
             return {
               activeTopic: topicId,
@@ -77,7 +94,7 @@ export const useCourseStore = create<CourseStore>()(
                 ...state.progress,
                 [topicId]: {
                   viewed: true,
-                  complete: !hasQuizBlocks,
+                  complete: !hasGatedBlocks,
                 },
               },
             }
@@ -109,12 +126,9 @@ export const useCourseStore = create<CourseStore>()(
 
             if (!topic) return { quizAnswers: newQuizAnswers }
 
-            const allQuizzesAnswered = topic.blocks.every(
-              (block, i) =>
-                block.type !== 'quiz' || newQuizAnswers[`${topicId}:${i}`],
-            )
-
-            if (!allQuizzesAnswered) return { quizAnswers: newQuizAnswers }
+            if (!isTopicFullyComplete(topic, topicId, newQuizAnswers, state.checkpointCompletions)) {
+              return { quizAnswers: newQuizAnswers }
+            }
 
             return {
               quizAnswers: newQuizAnswers,
@@ -126,6 +140,35 @@ export const useCourseStore = create<CourseStore>()(
           },
           false,
           'recordQuizAnswer',
+        ),
+
+      recordCheckpointCompletion: (key) =>
+        set(
+          (state) => {
+            if (state.checkpointCompletions[key]) return state
+
+            const newCheckpointCompletions = { ...state.checkpointCompletions, [key]: true }
+
+            const separatorIndex = key.lastIndexOf(':')
+            const topicId = key.substring(0, separatorIndex)
+            const topic = state.course?.topics.find((t) => t.id === topicId)
+
+            if (!topic) return { checkpointCompletions: newCheckpointCompletions }
+
+            if (!isTopicFullyComplete(topic, topicId, state.quizAnswers, newCheckpointCompletions)) {
+              return { checkpointCompletions: newCheckpointCompletions }
+            }
+
+            return {
+              checkpointCompletions: newCheckpointCompletions,
+              progress: {
+                ...state.progress,
+                [topicId]: { viewed: true, complete: true },
+              },
+            }
+          },
+          false,
+          'recordCheckpointCompletion',
         ),
 
       clearCourse: () =>

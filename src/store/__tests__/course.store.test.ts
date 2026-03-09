@@ -59,11 +59,41 @@ const courseWithQuizzes: Course = {
   ],
 }
 
+const courseWithCheckpoints: Course = {
+  ...mockCourse,
+  id: 'checkpoint-course',
+  topics: [
+    {
+      id: 'topic-checkpoint-only',
+      title: 'Checkpoint Only',
+      blocks: [
+        { type: 'text', content: 'Read this' },
+        { type: 'checkpoint' },
+      ],
+    },
+    {
+      id: 'topic-mixed',
+      title: 'Mixed',
+      blocks: [
+        { type: 'text', content: 'Intro' },
+        {
+          type: 'quiz',
+          question: 'Q?',
+          options: ['A', 'B'],
+          answer: 0,
+        },
+        { type: 'checkpoint', label: 'I understand' },
+      ],
+    },
+  ],
+}
+
 beforeEach(() => {
   useCourseStore.setState({
     course: null,
     activeTopic: null,
     progress: {},
+    checkpointCompletions: {},
   })
 })
 
@@ -196,6 +226,119 @@ describe('course.store', () => {
         viewed: true,
         complete: true,
       })
+    })
+  })
+
+  describe('setActiveTopic — checkpoint blocks', () => {
+    it('marks a topic with only checkpoints as viewed but not complete', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-checkpoint-only')
+
+      expect(useCourseStore.getState().progress['topic-checkpoint-only']).toEqual({
+        viewed: true,
+        complete: false,
+      })
+    })
+
+    it('marks a topic with quizzes and checkpoints as viewed but not complete', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-mixed')
+
+      expect(useCourseStore.getState().progress['topic-mixed']).toEqual({
+        viewed: true,
+        complete: false,
+      })
+    })
+  })
+
+  describe('recordCheckpointCompletion', () => {
+    it('records a checkpoint as completed', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-checkpoint-only')
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-checkpoint-only:1')
+
+      expect(useCourseStore.getState().checkpointCompletions['topic-checkpoint-only:1']).toBe(true)
+    })
+
+    it('marks topic complete when all checkpoints are completed (no quizzes)', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-checkpoint-only')
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-checkpoint-only:1')
+
+      expect(useCourseStore.getState().progress['topic-checkpoint-only']).toEqual({
+        viewed: true,
+        complete: true,
+      })
+    })
+
+    it('does not mark topic complete when checkpoint done but quiz unanswered', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-mixed')
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-mixed:2')
+
+      expect(useCourseStore.getState().progress['topic-mixed']).toEqual({
+        viewed: true,
+        complete: false,
+      })
+    })
+
+    it('marks topic complete when both quiz and checkpoint are done', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-mixed')
+
+      useCourseStore.getState().recordQuizAnswer('topic-mixed:1', {
+        selectedOption: 0,
+        correct: true,
+      })
+      useCourseStore.getState().recordCheckpointCompletion('topic-mixed:2')
+
+      expect(useCourseStore.getState().progress['topic-mixed']).toEqual({
+        viewed: true,
+        complete: true,
+      })
+    })
+
+    it('quiz answering also marks topic complete when checkpoint already done', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-mixed')
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-mixed:2')
+      useCourseStore.getState().recordQuizAnswer('topic-mixed:1', {
+        selectedOption: 0,
+        correct: true,
+      })
+
+      expect(useCourseStore.getState().progress['topic-mixed']).toEqual({
+        viewed: true,
+        complete: true,
+      })
+    })
+
+    it('is idempotent — completing the same checkpoint twice does not change state', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().setActiveTopic('topic-checkpoint-only')
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-checkpoint-only:1')
+      const stateAfterFirst = useCourseStore.getState()
+
+      useCourseStore.getState().recordCheckpointCompletion('topic-checkpoint-only:1')
+      const stateAfterSecond = useCourseStore.getState()
+
+      expect(stateAfterFirst).toBe(stateAfterSecond)
+    })
+  })
+
+  describe('progress scoping — checkpoints', () => {
+    it('resets checkpointCompletions when loading a different course', () => {
+      useCourseStore.getState().setCourse(courseWithCheckpoints)
+      useCourseStore.getState().recordCheckpointCompletion('topic-checkpoint-only:1')
+
+      useCourseStore.getState().setCourse(mockCourse)
+
+      expect(useCourseStore.getState().checkpointCompletions).toEqual({})
     })
   })
 

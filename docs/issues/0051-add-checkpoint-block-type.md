@@ -22,22 +22,22 @@ Add a new `checkpoint` block type that renders an explicit "Mark as complete" bu
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `checkpoint` blocks are parsed from `content.json` without errors
-- [ ] The block renders a clearly visible button with the `label` text or a default like "Mark as complete"
-- [ ] Clicking the button transitions it to a completed state (visually distinct — e.g. checkmark, muted style)
-- [ ] Once completed, the checkpoint cannot be un-completed (same pattern as quiz answers)
-- [ ] If already completed (from persisted progress), the block renders in its completed state on mount
-- [ ] Topics with checkpoint blocks require all checkpoints to be completed (in addition to quizzes) for topic completion
+- [x] `checkpoint` blocks are parsed from `content.json` without errors
+- [x] The block renders a clearly visible button with the `label` text or a default like "Mark as complete"
+- [x] Clicking the button transitions it to a completed state (visually distinct — e.g. checkmark, muted style)
+- [x] Once completed, the checkpoint cannot be un-completed (same pattern as quiz answers)
+- [x] If already completed (from persisted progress), the block renders in its completed state on mount
+- [x] Topics with checkpoint blocks require all checkpoints to be completed (in addition to quizzes) for topic completion
 
 ### Security
-- [ ] Checkpoint completion state is scoped to the specific course ID — completing a checkpoint in one course does not affect another
+- [x] Checkpoint completion state is scoped to the specific course ID — completing a checkpoint in one course does not affect another
 
 ### Performance
-- [ ] Checkpoint state changes are persisted using the existing debounced save mechanism — no additional IPC calls beyond what the progress system already does
+- [x] Checkpoint state changes are persisted using the existing debounced save mechanism — no additional IPC calls beyond what the progress system already does
 
 ### Testing
-- [ ] Component tests cover: initial uncompleted state, clicking to complete, rendering in pre-completed state, custom label text
-- [ ] Progress tracking tests verify that checkpoint completion is factored into topic completion logic
+- [x] Component tests cover: initial uncompleted state, clicking to complete, rendering in pre-completed state, custom label text
+- [x] Progress tracking tests verify that checkpoint completion is factored into topic completion logic
 
 ## Notes
 

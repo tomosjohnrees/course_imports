@@ -1,0 +1,51 @@
+/* ——— Checkpoint Block ——— */
+
+.checkpoint-block {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.checkpoint-block--completed {
+  border-color: var(--color-success);
+  background: var(--color-success-subtle);
+}
+
+.checkpoint-block-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: background-color 100ms, border-color 100ms, opacity 100ms;
+}
+
+.checkpoint-block-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.checkpoint-block-button:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.checkpoint-block--completed .checkpoint-block-button {
+  border-color: var(--color-success);
+  background: var(--color-success);
+  cursor: default;
+}
+
+.checkpoint-block-icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex-shrink: 0;
+}

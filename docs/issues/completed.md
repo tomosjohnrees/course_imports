@@ -219,3 +219,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0050 | [Add reveal block type with collapsible UI](0050-add-reveal-block-type.md) | Backlog (Post-v1) | complete |
+
+## Backlog (Post-v1) — Checkpoint Blocks
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0051 | [Add checkpoint block type with mark-as-complete button](0051-add-checkpoint-block-type.md) | Backlog (Post-v1) | complete |

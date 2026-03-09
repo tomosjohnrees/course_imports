@@ -330,6 +330,37 @@ describe('parseCourse', () => {
     expect(blocks[2]).toEqual({ type: 'callout', style: 'info', body: 'Also valid' })
   })
 
+  it('passes through checkpoint blocks without label', async () => {
+    await createCourseJson(tempDir, ['01-intro'])
+    await createTopic(tempDir, '01-intro', [
+      { type: 'checkpoint' },
+    ])
+
+    const result = await parseCourse(tempDir)
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.course.topics[0].blocks[0]).toEqual({
+      type: 'checkpoint',
+    })
+  })
+
+  it('passes through checkpoint blocks with custom label', async () => {
+    await createCourseJson(tempDir, ['01-intro'])
+    await createTopic(tempDir, '01-intro', [
+      { type: 'checkpoint', label: 'I understand recursion' },
+    ])
+
+    const result = await parseCourse(tempDir)
+
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.course.topics[0].blocks[0]).toEqual({
+      type: 'checkpoint',
+      label: 'I understand recursion',
+    })
+  })
+
   it('handles code blocks with inline content (no src)', async () => {
     await createCourseJson(tempDir, ['01-intro'])
     await createTopic(tempDir, '01-intro', [
