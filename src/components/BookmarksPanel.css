@@ -118,10 +118,3 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.bookmarks-entry-type {
-  flex-shrink: 0;
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-top: 1px;
-}
