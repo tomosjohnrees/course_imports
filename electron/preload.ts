@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.invoke(IpcChannel.store.saveProgress, courseId, data),
     getPreferences: () => ipcRenderer.invoke(IpcChannel.store.getPreferences),
     savePreferences: (prefs: Preferences) =>
-      ipcRenderer.invoke(IpcChannel.store.savePreferences, prefs)
+      ipcRenderer.invoke(IpcChannel.store.savePreferences, prefs),
+    clearAllProgress: () => ipcRenderer.invoke(IpcChannel.store.clearAllProgress)
   }
 })

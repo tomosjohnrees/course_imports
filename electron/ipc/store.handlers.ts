@@ -4,6 +4,7 @@ import {
   getRecentCourses,
   getProgress,
   saveProgress,
+  clearAllProgress,
   getPreferences,
   savePreferences,
   isValidPreferences,
@@ -50,6 +51,10 @@ export function registerStoreHandlers(): void {
       saveProgress(courseId, data)
     },
   )
+
+  ipcMain.handle(IpcChannel.store.clearAllProgress, async () => {
+    clearAllProgress()
+  })
 
   ipcMain.handle(IpcChannel.store.getPreferences, async () => {
     return getPreferences()

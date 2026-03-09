@@ -152,3 +152,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0028 | [Implement preferences persistence via IPC](0028-implement-preferences-persistence.md) | Milestone 5 — Preferences Persistence | complete |
+
+## Milestone 5 — Settings Panel
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0029 | [Implement settings panel](0029-implement-settings-panel.md) | Milestone 5 — Settings Panel | complete |

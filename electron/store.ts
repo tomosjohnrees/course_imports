@@ -142,6 +142,10 @@ export function saveProgress(courseId: string, data: CourseProgress): void {
   store.set('progress', { ...allProgress, [courseId]: data })
 }
 
+export function clearAllProgress(): void {
+  store.set('progress', {})
+}
+
 const VALID_THEMES = ['light', 'dark', 'system'] as const
 
 export function getPreferences(): Preferences {

@@ -1,8 +1,12 @@
-import { Check, Circle } from 'lucide-react'
+import { Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
 
-export default function Sidebar() {
+interface SidebarProps {
+  onOpenSettings: () => void
+}
+
+export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const course = useCourseStore((s) => s.course)
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const progress = useCourseStore((s) => s.progress)
@@ -162,6 +166,40 @@ export default function Sidebar() {
           )
         })}
       </ul>
+
+      {/* Settings trigger */}
+      <div
+        style={{
+          padding: 'var(--space-3) var(--space-4)',
+          borderTop: '1px solid var(--color-border)',
+        }}
+      >
+        <button
+          className="sidebar-topic-btn"
+          onClick={onOpenSettings}
+          aria-label="Open settings"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            width: '100%',
+            height: '36px',
+            padding: '0 var(--space-2)',
+            border: 'none',
+            color: 'var(--color-text-secondary)',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 500,
+            textAlign: 'left',
+            cursor: 'pointer',
+            borderRadius: 'var(--radius-sm)',
+            transition: 'background 100ms',
+          }}
+        >
+          <Settings size={16} strokeWidth={1.5} />
+          Settings
+        </button>
+      </div>
     </nav>
   )
 }

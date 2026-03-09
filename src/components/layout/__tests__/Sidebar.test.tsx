@@ -31,10 +31,11 @@ beforeEach(() => {
 describe('Sidebar', () => {
   it('displays all topics in the correct order', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     const buttons = screen.getAllByRole('button')
-    expect(buttons).toHaveLength(3)
+    // 3 topic buttons + 1 settings button
+    expect(buttons).toHaveLength(4)
     expect(buttons[0]).toHaveTextContent('Introduction')
     expect(buttons[1]).toHaveTextContent('Getting Started')
     expect(buttons[2]).toHaveTextContent('Advanced Topics')
@@ -45,7 +46,7 @@ describe('Sidebar', () => {
       course: mockCourse,
       activeTopic: 'topic-2',
     })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     const activeButton = screen.getByText('Getting Started').closest('button')!
     expect(activeButton.style.borderLeft).toBe(
@@ -56,7 +57,7 @@ describe('Sidebar', () => {
 
   it('updates active topic when a topic is clicked', async () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     const user = userEvent.setup()
     await user.click(screen.getByText('Advanced Topics'))
@@ -71,14 +72,14 @@ describe('Sidebar', () => {
         'topic-1': { viewed: true, complete: true },
       },
     })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
   })
 
   it('displays the course title', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByText('Test Course')).toBeInTheDocument()
   })
@@ -91,7 +92,7 @@ describe('Sidebar', () => {
         'topic-3': { viewed: true, complete: true },
       },
     })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '67')
@@ -100,7 +101,7 @@ describe('Sidebar', () => {
 
   it('shows 0% progress when no topics are complete', () => {
     useCourseStore.setState({ course: mockCourse })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     const progressBar = screen.getByRole('progressbar')
     expect(progressBar).toHaveAttribute('aria-valuenow', '0')
@@ -108,9 +109,10 @@ describe('Sidebar', () => {
   })
 
   it('handles no course loaded gracefully', () => {
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
-    expect(screen.queryAllByRole('button')).toHaveLength(0)
+    // Only the settings button when no course loaded
+    expect(screen.queryAllByRole('button')).toHaveLength(1)
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
   })
 
@@ -121,7 +123,7 @@ describe('Sidebar', () => {
         'topic-2': { viewed: true, complete: false },
       },
     })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
     expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
@@ -136,7 +138,7 @@ describe('Sidebar', () => {
         // topic-3 has no progress entry → not started
       },
     })
-    render(<Sidebar />)
+    render(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
@@ -150,7 +152,7 @@ describe('Sidebar', () => {
       course: mockCourse,
       progress: {},
     })
-    const { rerender } = render(<Sidebar />)
+    const { rerender } = render(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.queryByLabelText('Complete')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('In progress')).not.toBeInTheDocument()
@@ -163,7 +165,7 @@ describe('Sidebar', () => {
         },
       })
     })
-    rerender(<Sidebar />)
+    rerender(<Sidebar onOpenSettings={() => {}} />)
 
     expect(screen.getByLabelText('Complete')).toBeInTheDocument()
     expect(screen.getByLabelText('In progress')).toBeInTheDocument()
