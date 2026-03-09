@@ -213,3 +213,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0049 | [Allow users to remove courses they've added](0049-remove-added-courses.md) | None | complete |
+
+## Backlog (Post-v1) — Reveal Blocks
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0050 | [Add reveal block type with collapsible UI](0050-add-reveal-block-type.md) | Backlog (Post-v1) | complete |

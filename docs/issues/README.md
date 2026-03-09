@@ -1,11 +1,5 @@
 # Issues
 
-## Backlog (Post-v1) — Reveal Blocks
-
-| # | Title | Phase | Status |
-|---|-------|-------|--------|
-| 0050 | [Add reveal block type with collapsible UI](0050-add-reveal-block-type.md) | Backlog (Post-v1) | todo |
-
 ## Backlog (Post-v1) — Checkpoint Blocks
 
 | # | Title | Phase | Status |

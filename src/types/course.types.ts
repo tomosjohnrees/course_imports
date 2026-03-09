@@ -28,6 +28,7 @@ export type Block =
   | QuizBlock
   | CalloutBlock
   | ImageBlock
+  | RevealBlock
   | ErrorBlock
 
 export interface TextBlock {
@@ -61,6 +62,12 @@ export interface ImageBlock {
   src: string
   alt: string
   caption?: string
+}
+
+export interface RevealBlock {
+  type: 'reveal'
+  label?: string
+  body: string
 }
 
 export interface ErrorBlock {

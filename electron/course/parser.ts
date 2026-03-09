@@ -8,6 +8,7 @@ import type {
   CodeBlock,
   ImageBlock,
   CalloutBlock,
+  RevealBlock,
   QuizBlock,
   ErrorBlock,
 } from '../../src/types/course.types'
@@ -163,6 +164,15 @@ async function resolveBlock(
         style: rawBlock.style as CalloutBlock['style'],
         body: rawBlock.body as string,
       } satisfies CalloutBlock
+    }
+
+    case 'reveal': {
+      const block: RevealBlock = {
+        type: 'reveal',
+        body: rawBlock.body as string,
+      }
+      if (rawBlock.label) block.label = rawBlock.label as string
+      return block
     }
 
     case 'quiz': {

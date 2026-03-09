@@ -20,21 +20,21 @@ Add a new `reveal` block type that renders as a collapsible section with a click
 ## Acceptance criteria
 
 ### Functionality
-- [ ] `reveal` blocks are parsed from `content.json` without errors
-- [ ] The block renders with a clickable header showing the `label` text (or a sensible default like "Reveal" if no label is provided)
-- [ ] Clicking the header expands the block to show the `body` content rendered as markdown
-- [ ] Clicking again collapses the block
-- [ ] The expand/collapse state is visual only — it does not affect course progress
-- [ ] An appropriate chevron or arrow icon indicates the expanded/collapsed state
+- [x] `reveal` blocks are parsed from `content.json` without errors
+- [x] The block renders with a clickable header showing the `label` text (or a sensible default like "Reveal" if no label is provided)
+- [x] Clicking the header expands the block to show the `body` content rendered as markdown
+- [x] Clicking again collapses the block
+- [x] The expand/collapse state is visual only — it does not affect course progress
+- [x] An appropriate chevron or arrow icon indicates the expanded/collapsed state
 
 ### Security
-- [ ] The `body` markdown is rendered using the same sanitised markdown pipeline as other blocks — no raw HTML injection
+- [x] The `body` markdown is rendered using the same sanitised markdown pipeline as other blocks — no raw HTML injection
 
 ### Performance
-- [ ] Collapsed block body content is not rendered to the DOM until first expansion (lazy render), or is rendered but hidden efficiently
+- [x] Collapsed block body content is not rendered to the DOM until first expansion (lazy render), or is rendered but hidden efficiently
 
 ### Testing
-- [ ] Component tests cover: initial collapsed state, expanding on click, collapsing on second click, rendering markdown body content, default label when none is provided
+- [x] Component tests cover: initial collapsed state, expanding on click, collapsing on second click, rendering markdown body content, default label when none is provided
 
 ## Notes
 
