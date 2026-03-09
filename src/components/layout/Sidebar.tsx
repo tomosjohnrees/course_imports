@@ -1,4 +1,4 @@
-import { Check, Circle, Settings } from 'lucide-react'
+import { BookOpen, Check, Circle, Settings } from 'lucide-react'
 import { useCourseStore } from '@/store/course.store'
 import type { TopicStatus } from '@/hooks/useProgress'
 
@@ -16,8 +16,11 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
   const completedCount = topics.filter(
     (t) => progress[t.id]?.complete,
   ).length
-  const progressPercent =
-    topics.length > 0 ? (completedCount / topics.length) * 100 : 0
+  const progressPercent = !course
+    ? 0
+    : topics.length === 0
+      ? 100
+      : (completedCount / topics.length) * 100
 
   return (
     <nav
@@ -88,6 +91,33 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
       </div>
 
       {/* Topic list */}
+      {course && topics.length === 0 ? (
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'var(--space-6)',
+            gap: 'var(--space-3)',
+            color: 'var(--color-text-muted)',
+            fontFamily: 'var(--font-sans)',
+            textAlign: 'center',
+          }}
+        >
+          <BookOpen size={24} strokeWidth={1.5} />
+          <p
+            style={{
+              margin: 0,
+              fontSize: 'var(--text-sm)',
+              lineHeight: 'var(--leading-sm)',
+            }}
+          >
+            This course has no topics yet.
+          </p>
+        </div>
+      ) : (
       <ul
         style={{
           listStyle: 'none',
@@ -166,6 +196,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
           )
         })}
       </ul>
+      )}
 
       {/* Settings trigger */}
       <div

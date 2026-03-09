@@ -12,8 +12,9 @@ export function useTopicStatus(topicId: string): TopicStatus {
 
 export function useCompletionPercent(): number {
   return useCourseStore((s) => {
-    const topics = s.course?.topics ?? []
-    if (topics.length === 0) return 0
+    if (!s.course) return 0
+    const topics = s.course.topics
+    if (topics.length === 0) return 100
     const completed = topics.filter((t) => s.progress[t.id]?.complete).length
     return (completed / topics.length) * 100
   })

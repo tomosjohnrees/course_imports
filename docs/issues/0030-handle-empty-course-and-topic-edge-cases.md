@@ -20,21 +20,21 @@ The app must handle degenerate course structures gracefully — courses with zer
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Loading a course with an empty `topicOrder` array displays an empty state in both the sidebar and content area
-- [ ] Navigating to a topic that has an empty `blocks` array displays an informative empty state message
-- [ ] Topics with no quiz blocks are marked as complete when first viewed, with no console errors
-- [ ] The progress bar correctly computes completion percentage when some or all topics have no quizzes
-- [ ] The progress bar shows 100% when a zero-topic course is loaded (no topics = nothing to complete)
+- [x] Loading a course with an empty `topicOrder` array displays an empty state in both the sidebar and content area
+- [x] Navigating to a topic that has an empty `blocks` array displays an informative empty state message
+- [x] Topics with no quiz blocks are marked as complete when first viewed, with no console errors
+- [x] The progress bar correctly computes completion percentage when some or all topics have no quizzes
+- [x] The progress bar shows 100% when a zero-topic course is loaded (no topics = nothing to complete)
 
 ### Security
-- [ ] No internal file paths, error stack traces, or system information are exposed in empty state messages
+- [x] No internal file paths, error stack traces, or system information are exposed in empty state messages
 
 ### Performance
-- [ ] Empty state rendering adds no extra re-renders or store subscriptions beyond what a normal topic view requires
+- [x] Empty state rendering adds no extra re-renders or store subscriptions beyond what a normal topic view requires
 
 ### Testing
-- [ ] Unit tests cover progress calculation with zero topics, topics with no blocks, and topics with no quizzes
-- [ ] Component tests verify empty state UI renders for each scenario
+- [x] Unit tests cover progress calculation with zero topics, topics with no blocks, and topics with no quizzes
+- [x] Component tests verify empty state UI renders for each scenario
 
 ## Notes
 

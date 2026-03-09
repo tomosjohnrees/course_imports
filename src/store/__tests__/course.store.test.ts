@@ -204,14 +204,21 @@ describe('course.store', () => {
   describe('completion percentage', () => {
     function getCompletionPercent(): number {
       const { course, progress } = useCourseStore.getState()
-      const topics = course?.topics ?? []
-      if (topics.length === 0) return 0
+      if (!course) return 0
+      const topics = course.topics
+      if (topics.length === 0) return 100
       const completed = topics.filter((t) => progress[t.id]?.complete).length
       return (completed / topics.length) * 100
     }
 
     it('returns 0 when no course is loaded', () => {
       expect(getCompletionPercent()).toBe(0)
+    })
+
+    it('returns 100 when course has zero topics', () => {
+      const emptyCourse: Course = { ...mockCourse, topics: [] }
+      useCourseStore.getState().setCourse(emptyCourse)
+      expect(getCompletionPercent()).toBe(100)
     })
 
     it('returns 0 when no topics are complete', () => {
@@ -231,6 +238,15 @@ describe('course.store', () => {
       // complete 1 of 3 topics
       useCourseStore.getState().setActiveTopic('topic-no-quiz')
       expect(Math.round(getCompletionPercent())).toBe(33)
+    })
+
+    it('computes correctly when all topics have no quizzes', () => {
+      useCourseStore.getState().setCourse(mockCourse)
+      // Both topics in mockCourse have empty blocks (no quizzes)
+      useCourseStore.getState().setActiveTopic('topic-1')
+      useCourseStore.getState().setActiveTopic('topic-2')
+      // Both should be auto-completed since they have no quiz blocks
+      expect(getCompletionPercent()).toBe(100)
     })
   })
 

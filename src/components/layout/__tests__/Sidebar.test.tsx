@@ -116,6 +116,22 @@ describe('Sidebar', () => {
     expect(screen.getByText('0 of 0 topics complete')).toBeInTheDocument()
   })
 
+  it('shows empty state when course has zero topics', () => {
+    const emptyCourse: Course = {
+      ...mockCourse,
+      topics: [],
+    }
+    useCourseStore.setState({ course: emptyCourse })
+    render(<Sidebar onOpenSettings={() => {}} />)
+
+    expect(
+      screen.getByText('This course has no topics yet.'),
+    ).toBeInTheDocument()
+    // Progress bar should show 100% (nothing to complete)
+    const progressBar = screen.getByRole('progressbar')
+    expect(progressBar).toHaveAttribute('aria-valuenow', '100')
+  })
+
   it('shows "In progress" indicator for viewed but incomplete topics', () => {
     useCourseStore.setState({
       course: mockCourse,

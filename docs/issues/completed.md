@@ -158,3 +158,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0029 | [Implement settings panel](0029-implement-settings-panel.md) | Milestone 5 — Settings Panel | complete |
+
+## Milestone 6 — Edge Cases & Robustness
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0030 | [Handle empty course and topic edge cases](0030-handle-empty-course-and-topic-edge-cases.md) | Milestone 6 — Edge Cases & Robustness | complete |
