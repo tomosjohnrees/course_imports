@@ -163,6 +163,31 @@ describe('Sidebar', () => {
     expect(buttons[2].querySelector('[aria-label]')).toBeNull()
   })
 
+  it('truncates long topic titles and shows tooltip', () => {
+    const longTitle = 'A'.repeat(200)
+    const courseWithLongTitles: Course = {
+      ...mockCourse,
+      title: longTitle,
+      topics: [
+        { id: 'topic-long', title: longTitle, blocks: [] },
+      ],
+    }
+    useCourseStore.setState({ course: courseWithLongTitles })
+    render(<Sidebar onOpenSettings={() => {}} />)
+
+    // Course title has tooltip
+    const heading = screen.getByText(longTitle, { selector: 'h2' })
+    expect(heading).toHaveAttribute('title', longTitle)
+    expect(heading.style.overflow).toBe('hidden')
+    expect(heading.style.textOverflow).toBe('ellipsis')
+
+    // Topic title has tooltip
+    const topicSpan = screen.getByText(longTitle, { selector: 'span' })
+    expect(topicSpan).toHaveAttribute('title', longTitle)
+    expect(topicSpan.style.overflow).toBe('hidden')
+    expect(topicSpan.style.textOverflow).toBe('ellipsis')
+  })
+
   it('updates indicators when progress state changes', () => {
     useCourseStore.setState({
       course: mockCourse,

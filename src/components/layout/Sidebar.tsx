@@ -56,6 +56,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
       {/* Course header */}
       <div style={{ padding: 'var(--space-4)' }}>
         <h2
+          title={course?.title ?? 'Course'}
           style={{
             margin: 0,
             fontSize: 'var(--text-sm)',
@@ -166,6 +167,7 @@ export default function Sidebar({ onOpenSettings }: SidebarProps) {
                   }}
                 >
                   <span
+                    title={topic.title}
                     style={{
                       flex: 1,
                       overflow: 'hidden',

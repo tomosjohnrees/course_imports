@@ -20,18 +20,18 @@ Very long course or topic titles can overflow the sidebar, header, or recent cou
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Topic titles in the sidebar truncate with ellipsis when they exceed the available width
-- [ ] A tooltip shows the full topic title on hover for truncated items
-- [ ] The course title in the sidebar header truncates with ellipsis if too long
-- [ ] Recent course entries on the home screen handle long names without overflow
-- [ ] No horizontal scrollbar appears anywhere in the app with titles up to 200 characters
+- [x] Topic titles in the sidebar truncate with ellipsis when they exceed the available width
+- [x] A tooltip shows the full topic title on hover for truncated items
+- [x] The course title in the sidebar header truncates with ellipsis if too long
+- [x] Recent course entries on the home screen handle long names without overflow
+- [x] No horizontal scrollbar appears anywhere in the app with titles up to 200 characters
 
 ### Security
-- [ ] Title content is rendered as text, not HTML, to prevent injection via course metadata
+- [x] Title content is rendered as text, not HTML, to prevent injection via course metadata
 
 ### Performance
-- [ ] Truncation is handled via CSS only (no JavaScript measurement or resize observers)
+- [x] Truncation is handled via CSS only (no JavaScript measurement or resize observers)
 
 ### Testing
-- [ ] Component tests render sidebar and recent courses with 200-character titles and verify no overflow
-- [ ] Visual snapshot tests capture truncation behaviour for sidebar and home screen
+- [x] Component tests render sidebar and recent courses with 200-character titles and verify no overflow
+- [x] Visual snapshot tests capture truncation behaviour for sidebar and home screen

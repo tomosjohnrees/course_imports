@@ -362,6 +362,29 @@ describe('Home', () => {
       })
     })
 
+    it('truncates long recent course titles and shows tooltip', async () => {
+      const longTitle = 'B'.repeat(200)
+      const longTitleCourses: RecentCourse[] = [
+        {
+          id: 'course-long',
+          title: longTitle,
+          sourceType: 'local',
+          lastLoaded: Date.now(),
+        },
+      ]
+      vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(longTitleCourses)
+      renderWithRouter()
+
+      await waitFor(() => {
+        expect(screen.getByText(longTitle)).toBeInTheDocument()
+      })
+
+      const titleEl = screen.getByText(longTitle)
+      expect(titleEl).toHaveAttribute('title', longTitle)
+      expect(titleEl.style.overflow).toBe('hidden')
+      expect(titleEl.style.textOverflow).toBe('ellipsis')
+    })
+
     it('navigates to /course when a recent course loads successfully', async () => {
       vi.mocked(window.api.store.getRecentCourses).mockResolvedValue(mockRecentCourses)
       vi.mocked(window.api.course.loadRecentCourse).mockResolvedValue({

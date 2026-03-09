@@ -180,6 +180,9 @@ const recentTitleStyle: React.CSSProperties = {
   fontWeight: 500,
   color: '#1A1916',
   margin: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 }
 
 const recentMetaStyle: React.CSSProperties = {
@@ -310,10 +313,10 @@ export default function Home() {
                   disabled={isLoading}
                   aria-label={`Load ${course.title}`}
                 >
-                  <div>
-                    <p style={recentTitleStyle}>{course.title}</p>
+                  <div style={{ overflow: 'hidden', minWidth: 0, flex: 1 }}>
+                    <p title={course.title} style={recentTitleStyle}>{course.title}</p>
                   </div>
-                  <div>
+                  <div style={{ flexShrink: 0 }}>
                     <p style={recentMetaStyle}>
                       {course.sourceType === 'github' ? 'GitHub' : 'Local'}
                     </p>
