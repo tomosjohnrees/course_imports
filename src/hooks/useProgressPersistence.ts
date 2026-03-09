@@ -42,7 +42,7 @@ export function useProgressPersistence(): void {
           timerRef.current = null
           Promise.resolve(
             window.api.store.saveProgress(courseId, progressSnapshot),
-          ).then(notifySaved, (err) => {
+          ).then(notifySaved, (err: unknown) => {
             console.error('Failed to save progress:', err)
           })
         }, DEBOUNCE_MS)
