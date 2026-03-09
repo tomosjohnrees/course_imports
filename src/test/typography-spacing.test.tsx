@@ -66,7 +66,7 @@ describe('Typography and spacing snapshot tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('QuizBlock multiple-choice matches snapshot', () => {
+  it('QuizBlock matches snapshot', () => {
     const { container } = render(
       <QuizBlock
         type="quiz"

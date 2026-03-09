@@ -59,7 +59,7 @@ beforeEach(() => {
 })
 
 describe('Accessibility audit', () => {
-  it('QuizBlock (multiple-choice) has no critical axe violations', async () => {
+  it('QuizBlock has no critical axe violations', async () => {
     const { container } = render(
       <QuizBlock
         type="quiz"

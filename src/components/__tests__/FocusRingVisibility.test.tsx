@@ -116,7 +116,6 @@ describe('Focus ring visibility', () => {
     })
   })
 
-
   it('all interactive elements in sidebar are focusable', () => {
     renderSidebar()
 

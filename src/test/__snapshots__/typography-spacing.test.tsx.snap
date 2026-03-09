@@ -315,7 +315,7 @@ exports[`Typography and spacing snapshot tests > Home screen matches snapshot 1`
 </div>
 `;
 
-exports[`Typography and spacing snapshot tests > QuizBlock multiple-choice matches snapshot 1`] = `
+exports[`Typography and spacing snapshot tests > QuizBlock matches snapshot 1`] = `
 <div>
   <div
     class="quiz-block"
