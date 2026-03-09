@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { Course, CourseNotes, CourseProgress, QuizAnswer, Topic } from '@/types/course.types'
+import type { BlockBookmark, Course, CourseBookmarks, CourseNotes, CourseProgress, QuizAnswer, Topic } from '@/types/course.types'
 
 /**
  * Returns the topic ID to auto-select when a course loads.
@@ -28,9 +28,13 @@ interface CourseStore {
   quizAnswers: Record<string, QuizAnswer>
   checkpointCompletions: Record<string, boolean>
   notes: CourseNotes
+  bookmarks: CourseBookmarks
   setCourse: (course: Course) => void
   hydrateProgress: (progress: CourseProgress) => void
   hydrateNotes: (notes: CourseNotes) => void
+  hydrateBookmarks: (bookmarks: CourseBookmarks) => void
+  addBookmark: (topicId: string, blockIndex: number, label?: string) => void
+  removeBookmark: (topicId: string, blockIndex: number) => void
   setActiveTopic: (topicId: string) => void
   markTopicComplete: (topicId: string) => void
   recordQuizAnswer: (key: string, answer: QuizAnswer) => void
@@ -59,6 +63,7 @@ const initialState = {
   quizAnswers: {} as Record<string, QuizAnswer>,
   checkpointCompletions: {} as Record<string, boolean>,
   notes: {} as CourseNotes,
+  bookmarks: [] as CourseBookmarks,
 }
 
 export const useCourseStore = create<CourseStore>()(
@@ -75,6 +80,7 @@ export const useCourseStore = create<CourseStore>()(
             quizAnswers: {},
             checkpointCompletions: {},
             notes: {},
+            bookmarks: [],
           },
           false,
           'setCourse',
@@ -85,6 +91,39 @@ export const useCourseStore = create<CourseStore>()(
 
       hydrateNotes: (notes) =>
         set({ notes }, false, 'hydrateNotes'),
+
+      hydrateBookmarks: (bookmarks) =>
+        set({ bookmarks }, false, 'hydrateBookmarks'),
+
+      addBookmark: (topicId, blockIndex, label) =>
+        set(
+          (state) => {
+            const exists = state.bookmarks.some(
+              (b) => b.topicId === topicId && b.blockIndex === blockIndex,
+            )
+            if (exists) return state
+            const bookmark: BlockBookmark = {
+              topicId,
+              blockIndex,
+              label,
+              createdAt: Date.now(),
+            }
+            return { bookmarks: [...state.bookmarks, bookmark] }
+          },
+          false,
+          'addBookmark',
+        ),
+
+      removeBookmark: (topicId, blockIndex) =>
+        set(
+          (state) => ({
+            bookmarks: state.bookmarks.filter(
+              (b) => !(b.topicId === topicId && b.blockIndex === blockIndex),
+            ),
+          }),
+          false,
+          'removeBookmark',
+        ),
 
       setActiveTopic: (topicId) =>
         set(

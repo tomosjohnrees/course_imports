@@ -41,5 +41,13 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.invoke(IpcChannel.notes.get, courseId, topicId),
     getAll: (courseId: string) =>
       ipcRenderer.invoke(IpcChannel.notes.getAll, courseId)
+  },
+  bookmarks: {
+    add: (courseId: string, topicId: string, blockIndex: number, label?: string) =>
+      ipcRenderer.invoke(IpcChannel.bookmarks.add, courseId, topicId, blockIndex, label),
+    remove: (courseId: string, topicId: string, blockIndex: number) =>
+      ipcRenderer.invoke(IpcChannel.bookmarks.remove, courseId, topicId, blockIndex),
+    getAll: (courseId: string) =>
+      ipcRenderer.invoke(IpcChannel.bookmarks.getAll, courseId)
   }
 })

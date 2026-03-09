@@ -20,23 +20,23 @@ Add the data layer for bookmarking specific content blocks within a course. Book
 ## Acceptance criteria
 
 ### Functionality
-- [ ] A bookmark can be added for a specific course + topic + block index
-- [ ] A bookmark can be removed by the same identifiers
-- [ ] All bookmarks for a course can be retrieved in a single call
-- [ ] Adding a bookmark that already exists is a no-op (no duplicates)
-- [ ] Bookmarks for different courses are fully independent
-- [ ] Bookmarks persist across app restarts
+- [x] A bookmark can be added for a specific course + topic + block index
+- [x] A bookmark can be removed by the same identifiers
+- [x] All bookmarks for a course can be retrieved in a single call
+- [x] Adding a bookmark that already exists is a no-op (no duplicates)
+- [x] Bookmarks for different courses are fully independent
+- [x] Bookmarks persist across app restarts
 
 ### Security
-- [ ] Bookmarks are scoped by course ID — there is no way to read or write bookmarks across courses through the IPC interface
-- [ ] User-provided bookmark labels are stored as plain text — no executable content
+- [x] Bookmarks are scoped by course ID — there is no way to read or write bookmarks across courses through the IPC interface
+- [x] User-provided bookmark labels are stored as plain text — no executable content
 
 ### Performance
-- [ ] Loading all bookmarks for a course is a single read operation
-- [ ] Adding or removing a bookmark is a single write — not a full rewrite of all bookmarks
+- [x] Loading all bookmarks for a course is a single read operation
+- [x] Adding or removing a bookmark is a single write — not a full rewrite of all bookmarks
 
 ### Testing
-- [ ] IPC handler tests cover: adding a bookmark, removing a bookmark, retrieving all bookmarks, adding a duplicate (no-op), retrieving bookmarks for a course with none (returns empty array)
+- [x] IPC handler tests cover: adding a bookmark, removing a bookmark, retrieving all bookmarks, adding a duplicate (no-op), retrieving bookmarks for a course with none (returns empty array)
 
 ## Notes
 

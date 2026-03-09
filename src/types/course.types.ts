@@ -117,3 +117,12 @@ export interface TopicNote {
 }
 
 export type CourseNotes = Record<string, TopicNote>
+
+export interface BlockBookmark {
+  topicId: string
+  blockIndex: number
+  label?: string
+  createdAt: number
+}
+
+export type CourseBookmarks = BlockBookmark[]

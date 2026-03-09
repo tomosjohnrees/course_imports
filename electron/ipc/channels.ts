@@ -21,5 +21,10 @@ export const IpcChannel = {
     save: 'notes:save',
     get: 'notes:get',
     getAll: 'notes:getAll'
+  },
+  bookmarks: {
+    add: 'bookmarks:add',
+    remove: 'bookmarks:remove',
+    getAll: 'bookmarks:getAll'
   }
 } as const

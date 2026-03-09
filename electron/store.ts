@@ -1,6 +1,6 @@
 import Store from 'electron-store'
 import { safeStorage } from 'electron'
-import type { CourseNotes, CourseProgress, Preferences, RecentCourse, TopicNote } from '../src/types/course.types'
+import type { BlockBookmark, CourseBookmarks, CourseNotes, CourseProgress, Preferences, RecentCourse, TopicNote } from '../src/types/course.types'
 
 export interface StoredRecentCourse {
   id: string
@@ -20,6 +20,7 @@ interface StoreSchema {
   recentCourses: StoredRecentCourse[]
   progress: Record<string, CourseProgress>
   notes: Record<string, CourseNotes>
+  bookmarks: Record<string, CourseBookmarks>
 }
 
 const MAX_RECENT_COURSES = 10
@@ -88,6 +89,24 @@ const store = new Store<StoreSchema>({
       },
       default: {},
     },
+    bookmarks: {
+      type: 'object',
+      additionalProperties: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            topicId: { type: 'string' },
+            blockIndex: { type: 'number' },
+            label: { type: 'string' },
+            createdAt: { type: 'number' },
+          },
+          required: ['topicId', 'blockIndex', 'createdAt'],
+          additionalProperties: false,
+        },
+      },
+      default: {},
+    },
   },
   defaults: {
     preferences: {
@@ -96,6 +115,7 @@ const store = new Store<StoreSchema>({
     recentCourses: [],
     progress: {},
     notes: {},
+    bookmarks: {},
   },
 })
 
@@ -243,6 +263,55 @@ export function clearCourseNotes(courseId: string): void {
 
 export function clearAllNotes(): void {
   store.set('notes', {})
+}
+
+function bookmarkKey(b: { topicId: string; blockIndex: number }): string {
+  return `${b.topicId}:${b.blockIndex}`
+}
+
+export function addBookmark(
+  courseId: string,
+  topicId: string,
+  blockIndex: number,
+  label?: string,
+): void {
+  const allBookmarks = store.get('bookmarks')
+  const courseBookmarks = allBookmarks[courseId] ?? []
+
+  const exists = courseBookmarks.some(
+    (b) => b.topicId === topicId && b.blockIndex === blockIndex,
+  )
+  if (exists) return
+
+  const bookmark: BlockBookmark = {
+    topicId,
+    blockIndex,
+    label,
+    createdAt: Date.now(),
+  }
+
+  store.set(`bookmarks.${courseId}`, [...courseBookmarks, bookmark])
+}
+
+export function removeBookmark(
+  courseId: string,
+  topicId: string,
+  blockIndex: number,
+): void {
+  const allBookmarks = store.get('bookmarks')
+  const courseBookmarks = allBookmarks[courseId]
+  if (!courseBookmarks) return
+
+  const filtered = courseBookmarks.filter(
+    (b) => !(b.topicId === topicId && b.blockIndex === blockIndex),
+  )
+
+  store.set(`bookmarks.${courseId}`, filtered)
+}
+
+export function getAllBookmarks(courseId: string): CourseBookmarks {
+  const allBookmarks = store.get('bookmarks')
+  return allBookmarks[courseId] ?? []
 }
 
 export default store

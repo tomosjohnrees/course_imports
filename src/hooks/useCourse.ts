@@ -13,18 +13,21 @@ export function useCourse() {
   const setCourse = useCourseStore((s) => s.setCourse)
   const hydrateProgress = useCourseStore((s) => s.hydrateProgress)
   const hydrateNotes = useCourseStore((s) => s.hydrateNotes)
+  const hydrateBookmarks = useCourseStore((s) => s.hydrateBookmarks)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
   const setRetryAction = useUIStore((s) => s.setRetryAction)
 
   async function hydrateFromDisk(courseId: string) {
-    const [saved, savedNotes] = await Promise.all([
+    const [saved, savedNotes, savedBookmarks] = await Promise.all([
       window.api.store.getProgress(courseId),
       window.api.notes.getAll(courseId),
+      window.api.bookmarks.getAll(courseId),
     ])
     if (saved) hydrateProgress(saved)
     if (savedNotes) hydrateNotes(savedNotes)
+    if (savedBookmarks.length > 0) hydrateBookmarks(savedBookmarks)
   }
 
   function selectInitialTopic() {

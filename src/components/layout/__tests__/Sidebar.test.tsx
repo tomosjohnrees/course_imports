@@ -80,6 +80,11 @@ beforeEach(() => {
       get: vi.fn(),
       getAll: vi.fn().mockResolvedValue(null),
     },
+    bookmarks: {
+      add: vi.fn(),
+      remove: vi.fn(),
+      getAll: vi.fn().mockResolvedValue([]),
+    },
   }
 })
 
