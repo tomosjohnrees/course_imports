@@ -12,14 +12,19 @@ export function useCourse() {
   const navigate = useNavigate()
   const setCourse = useCourseStore((s) => s.setCourse)
   const hydrateProgress = useCourseStore((s) => s.hydrateProgress)
+  const hydrateNotes = useCourseStore((s) => s.hydrateNotes)
   const setActiveTopic = useCourseStore((s) => s.setActiveTopic)
   const setLoading = useUIStore((s) => s.setLoading)
   const setError = useUIStore((s) => s.setError)
   const setRetryAction = useUIStore((s) => s.setRetryAction)
 
   async function hydrateFromDisk(courseId: string) {
-    const saved = await window.api.store.getProgress(courseId)
+    const [saved, savedNotes] = await Promise.all([
+      window.api.store.getProgress(courseId),
+      window.api.notes.getAll(courseId),
+    ])
     if (saved) hydrateProgress(saved)
+    if (savedNotes) hydrateNotes(savedNotes)
   }
 
   function selectInitialTopic() {

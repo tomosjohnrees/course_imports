@@ -2,9 +2,11 @@
 
 import type {
   Course,
+  CourseNotes,
   CourseProgress,
   Preferences,
   RecentCourse,
+  TopicNote,
   ValidationResult
 } from './types/course.types'
 
@@ -31,6 +33,11 @@ interface WindowApi {
     savePreferences: (prefs: Preferences) => Promise<void>
     clearAllProgress: () => Promise<void>
     removeRecentCourse: (courseId: string, clearProgress: boolean) => Promise<boolean>
+  }
+  notes: {
+    save: (courseId: string, topicId: string, text: string) => Promise<void>
+    get: (courseId: string, topicId: string) => Promise<TopicNote | null>
+    getAll: (courseId: string) => Promise<CourseNotes | null>
   }
 }
 

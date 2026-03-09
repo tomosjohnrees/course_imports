@@ -1,6 +1,6 @@
 import Store from 'electron-store'
 import { safeStorage } from 'electron'
-import type { CourseProgress, Preferences, RecentCourse } from '../src/types/course.types'
+import type { CourseNotes, CourseProgress, Preferences, RecentCourse, TopicNote } from '../src/types/course.types'
 
 export interface StoredRecentCourse {
   id: string
@@ -19,6 +19,7 @@ interface StoreSchema {
   encryptedGitHubToken?: string
   recentCourses: StoredRecentCourse[]
   progress: Record<string, CourseProgress>
+  notes: Record<string, CourseNotes>
 }
 
 const MAX_RECENT_COURSES = 10
@@ -71,6 +72,22 @@ const store = new Store<StoreSchema>({
       },
       default: {},
     },
+    notes: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        additionalProperties: {
+          type: 'object',
+          properties: {
+            text: { type: 'string' },
+            lastModified: { type: 'number' },
+          },
+          required: ['text', 'lastModified'],
+          additionalProperties: false,
+        },
+      },
+      default: {},
+    },
   },
   defaults: {
     preferences: {
@@ -78,6 +95,7 @@ const store = new Store<StoreSchema>({
     },
     recentCourses: [],
     progress: {},
+    notes: {},
   },
 })
 
@@ -193,6 +211,38 @@ export function savePreferences(prefs: Preferences): void {
 
 export function getStoredTheme(): string {
   return store.get('preferences').theme
+}
+
+export function saveNote(courseId: string, topicId: string, text: string): void {
+  const allNotes = store.get('notes')
+  const courseNotes = allNotes[courseId] ?? {}
+  store.set('notes', {
+    ...allNotes,
+    [courseId]: {
+      ...courseNotes,
+      [topicId]: { text, lastModified: Date.now() },
+    },
+  })
+}
+
+export function getNote(courseId: string, topicId: string): TopicNote | null {
+  const allNotes = store.get('notes')
+  return allNotes[courseId]?.[topicId] ?? null
+}
+
+export function getAllNotes(courseId: string): CourseNotes | null {
+  const allNotes = store.get('notes')
+  return allNotes[courseId] ?? null
+}
+
+export function clearCourseNotes(courseId: string): void {
+  const allNotes = store.get('notes')
+  const { [courseId]: _, ...rest } = allNotes
+  store.set('notes', rest)
+}
+
+export function clearAllNotes(): void {
+  store.set('notes', {})
 }
 
 export default store

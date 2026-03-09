@@ -33,6 +33,11 @@ beforeEach(() => {
       clearAllProgress: vi.fn(),
       removeRecentCourse: vi.fn().mockResolvedValue(true),
     },
+    notes: {
+      save: vi.fn(),
+      get: vi.fn(),
+      getAll: vi.fn().mockResolvedValue(null),
+    },
   }
 })
 

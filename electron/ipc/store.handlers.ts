@@ -5,7 +5,9 @@ import {
   getProgress,
   saveProgress,
   clearAllProgress,
+  clearAllNotes,
   clearCourseProgress,
+  clearCourseNotes,
   removeRecentCourse,
   getPreferences,
   savePreferences,
@@ -57,6 +59,7 @@ export function registerStoreHandlers(): void {
 
   ipcMain.handle(IpcChannel.store.clearAllProgress, async () => {
     clearAllProgress()
+    clearAllNotes()
   })
 
   ipcMain.handle(
@@ -72,6 +75,7 @@ export function registerStoreHandlers(): void {
       const removed = removeRecentCourse(courseId)
       if (removed && clearProgress === true) {
         clearCourseProgress(courseId)
+        clearCourseNotes(courseId)
       }
       return removed
     },

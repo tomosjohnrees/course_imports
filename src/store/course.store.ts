@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { Course, CourseProgress, QuizAnswer, Topic } from '@/types/course.types'
+import type { Course, CourseNotes, CourseProgress, QuizAnswer, Topic } from '@/types/course.types'
 
 /**
  * Returns the topic ID to auto-select when a course loads.
@@ -27,12 +27,15 @@ interface CourseStore {
   progress: CourseProgress
   quizAnswers: Record<string, QuizAnswer>
   checkpointCompletions: Record<string, boolean>
+  notes: CourseNotes
   setCourse: (course: Course) => void
   hydrateProgress: (progress: CourseProgress) => void
+  hydrateNotes: (notes: CourseNotes) => void
   setActiveTopic: (topicId: string) => void
   markTopicComplete: (topicId: string) => void
   recordQuizAnswer: (key: string, answer: QuizAnswer) => void
   recordCheckpointCompletion: (key: string) => void
+  updateNote: (topicId: string, text: string) => void
   clearCourse: () => void
 }
 
@@ -55,6 +58,7 @@ const initialState = {
   progress: {} as CourseProgress,
   quizAnswers: {} as Record<string, QuizAnswer>,
   checkpointCompletions: {} as Record<string, boolean>,
+  notes: {} as CourseNotes,
 }
 
 export const useCourseStore = create<CourseStore>()(
@@ -70,6 +74,7 @@ export const useCourseStore = create<CourseStore>()(
             progress: {},
             quizAnswers: {},
             checkpointCompletions: {},
+            notes: {},
           },
           false,
           'setCourse',
@@ -77,6 +82,9 @@ export const useCourseStore = create<CourseStore>()(
 
       hydrateProgress: (progress) =>
         set({ progress }, false, 'hydrateProgress'),
+
+      hydrateNotes: (notes) =>
+        set({ notes }, false, 'hydrateNotes'),
 
       setActiveTopic: (topicId) =>
         set(
@@ -169,6 +177,18 @@ export const useCourseStore = create<CourseStore>()(
           },
           false,
           'recordCheckpointCompletion',
+        ),
+
+      updateNote: (topicId, text) =>
+        set(
+          (state) => ({
+            notes: {
+              ...state.notes,
+              [topicId]: { text, lastModified: Date.now() },
+            },
+          }),
+          false,
+          'updateNote',
         ),
 
       clearCourse: () =>

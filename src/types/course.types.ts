@@ -110,3 +110,10 @@ export interface Preferences {
   theme: 'light' | 'dark' | 'system'
   githubToken?: string
 }
+
+export interface TopicNote {
+  text: string
+  lastModified: number
+}
+
+export type CourseNotes = Record<string, TopicNote>

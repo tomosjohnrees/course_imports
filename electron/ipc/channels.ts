@@ -16,5 +16,10 @@ export const IpcChannel = {
     getInitialTheme: 'store:getInitialTheme',
     clearAllProgress: 'store:clearAllProgress',
     removeRecentCourse: 'store:removeRecentCourse'
+  },
+  notes: {
+    save: 'notes:save',
+    get: 'notes:get',
+    getAll: 'notes:getAll'
   }
 } as const

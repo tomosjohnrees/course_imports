@@ -20,23 +20,23 @@ Add the data layer for per-topic freeform notes so users can jot down thoughts, 
 ## Acceptance criteria
 
 ### Functionality
-- [ ] Notes can be saved for a specific course + topic combination
-- [ ] Notes can be retrieved by course + topic, returning the text and last-modified timestamp
-- [ ] All notes for a course can be retrieved in a single call
-- [ ] Saving a note for a course/topic that already has one overwrites it
-- [ ] Notes for different courses are fully independent
-- [ ] Notes persist across app restarts
+- [x] Notes can be saved for a specific course + topic combination
+- [x] Notes can be retrieved by course + topic, returning the text and last-modified timestamp
+- [x] All notes for a course can be retrieved in a single call
+- [x] Saving a note for a course/topic that already has one overwrites it
+- [x] Notes for different courses are fully independent
+- [x] Notes persist across app restarts
 
 ### Security
-- [ ] Notes are scoped by course ID — there is no way to read or write notes across courses through the IPC interface
-- [ ] Note content is stored as plain text — no executable content is persisted or evaluated
+- [x] Notes are scoped by course ID — there is no way to read or write notes across courses through the IPC interface
+- [x] Note content is stored as plain text — no executable content is persisted or evaluated
 
 ### Performance
-- [ ] Note saves are debounced (e.g. 500ms) to avoid excessive writes during active typing
-- [ ] Loading all notes for a course is a single read operation, not one read per topic
+- [x] Note saves are debounced (e.g. 500ms) to avoid excessive writes during active typing
+- [x] Loading all notes for a course is a single read operation, not one read per topic
 
 ### Testing
-- [ ] IPC handler tests cover: saving a new note, overwriting an existing note, retrieving a note, retrieving all notes for a course, retrieving a note that doesn't exist (returns null/empty)
+- [x] IPC handler tests cover: saving a new note, overwriting an existing note, retrieving a note, retrieving all notes for a course, retrieving a note that doesn't exist (returns null/empty)
 
 ## Notes
 

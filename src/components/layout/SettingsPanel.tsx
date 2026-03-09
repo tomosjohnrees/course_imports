@@ -64,10 +64,11 @@ export default function SettingsPanel({ open, onClose }: SettingsPanelProps) {
 
   const handleClearProgress = async () => {
     await window.api.store.clearAllProgress()
-    // Reset in-session progress
+    // Reset in-session progress and notes
     const courseStore = useCourseStore.getState()
     if (courseStore.course) {
       courseStore.hydrateProgress({})
+      courseStore.hydrateNotes({})
     }
     setConfirmingClear(false)
   }

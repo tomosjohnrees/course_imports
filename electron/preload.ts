@@ -33,5 +33,13 @@ contextBridge.exposeInMainWorld('api', {
     clearAllProgress: () => ipcRenderer.invoke(IpcChannel.store.clearAllProgress),
     removeRecentCourse: (courseId: string, clearProgress: boolean) =>
       ipcRenderer.invoke(IpcChannel.store.removeRecentCourse, courseId, clearProgress)
+  },
+  notes: {
+    save: (courseId: string, topicId: string, text: string) =>
+      ipcRenderer.invoke(IpcChannel.notes.save, courseId, topicId, text),
+    get: (courseId: string, topicId: string) =>
+      ipcRenderer.invoke(IpcChannel.notes.get, courseId, topicId),
+    getAll: (courseId: string) =>
+      ipcRenderer.invoke(IpcChannel.notes.getAll, courseId)
   }
 })

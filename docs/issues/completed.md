@@ -225,3 +225,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0051 | [Add checkpoint block type with mark-as-complete button](0051-add-checkpoint-block-type.md) | Backlog (Post-v1) | complete |
+
+## Backlog (Post-v1) — Notes
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0052 | [Implement per-topic notes persistence](0052-implement-per-topic-notes-persistence.md) | Backlog (Post-v1) | complete |

@@ -31,6 +31,7 @@ vi.mock('electron-store', () => {
     recentCourses: [],
     progress: {},
     preferences: { theme: 'system' },
+    notes: {},
   }
   return {
     default: class {
@@ -68,6 +69,7 @@ beforeEach(async () => {
   StoreClass._data.recentCourses = []
   StoreClass._data.progress = {}
   StoreClass._data.preferences = { theme: 'system' }
+  StoreClass._data.notes = {}
   delete StoreClass._data.encryptedGitHubToken
 })
 
