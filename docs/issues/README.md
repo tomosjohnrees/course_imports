@@ -2,7 +2,6 @@
 
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
-| 0025 | [Implement image block](0025-implement-image-block.md) | Milestone 4 — Image Block | todo |
 | 0026 | [Implement in-session progress tracking](0026-implement-in-session-progress-tracking.md) | Milestone 5 — Progress Tracking | todo |
 | 0027 | [Implement progress persistence via IPC](0027-implement-progress-persistence.md) | Milestone 5 — Progress Persistence | todo |
 | 0028 | [Implement preferences persistence via IPC](0028-implement-preferences-persistence.md) | Milestone 5 — Preferences Persistence | todo |

@@ -128,3 +128,9 @@
 | # | Title | Phase | Status |
 |---|-------|-------|--------|
 | 0024 | [Implement callout block](0024-implement-callout-block.md) | Milestone 4 — Callout Block | complete |
+
+## Milestone 4 — Image Block
+
+| # | Title | Phase | Status |
+|---|-------|-------|--------|
+| 0025 | [Implement image block](0025-implement-image-block.md) | Milestone 4 — Image Block | complete |

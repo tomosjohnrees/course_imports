@@ -1,32 +1,36 @@
-import { memo } from 'react'
+import { memo, useState, useCallback } from 'react'
+import { ImageOff } from 'lucide-react'
 import type { ImageBlock as ImageBlockType } from '@/types/course.types'
+import './ImageBlock.css'
 
-// Full implementation in issue #0025
+function isValidImageSrc(src: string): boolean {
+  return src.startsWith('data:') || src.startsWith('https://')
+}
+
 export default memo(function ImageBlock({ src, alt, caption }: ImageBlockType) {
+  const [error, setError] = useState(false)
+
+  const handleError = useCallback(() => setError(true), [])
+
+  const altText = alt || caption || 'Course image'
+  const validSrc = isValidImageSrc(src)
+
+  if (!validSrc || error) {
+    return (
+      <figure className="image-block">
+        <div className="image-block-fallback" role="img" aria-label={altText}>
+          <ImageOff size={20} />
+          <span>{altText}</span>
+        </div>
+        {caption && <figcaption className="image-block-caption">{caption}</figcaption>}
+      </figure>
+    )
+  }
+
   return (
-    <figure style={{ margin: 0 }}>
-      <img
-        src={src}
-        alt={alt}
-        style={{
-          maxWidth: '100%',
-          height: 'auto',
-          borderRadius: '6px',
-        }}
-      />
-      {caption && (
-        <figcaption
-          style={{
-            marginTop: 'var(--space-2)',
-            fontFamily: 'var(--font-sans)',
-            fontSize: 'var(--text-sm)',
-            color: 'var(--color-text-muted)',
-            textAlign: 'center',
-          }}
-        >
-          {caption}
-        </figcaption>
-      )}
+    <figure className="image-block">
+      <img src={src} alt={altText} onError={handleError} />
+      {caption && <figcaption className="image-block-caption">{caption}</figcaption>}
     </figure>
   )
 })
