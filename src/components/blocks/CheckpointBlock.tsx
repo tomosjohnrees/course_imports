@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import type { CheckpointBlock as CheckpointBlockType } from '@/types/course.types'
 import { useCourseStore } from '@/store/course.store'
 import './CheckpointBlock.css'
@@ -9,18 +9,15 @@ export default memo(function CheckpointBlock(props: CheckpointBlockProps) {
   const { label, blockIndex } = props
   const activeTopic = useCourseStore((s) => s.activeTopic)
   const checkpointKey = `${activeTopic}:${blockIndex}`
-  const savedCompletion = useCourseStore(
-    (s) => s.checkpointCompletions[checkpointKey],
+  const completed = useCourseStore(
+    (s) => s.checkpointCompletions[checkpointKey] ?? false,
   )
   const recordCheckpointCompletion = useCourseStore(
     (s) => s.recordCheckpointCompletion,
   )
 
-  const [completed, setCompleted] = useState(savedCompletion ?? false)
-
   const handleComplete = () => {
     if (completed) return
-    setCompleted(true)
     recordCheckpointCompletion(checkpointKey)
   }
 
